@@ -23,8 +23,6 @@ module.exports = {
     try {
       const { page = 1, rows = 10 } = req.query
       const where = buildQuery(req.query)
-      // TODO usar findAndCounterAll
-      // reference: https://sequelize.org/master/class/lib/model.js~Model.html#static-method-findAndCountAll
       const total = await Employee.count({ where })
       const employees = await Employee.findAll({
         where,
@@ -46,7 +44,9 @@ module.exports = {
       attributes: { exclude: ['password'] }
     })
 
-    if (!employee) return res.status(404).json({ message: 'employee not found' })
+    if (!employee) {
+      return res.status(404).json({ message: 'employee not found' })
+    }
 
     return res.json(employee)
   },
@@ -72,7 +72,9 @@ module.exports = {
     const { id, name, email, password } = req.body
     const employee = await Employee.findByPk(id)
 
-    if (!employee) return res.status(404).json({ message: 'employee not found' })
+    if (!employee) {
+      return res.status(404).json({ message: 'employee not found' })
+    }
 
     try {
       employee.name = name

@@ -40,7 +40,7 @@ module.exports = app => {
         id: Joi.number().required(),
         name: Joi.string().required(),
         email: Joi.string().required().email(),
-        password: Joi.string().min(3).max(8).optional()
+        password: Joi.string().min(3).max(8).optional().allow('')
       })
     })
   )
