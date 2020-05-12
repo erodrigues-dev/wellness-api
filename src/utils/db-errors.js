@@ -1,16 +1,15 @@
-const { BaseError } = require('sequelize')
+const { DatabaseError, UniqueConstraintError } = require('sequelize')
 
 function getErrorMessage(error) {
-  let message = 'Has ocurred an error'
-
-  if (
-    error instanceof BaseError &&
-    error.name === 'SequelizeUniqueConstraintError'
-  ) {
-    message = error.errors[0].message
+  if (error instanceof DatabaseError) {
+    return error.message
   }
 
-  return message
+  if (error instanceof UniqueConstraintError) {
+    return error.errors[0].message
+  }
+
+  return 'Has ocurred an error'
 }
 
 module.exports = getErrorMessage
