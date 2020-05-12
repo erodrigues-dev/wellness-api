@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Profile.associate = ({ Functionality }) => {
     Profile.Functionalities = Profile.hasMany(Functionality, {
-      foreignKey: 'profile_id',
+      foreignKey: 'profileId',
       as: 'functionalities'
     })
   }
