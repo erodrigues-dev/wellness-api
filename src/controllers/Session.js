@@ -10,7 +10,17 @@ module.exports = {
 
     if (!user) {
       type = 'employee'
-      user = await Employee.findOne({ where: { email } })
+      user = await Employee.findOne({
+        where: { email },
+        include: [
+          {
+            association: Employee.Profile,
+            include: 'functionalities'
+          }
+        ]
+      })
+
+      console.log(user.toJSON())
     }
 
     if (!user) {
@@ -23,16 +33,30 @@ module.exports = {
       return res.status(401).json()
     }
 
-    const token = jwt.sign(
-      {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        type
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '12h' }
-    )
+    const payload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      type
+    }
+
+    if (user.profile) {
+      const { id, name, functionalities: list } = user.profile
+      const functionalities = list.map(item => ({
+        name: item.name,
+        actions: item.actions
+      }))
+
+      payload.profile = {
+        id,
+        name,
+        functionalities
+      }
+    }
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: '12h'
+    })
 
     return res.json({ token })
   }
