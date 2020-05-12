@@ -84,7 +84,7 @@ module.exports = {
 
       return res.status(204).json()
     } catch (error) {
-      transaction.rollback()
+      await transaction.rollback()
       next(error)
     }
   },
