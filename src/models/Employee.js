@@ -5,5 +5,12 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING
   })
 
+  Employee.associate = ({ Profile }) => {
+    Employee.Profile = Employee.belongsTo(Profile, {
+      foreignKey: 'profileId',
+      as: 'profile'
+    })
+  }
+
   return Employee
 }

@@ -28,7 +28,17 @@ module.exports = {
         where,
         limit: rows,
         offset: (page - 1) * rows,
-        attributes: { exclude: ['password'] },
+        attributes: {
+          exclude: ['password', 'profileId']
+        },
+        include: [
+          {
+            association: Employee.Profile,
+            attributes: {
+              exclude: ['description', 'createdAt', 'updatedAt']
+            }
+          }
+        ],
         order: ['name']
       })
 
@@ -52,14 +62,15 @@ module.exports = {
   },
 
   async store(req, res, next) {
-    const { name, email, password } = req.body
+    const { name, email, password, profileId } = req.body
 
     try {
       const hashPwd = await hash(password)
       const employee = await Employee.create({
         name,
         email,
-        password: hashPwd
+        password: hashPwd,
+        profileId
       })
 
       return res.json(employee)
@@ -69,7 +80,7 @@ module.exports = {
   },
 
   async update(req, res, next) {
-    const { id, name, email, password } = req.body
+    const { id, name, email, password, profileId } = req.body
     const employee = await Employee.findByPk(id)
 
     if (!employee) {
@@ -79,6 +90,7 @@ module.exports = {
     try {
       employee.name = name
       employee.email = email
+      employee.profileId = profileId
       if (password) employee.password = await hash(password)
       await employee.save()
       return res.json(employee)

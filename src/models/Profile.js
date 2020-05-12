@@ -4,10 +4,15 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.INTEGER
   })
 
-  Profile.associate = ({ Functionality }) => {
+  Profile.associate = ({ Functionality, Employee }) => {
     Profile.Functionalities = Profile.hasMany(Functionality, {
       foreignKey: 'profileId',
       as: 'functionalities'
+    })
+
+    Profile.Employees = Profile.hasMany(Employee, {
+      foreignKey: 'profileId',
+      as: 'employees'
     })
   }
 
