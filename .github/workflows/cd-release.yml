@@ -21,4 +21,4 @@ jobs:
             git pull --rebase
             yarn
             yarn sequelize db:migrate
-            $(yarn global bin)/pm2 restart wellness-server
+            $(yarn global bin)/pm2 restart server
