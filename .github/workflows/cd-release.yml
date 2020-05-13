@@ -1,0 +1,24 @@
+name: cd-release
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  google_cloud_cd:
+    name: Google Cloud Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: connecting to google cloud on SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd www/wellness-backend
+            git checkout release
+            git pull --rebase
+            yarn
+            yarn sequelize db:migrate
+            $(yarn global bin)/pm2 restart wellness-server
