@@ -33,7 +33,6 @@ module.exports = app => {
             name: Joi.string().required(),
             actions: Joi.number().required()
           })
-          .min(1)
           .required()
       })
     })
@@ -51,7 +50,6 @@ module.exports = app => {
             name: Joi.string().required(),
             actions: Joi.number().required()
           })
-          .min(1)
           .required()
       })
     })

@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Functionality.associate = ({ Profile }) => {
     Functionality.Profile = Functionality.belongsTo(Profile, {
-      foreignKey: 'profile_id',
+      foreignKey: 'profileId',
       as: 'profile'
     })
   }
