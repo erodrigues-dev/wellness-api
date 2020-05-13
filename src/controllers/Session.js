@@ -19,8 +19,6 @@ module.exports = {
           }
         ]
       })
-
-      console.log(user.toJSON())
     }
 
     if (!user) {
