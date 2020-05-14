@@ -8,7 +8,7 @@ module.exports = app => {
         name: Joi.string().allow('').optional(),
         email: Joi.string().allow('').optional(),
         page: Joi.number(),
-        rows: Joi.number()
+        limit: Joi.number()
       })
     })
   )

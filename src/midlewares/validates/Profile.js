@@ -8,7 +8,7 @@ module.exports = app => {
         name: Joi.string().allow('').optional(),
         description: Joi.string().allow('').optional(),
         page: Joi.number().min(1),
-        rows: Joi.number().min(1)
+        limit: Joi.number().min(1).optional()
       })
     })
   )
