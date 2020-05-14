@@ -21,14 +21,14 @@ function buildQuery({ name, email }) {
 module.exports = {
   async index(req, res, next) {
     try {
-      const { page = 1, rows = 10 } = req.query
+      const { page = 1, limit = 10 } = req.query
       const where = buildQuery(req.query)
 
       const total = await Customer.count({ where })
       const customers = await Customer.findAll({
         where,
-        limit: rows,
-        offset: (page - 1) * rows,
+        limit: limit,
+        offset: (page - 1) * limit,
         attributes: { exclude: ['password'] },
         order: ['name']
       })
@@ -45,7 +45,8 @@ module.exports = {
       attributes: { exclude: ['password'] }
     })
 
-    if (!customer) return res.status(404).json({ message: 'customer not found' })
+    if (!customer)
+      return res.status(404).json({ message: 'customer not found' })
 
     return res.json(customer)
   },
@@ -71,7 +72,8 @@ module.exports = {
     const { id, name, email, password } = req.body
     const customer = await Customer.findByPk(id)
 
-    if (!customer) return res.status(404).json({ message: 'customer not found' })
+    if (!customer)
+      return res.status(404).json({ message: 'customer not found' })
 
     try {
       customer.name = name

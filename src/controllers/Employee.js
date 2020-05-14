@@ -21,13 +21,13 @@ function buildQuery({ name, email }) {
 module.exports = {
   async index(req, res, next) {
     try {
-      const { page = 1, rows = 10 } = req.query
+      const { page = 1, limit = 10 } = req.query
       const where = buildQuery(req.query)
       const total = await Employee.count({ where })
       const employees = await Employee.findAll({
         where,
-        limit: rows,
-        offset: (page - 1) * rows,
+        limit: limit,
+        offset: (page - 1) * limit,
         attributes: {
           exclude: ['password', 'profileId']
         },
