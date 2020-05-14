@@ -2,20 +2,23 @@ const { Profile, Functionality, sequelize, Sequelize } = require('../models')
 
 module.exports = {
   async index(req, res, next) {
-    const { name, description, page = 1, rows = 10 } = req.query
-    try {
-      const where = {
-        name: { [Sequelize.Op.iLike]: `%${name}%` },
-        description: { [Sequelize.Op.iLike]: `%${description}%` }
-      }
-      if (!name) delete where.name
-      if (!description) delete where.description
+    const { name, description, page = 1, limit } = req.query
 
-      const result = await Profile.findAndCountAll({
-        where,
-        limit: rows,
-        offset: rows * (page - 1)
-      })
+    try {
+      const query = { where: {} }
+      if (name) {
+        query.where.name = { [Sequelize.Op.iLike]: `%${name}%` }
+      }
+      if (description) {
+        query.where.description = { [Sequelize.Op.iLike]: `%${description}%` }
+      }
+
+      if (limit) {
+        query.limit = limit
+        query.offset = limit * (page - 1)
+      }
+
+      const result = await Profile.findAndCountAll(query)
 
       return res.header('X-Total-Count', result.count).json(result.rows)
     } catch (error) {
