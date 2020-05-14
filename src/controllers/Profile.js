@@ -74,7 +74,7 @@ module.exports = {
         // insere todas as funcionalidades
         const inserts = functionalities.map(functionality => {
           const { name, actions } = functionality
-          return Functionality.create({ name, actions, profile_id: model.id })
+          return Functionality.create({ name, actions, profileId: model.id })
         })
         await Promise.all(inserts)
       }
