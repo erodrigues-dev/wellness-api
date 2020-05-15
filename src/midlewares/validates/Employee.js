@@ -7,6 +7,8 @@ module.exports = app => {
       [Segments.QUERY]: Joi.object().keys({
         name: Joi.string().allow('').optional(),
         email: Joi.string().allow('').optional(),
+        profile: Joi.string().allow('').optional(),
+        specialty: Joi.string().allow('').optional(),
         page: Joi.number(),
         limit: Joi.number()
       })
