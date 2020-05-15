@@ -41,7 +41,8 @@ module.exports = app => {
         id: Joi.number().required(),
         name: Joi.string().required(),
         email: Joi.string().required().email(),
-        password: Joi.string().min(3).max(8).optional().allow(''),
+        password: Joi.string().min(8).max(20).optional().allow(''),
+        specialty: Joi.string().max(100).optional().allow(''),
         profileId: Joi.number().required()
       })
     })
