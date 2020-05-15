@@ -1,10 +1,11 @@
 const { hash } = require('../utils/hash-password')
 const { Employee, Sequelize } = require('../models')
 
-function buildQuery({ name, email }) {
+function buildQuery({ name, email, specialty, profile }) {
   const where = {
     name: { [Sequelize.Op.iLike]: `%${name}%` },
-    email: { [Sequelize.Op.iLike]: `%${email}%` }
+    email: { [Sequelize.Op.iLike]: `%${email}%` },
+    specialty: { [Sequelize.Op.iLike]: `%${specialty}%` }
   }
 
   if (!name) {
@@ -15,14 +16,22 @@ function buildQuery({ name, email }) {
     delete where.email
   }
 
+  if (!specialty) {
+    delete where.specialty
+  }
+
   return where
 }
 
 module.exports = {
   async index(req, res, next) {
     try {
-      const { page = 1, limit = 10 } = req.query
-      const where = buildQuery(req.query)
+      const { page = 1, limit = 10, profile, ...rest } = req.query
+      const where = buildQuery(rest)
+      const whereProfile = {}
+      if (profile) {
+        whereProfile.name = { [Sequelize.Op.iLike]: `%${profile}%` }
+      }
       const total = await Employee.count({ where })
       const employees = await Employee.findAll({
         where,
@@ -34,9 +43,8 @@ module.exports = {
         include: [
           {
             association: Employee.Profile,
-            attributes: {
-              exclude: ['description', 'createdAt', 'updatedAt']
-            }
+            attributes: ['id', 'name'],
+            where: { ...whereProfile }
           }
         ],
         order: ['name']
@@ -62,7 +70,7 @@ module.exports = {
   },
 
   async store(req, res, next) {
-    const { name, email, password, profileId } = req.body
+    const { name, email, password, specialty, profileId } = req.body
 
     try {
       const hashPwd = await hash(password)
@@ -70,6 +78,7 @@ module.exports = {
         name,
         email,
         password: hashPwd,
+        specialty,
         profileId
       })
 
@@ -80,7 +89,7 @@ module.exports = {
   },
 
   async update(req, res, next) {
-    const { id, name, email, password, profileId } = req.body
+    const { id, name, email, password, specialty, profileId } = req.body
     const employee = await Employee.findByPk(id)
 
     if (!employee) {
@@ -90,6 +99,7 @@ module.exports = {
     try {
       employee.name = name
       employee.email = email
+      employee.specialty = specialty
       employee.profileId = profileId
       if (password) employee.password = await hash(password)
       await employee.save()

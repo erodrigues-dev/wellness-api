@@ -2,6 +2,10 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('specialties')
+  },
+
+  down: (queryInterface, Sequelize) => {
     return queryInterface.createTable(
       'specialties',
       {
@@ -32,9 +36,5 @@ module.exports = {
         }
       }
     )
-  },
-
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('specialties')
   }
 }
