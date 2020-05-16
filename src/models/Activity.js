@@ -6,14 +6,12 @@ module.exports = (sequelize, DataTypes) => {
     duration: DataTypes.INTEGER
   })
 
-  /*
-  Activity.associate = ({ Package }) => {
-    Activity.Package = Activity.belongsToMany(Package, {
-      foreignKey: 'package_id',
-      as: 'package'
+  Activity.associate = ({ Package, PackageActivity }) => {
+    Activity.Packages = Activity.belongsToMany(Package, {
+      through: PackageActivity,
+      as: 'packages'
     })
   }
-  */
 
   return Activity
 }

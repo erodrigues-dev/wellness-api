@@ -1,18 +1,16 @@
 module.exports = (sequelize, DataTypes) => {
   const Package = sequelize.define('Package', {
     name: DataTypes.STRING,
-    description: DataTypes.STRING,
-    price: DataTypes.NUMERIC
+    price: DataTypes.DECIMAL,
+    description: DataTypes.STRING
   })
 
-  /*
-  Package.associate = ({ Activity }) => {
-    Package.Activity = Package.belongsToMany(Activity, {
-      foreignKey: 'activity_id',
-      as: 'activity'
+  Package.associate = ({ Activity, PackageActivity }) => {
+    Package.Activities = Package.belongsToMany(Activity, {
+      through: PackageActivity,
+      as: 'activities'
     })
   }
-  */
 
   return Package
 }
