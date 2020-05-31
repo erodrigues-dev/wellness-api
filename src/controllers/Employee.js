@@ -1,7 +1,7 @@
 const { hash } = require('../utils/hash-password')
 const { Employee, Sequelize } = require('../models')
 
-function buildQuery({ name, email, specialty, profile }) {
+function buildQuery({ name, email, specialty }) {
   const where = {
     name: { [Sequelize.Op.iLike]: `%${name}%` },
     email: { [Sequelize.Op.iLike]: `%${email}%` },
