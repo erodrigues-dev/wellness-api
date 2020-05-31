@@ -1,21 +1,12 @@
 const { Package, sequelize, Sequelize } = require('../models')
 
 const serialize = obj => ({
-  id: obj.id,
-  name: obj.name,
+  ...obj,
   price: parseFloat(obj.price),
-  description: obj.description,
-  createdAt: obj.createdAt,
-  updatedAt: obj.updatedAt,
-  activities: obj.activities.map(item => ({
-    id: item.id,
-    name: item.name,
-    description: item.description,
+  activities: obj.activities.map(({ PackageActivity, ...item }) => ({
+    ...item,
     price: parseFloat(item.price),
-    duration: item.duration,
-    createdAt: item.createdAt,
-    updatedAt: item.updatedAt,
-    quantity: item.PackageActivity.quantity
+    quantity: PackageActivity.quantity
   }))
 })
 
@@ -43,7 +34,7 @@ module.exports = {
         ]
       })
 
-      const records = list.rows.map(serialize)
+      const records = list.rows.map(row => row.toJSON()).map(serialize)
 
       return res.header('X-Total-Count', list.count).json(records)
     } catch (error) {
@@ -65,7 +56,7 @@ module.exports = {
         return res.status(404).json({ message: 'package not found' })
       }
 
-      const storedPackage = serialize(obj)
+      const storedPackage = serialize(obj.toJSON())
 
       return res.json(storedPackage)
     } catch (error) {
