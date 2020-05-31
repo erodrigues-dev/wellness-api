@@ -6,10 +6,15 @@ module.exports = (sequelize, DataTypes) => {
     duration: DataTypes.INTEGER
   })
 
-  Activity.associate = ({ Package, PackageActivity }) => {
+  Activity.associate = ({ Package, PackageActivity, Employee }) => {
     Activity.Packages = Activity.belongsToMany(Package, {
       through: PackageActivity,
       as: 'packages'
+    })
+
+    Activity.Employee = Activity.belongsTo(Employee, {
+      foreignKey: 'employeeId',
+      as: 'employee'
     })
   }
 

@@ -5,7 +5,8 @@ module.exports = {
     try {
       const { page = 1, limit, name } = req.query
       const query = {
-        where: {}
+        where: {},
+        include: 'employee'
       }
       if (name) {
         query.where.name = { [Sequelize.Op.iLike]: `%${name}%` }
@@ -24,7 +25,7 @@ module.exports = {
   async get(req, res, next) {
     try {
       const { id } = req.params
-      const result = await Activity.findByPk(id)
+      const result = await Activity.findByPk(id, { include: 'employee' })
 
       if (!result) {
         return res.status(404).json({ message: 'Activity not found' })
@@ -38,13 +39,14 @@ module.exports = {
 
   async store(req, res, next) {
     try {
-      const { name, description, price, duration } = req.body
+      const { name, description, price, duration, employeeId } = req.body
 
       const activity = await Activity.create({
         name,
         description,
         price,
-        duration
+        duration,
+        employeeId
       })
 
       return res.json(activity)
@@ -55,7 +57,7 @@ module.exports = {
 
   async update(req, res, next) {
     try {
-      const { id, name, description, price, duration } = req.body
+      const { id, name, description, price, duration, employeeId } = req.body
 
       const activity = await Activity.findByPk(id)
 
@@ -67,6 +69,7 @@ module.exports = {
       activity.description = description
       activity.price = price
       activity.duration = duration
+      activity.employeeId = employeeId
 
       await activity.save()
 

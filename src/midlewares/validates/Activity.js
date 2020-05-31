@@ -28,7 +28,8 @@ module.exports = app => {
         name: Joi.string().required(),
         description: Joi.string().required(),
         price: Joi.number().precision(2).required(),
-        duration: Joi.number().integer().required()
+        duration: Joi.number().integer().required(),
+        employeeId: Joi.number().integer().required()
       })
     })
   )
@@ -41,7 +42,8 @@ module.exports = app => {
         name: Joi.string().required(),
         description: Joi.string().required(),
         price: Joi.number().precision(2).required(),
-        duration: Joi.number().integer().required()
+        duration: Joi.number().integer().required(),
+        employeeId: Joi.number().integer().required()
       })
     })
   )
