@@ -1,5 +1,24 @@
 const { Package, sequelize, Sequelize } = require('../models')
 
+const serialize = obj => ({
+  id: obj.id,
+  name: obj.name,
+  price: parseFloat(obj.price),
+  description: obj.description,
+  createdAt: obj.createdAt,
+  updatedAt: obj.updatedAt,
+  activities: obj.activities.map(item => ({
+    id: item.id,
+    name: item.name,
+    description: item.description,
+    price: parseFloat(item.price),
+    duration: item.duration,
+    createdAt: item.createdAt,
+    updatedAt: item.updatedAt,
+    quantity: item.PackageActivity.quantity
+  }))
+})
+
 module.exports = {
   async index(req, res, next) {
     try {
@@ -24,7 +43,9 @@ module.exports = {
         ]
       })
 
-      return res.header('X-Total-Count', list.count).json(list.rows)
+      const records = list.rows.map(serialize)
+
+      return res.header('X-Total-Count', list.count).json(records)
     } catch (error) {
       next(error)
     }
@@ -34,17 +55,19 @@ module.exports = {
     try {
       const { id } = req.params
 
-      const storePackage = await Package.findByPk(id, {
+      const obj = await Package.findByPk(id, {
         include: {
           association: 'activities'
         }
       })
 
-      if (!storePackage) {
+      if (!obj) {
         return res.status(404).json({ message: 'package not found' })
       }
 
-      return res.json(storePackage)
+      const storedPackage = serialize(obj)
+
+      return res.json(storedPackage)
     } catch (error) {
       next(error)
     }
@@ -78,7 +101,8 @@ module.exports = {
         transaction
       })
       await transaction.commit()
-      return res.json(storePackage)
+      const serialized = serialize(storePackage)
+      return res.json(serialized)
     } catch (error) {
       await transaction.rollback()
       next(error)
