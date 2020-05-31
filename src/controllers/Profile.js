@@ -72,12 +72,16 @@ module.exports = {
       if (functionalities) {
         // remove todas as funcionalidades
         await Functionality.destroy({
-          where: { profile_id: model.id }
+          where: { profile_id: model.id },
+          transaction
         })
         // insere todas as funcionalidades
         const inserts = functionalities.map(functionality => {
           const { name, actions } = functionality
-          return Functionality.create({ name, actions, profileId: model.id })
+          return Functionality.create(
+            { name, actions, profileId: model.id },
+            { transaction }
+          )
         })
         await Promise.all(inserts)
       }
