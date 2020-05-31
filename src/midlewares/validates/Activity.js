@@ -6,6 +6,7 @@ module.exports = app => {
     celebrate({
       [Segments.QUERY]: Joi.object().keys({
         name: Joi.string().allow('').optional(),
+        employeeId: Joi.string().allow('').optional(),
         page: Joi.number().min(1).optional(),
         limit: Joi.number().min(1).optional()
       })

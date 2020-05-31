@@ -3,13 +3,21 @@ const { Activity, Sequelize } = require('../models')
 module.exports = {
   async index(req, res, next) {
     try {
-      const { page = 1, limit, name } = req.query
+      const { page = 1, limit, name, employeeId } = req.query
       const query = {
         where: {},
-        include: 'employee'
+        include: {
+          association: 'employee',
+          attributes: {
+            exclude: ['password']
+          }
+        }
       }
       if (name) {
         query.where.name = { [Sequelize.Op.iLike]: `%${name}%` }
+      }
+      if (employeeId) {
+        query.where.employeeId = employeeId
       }
       if (limit) {
         query.offset = limit * (page - 1)
@@ -25,7 +33,14 @@ module.exports = {
   async get(req, res, next) {
     try {
       const { id } = req.params
-      const result = await Activity.findByPk(id, { include: 'employee' })
+      const result = await Activity.findByPk(id, {
+        include: {
+          association: 'employee',
+          attributes: {
+            exclude: ['password']
+          }
+        }
+      })
 
       if (!result) {
         return res.status(404).json({ message: 'Activity not found' })
