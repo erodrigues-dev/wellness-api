@@ -1,5 +1,6 @@
 const { hash } = require('../utils/hash-password')
 const { Customer, Sequelize } = require('../models')
+const { deleteFileFromUrl } = require('../utils/google-cloud-storage')
 
 function buildQuery({ name, email }) {
   const where = {
@@ -45,21 +46,24 @@ module.exports = {
       attributes: { exclude: ['password'] }
     })
 
-    if (!customer)
+    if (!customer) {
       return res.status(404).json({ message: 'customer not found' })
+    }
 
     return res.json(customer)
   },
 
   async store(req, res, next) {
     const { name, email, password } = req.body
+    const imageUrl = req.file ? req.file.url : null
 
     try {
       const hashPwd = await hash(password)
       const customer = await Customer.create({
         name,
         email,
-        password: hashPwd
+        password: hashPwd,
+        imageUrl
       })
 
       return res.json(customer)
@@ -72,13 +76,23 @@ module.exports = {
     const { id, name, email, password } = req.body
     const customer = await Customer.findByPk(id)
 
-    if (!customer)
+    if (!customer) {
       return res.status(404).json({ message: 'customer not found' })
+    }
 
     try {
       customer.name = name
       customer.email = email
       if (password) customer.password = await hash(password)
+
+      if (req.file) {
+        if (customer.imageUrl) {
+          deleteFileFromUrl(customer.imageUrl)
+        }
+
+        customer.imageUrl = req.file.url
+      }
+
       await customer.save()
       return res.json(customer)
     } catch (error) {

@@ -6,6 +6,7 @@ require('./database/index')
 
 const app = express()
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 // prettier-ignore
 consign({ cwd: 'src' })
