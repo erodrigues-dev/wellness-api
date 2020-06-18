@@ -30,7 +30,8 @@ module.exports = app => {
       [Segments.BODY]: Joi.object().keys({
         name: Joi.string().required(),
         email: Joi.string().required().email(),
-        password: Joi.string().required().min(3).max(8),
+        password: Joi.string().required().min(8).max(20),
+        specialty: Joi.string().max(100).optional().allow(''),
         profileId: Joi.number().required()
       })
     })
