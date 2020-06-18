@@ -35,6 +35,7 @@ module.exports = {
       id: user.id,
       name: user.name,
       email: user.email,
+      imageUrl: user.imageUrl,
       type
     }
 
