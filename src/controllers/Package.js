@@ -1,4 +1,5 @@
 const { Package, sequelize, Sequelize } = require('../models')
+const { deleteFileFromUrl } = require('../utils/google-cloud-storage')
 
 const serialize = obj => ({
   ...obj,
@@ -66,13 +67,16 @@ module.exports = {
 
   async store(req, res, next) {
     const transaction = await sequelize.transaction()
+    const imageUrl = req.file ? req.file.url : null
+
     try {
       const { name, price, description, activities } = req.body
       const storePackage = await Package.create(
         {
           name,
           price,
-          description
+          description,
+          imageUrl
         },
         { transaction }
       )
@@ -84,15 +88,15 @@ module.exports = {
           })
         )
       )
+      await transaction.commit()
+
       await storePackage.reload({
         include: {
           association: 'activities',
           through: { attributes: ['quantity'] }
-        },
-        transaction
+        }
       })
-      await transaction.commit()
-      const serialized = serialize(storePackage)
+      const serialized = serialize(storePackage.toJSON())
       return res.json(serialized)
     } catch (error) {
       await transaction.rollback()
@@ -113,6 +117,14 @@ module.exports = {
       storePackage.price = price
       storePackage.description = description
 
+      if (req.file) {
+        if (storePackage.imageUrl) {
+          deleteFileFromUrl(storePackage.imageUrl)
+        }
+
+        storePackage.imageUrl = req.file.url
+      }
+
       await storePackage.save({ transaction })
       await storePackage.setActivities([], { transaction })
 
@@ -126,7 +138,7 @@ module.exports = {
       )
 
       await transaction.commit()
-      return res.json()
+      return res.status(204).json()
     } catch (error) {
       await transaction.rollback()
       next(error)

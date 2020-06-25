@@ -1,4 +1,5 @@
 const { Activity, Sequelize } = require('../models')
+const { deleteFileFromUrl } = require('../utils/google-cloud-storage')
 
 module.exports = {
   async index(req, res, next) {
@@ -55,13 +56,19 @@ module.exports = {
   async store(req, res, next) {
     try {
       const { name, description, price, duration, employeeId } = req.body
+      let imageUrl = null
+
+      if (req.file) {
+        imageUrl = req.file.url
+      }
 
       const activity = await Activity.create({
         name,
         description,
         price,
         duration,
-        employeeId
+        employeeId,
+        imageUrl
       })
 
       return res.json(activity)
@@ -85,6 +92,14 @@ module.exports = {
       activity.price = price
       activity.duration = duration
       activity.employeeId = employeeId
+
+      if (req.file) {
+        if (activity.imageUrl) {
+          deleteFileFromUrl(activity.imageUrl)
+        }
+
+        activity.imageUrl = req.file.url
+      }
 
       await activity.save()
 

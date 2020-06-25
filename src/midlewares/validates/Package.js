@@ -1,5 +1,12 @@
 const { celebrate, Joi, Segments } = require('celebrate')
 
+const parseActivities = (req, res, next) => {
+  req.body.activities = (req.body.activities || []).map(json =>
+    JSON.parse(json)
+  )
+  next()
+}
+
 module.exports = app => {
   app.get(
     '/packages',
@@ -24,6 +31,7 @@ module.exports = app => {
 
   app.post(
     '/packages',
+    parseActivities,
     celebrate({
       [Segments.BODY]: Joi.object({
         name: Joi.string().required(),
@@ -41,6 +49,7 @@ module.exports = app => {
 
   app.put(
     '/packages',
+    parseActivities,
     celebrate({
       [Segments.BODY]: Joi.object({
         id: Joi.number().required(),

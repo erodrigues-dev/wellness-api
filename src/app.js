@@ -1,16 +1,20 @@
 const express = require('express')
 const consign = require('consign')
+const morgan = require('morgan')
 
 require('dotenv/config')
 require('./database/index')
 
 const app = express()
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(morgan('short'))
 
-// prettier-ignore
 consign({ cwd: 'src' })
   .include('midlewares/cors.js')
   .then('midlewares/jwt.js')
+  .then('midlewares/permissions')
+  .then('midlewares/uploads')
   .then('midlewares/validates')
   .then('controllers')
   .then('routes')

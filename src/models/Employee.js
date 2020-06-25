@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
-    specialty: DataTypes.STRING
+    specialty: DataTypes.STRING,
+    imageUrl: DataTypes.STRING
   })
 
   Employee.associate = ({ Profile }) => {

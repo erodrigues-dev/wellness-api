@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     description: DataTypes.STRING,
     price: DataTypes.NUMERIC,
-    duration: DataTypes.INTEGER
+    duration: DataTypes.INTEGER,
+    imageUrl: DataTypes.STRING
   })
 
   Activity.associate = ({ Package, PackageActivity, Employee }) => {

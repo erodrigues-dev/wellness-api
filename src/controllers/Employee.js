@@ -1,5 +1,6 @@
 const { hash } = require('../utils/hash-password')
 const { Employee, Sequelize } = require('../models')
+const { deleteFileFromUrl } = require('../utils/google-cloud-storage')
 
 function buildQuery({ name, email, specialty }) {
   const where = {
@@ -79,7 +80,8 @@ module.exports = {
         email,
         password: hashPwd,
         specialty,
-        profileId
+        profileId,
+        imageUrl: req.file && req.file.url
       })
 
       return res.json(employee)
@@ -101,7 +103,17 @@ module.exports = {
       employee.email = email
       employee.specialty = specialty
       employee.profileId = profileId
-      if (password) employee.password = await hash(password)
+      if (password) {
+        employee.password = await hash(password)
+      }
+
+      if (req.file) {
+        if (employee.imageUrl) {
+          await deleteFileFromUrl(employee.imageUrl)
+        }
+
+        employee.imageUrl = req.file.url
+      }
       await employee.save()
       return res.json(employee)
     } catch (error) {
