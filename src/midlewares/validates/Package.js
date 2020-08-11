@@ -37,6 +37,9 @@ module.exports = app => {
         name: Joi.string().required(),
         price: Joi.number().min(0.01).positive().required(),
         description: Joi.string().required(),
+        expiration: Joi.date().required(),
+        showInApp: Joi.boolean(),
+        showInWeb: Joi.boolean(),
         activities: Joi.array()
           .items({
             id: Joi.number().required(),

@@ -3,7 +3,10 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     price: DataTypes.DECIMAL,
     description: DataTypes.STRING,
-    imageUrl: DataTypes.STRING
+    imageUrl: DataTypes.STRING,
+    expiration: DataTypes.DATEONLY,
+    showInApp: DataTypes.BOOLEAN,
+    showInWeb: DataTypes.BOOLEAN
   })
 
   Package.associate = ({ Activity, PackageActivity }) => {
