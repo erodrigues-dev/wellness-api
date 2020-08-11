@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     price: DataTypes.DECIMAL,
     description: DataTypes.STRING,
     imageUrl: DataTypes.STRING,
-    expiration: DataTypes.DATEONLY,
+    expiration: DataTypes.DATE,
     showInApp: DataTypes.BOOLEAN,
     showInWeb: DataTypes.BOOLEAN
   })
