@@ -7,6 +7,12 @@ const parseActivities = (req, res, next) => {
   next()
 }
 
+const getCurrentDate = () => {
+  const date = new Date()
+
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+}
+
 module.exports = app => {
   app.get(
     '/packages',
@@ -37,9 +43,9 @@ module.exports = app => {
         name: Joi.string().required(),
         price: Joi.number().min(0.01).positive().required(),
         description: Joi.string().required(),
-        expiration: Joi.date().required(),
-        showInApp: Joi.boolean(),
-        showInWeb: Joi.boolean(),
+        expiration: Joi.date().min(getCurrentDate()).allow(null).default(null),
+        showInApp: Joi.boolean().default(true),
+        showInWeb: Joi.boolean().default(true),
         activities: Joi.array()
           .items({
             id: Joi.number().required(),
@@ -59,6 +65,9 @@ module.exports = app => {
         name: Joi.string().required(),
         price: Joi.number().min(0.01).positive().required(),
         description: Joi.string().required(),
+        expiration: Joi.date().min(getCurrentDate()).allow(null).default(null),
+        showInApp: Joi.boolean().default(true),
+        showInWeb: Joi.boolean().default(true),
         activities: Joi.array()
           .items({
             id: Joi.number().required(),

@@ -70,13 +70,24 @@ module.exports = {
     const imageUrl = req.file ? req.file.url : null
 
     try {
-      const { name, price, description, activities } = req.body
+      const {
+        name,
+        price,
+        description,
+        activities,
+        expiration,
+        showInWeb,
+        showInApp
+      } = req.body
       const storePackage = await Package.create(
         {
           name,
           price,
           description,
-          imageUrl
+          imageUrl,
+          expiration,
+          showInWeb,
+          showInApp
         },
         { transaction }
       )
@@ -107,15 +118,26 @@ module.exports = {
   async update(req, res, next) {
     const transaction = await sequelize.transaction()
     try {
-      const { id, name, price, description, activities } = req.body
+      const {
+        id,
+        name,
+        price,
+        description,
+        activities,
+        expiration,
+        showInWeb,
+        showInApp
+      } = req.body
       const storePackage = await Package.findByPk(id)
       if (!storePackage) {
         return res.status(404).json({ message: 'package not found' })
       }
-
       storePackage.name = name
       storePackage.price = price
       storePackage.description = description
+      storePackage.expiration = expiration
+      storePackage.showInWeb = showInWeb
+      storePackage.showInApp = showInApp
 
       if (req.file) {
         if (storePackage.imageUrl) {
