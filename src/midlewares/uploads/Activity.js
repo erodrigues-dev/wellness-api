@@ -1,4 +1,4 @@
-const upload = require('../../utils/multer-google-cloud-storage')
+const upload = require('../../shared/utils/multer-google-cloud-storage')
 const mimetypes = ['image/png', 'image/jpg', 'image/jpeg']
 
 module.exports = app => {

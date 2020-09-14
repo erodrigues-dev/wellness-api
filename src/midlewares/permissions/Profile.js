@@ -1,4 +1,4 @@
-const { ACTIONS, checkPermission } = require('../../utils/permission')
+const { ACTIONS, checkPermission } = require('../../shared/utils/permission')
 
 module.exports = app => {
   app.get('/profiles', checkPermission('profiles', ACTIONS.LIST))

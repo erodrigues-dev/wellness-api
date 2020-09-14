@@ -1,5 +1,5 @@
-const { Package, sequelize, Sequelize } = require('../models')
-const { deleteFileFromUrl } = require('../utils/google-cloud-storage')
+const { Package, sequelize, Sequelize } = require('../database/models')
+const { deleteFileFromUrl } = require('../shared/utils/google-cloud-storage')
 
 const serialize = obj => ({
   ...obj,

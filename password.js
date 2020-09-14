@@ -1,4 +1,4 @@
-const util = require('./src/utils/hash-password')
+const util = require('shared/utils/hash-password')
 
 const [, , command, arg1, arg2] = process.argv
 

@@ -1,5 +1,5 @@
-const { Activity, Sequelize } = require('../models')
-const { deleteFileFromUrl } = require('../utils/google-cloud-storage')
+const { Activity, Sequelize } = require('../database/models')
+const { deleteFileFromUrl } = require('../shared/utils/google-cloud-storage')
 
 module.exports = {
   async index(req, res, next) {

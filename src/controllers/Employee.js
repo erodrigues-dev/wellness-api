@@ -1,6 +1,6 @@
-const { hash } = require('../utils/hash-password')
-const { Employee, Sequelize } = require('../models')
-const { deleteFileFromUrl } = require('../utils/google-cloud-storage')
+const { hash } = require('../shared/utils/hash-password')
+const { Employee, Sequelize } = require('../database/models')
+const { deleteFileFromUrl } = require('../shared/utils/google-cloud-storage')
 
 function buildQuery({ name, email, specialty }) {
   const where = {

@@ -1,17 +1,26 @@
-const ROLES = {
-  CUSTOMER: 'customer',
-  EMPLOYEE: 'employee'
+import { Request, Response, NextFunction } from 'express'
+import { IProfile } from '../../database/models/IProfile'
+
+export enum ACTIONS {
+  LIST = 1,
+  GET = 1,
+  CREATE = 2,
+  UPDATE = 4
 }
 
-const ACTIONS = {
-  LIST: 1,
-  GET: 1,
-  CREATE: 2,
-  UPDATE: 4
+interface AuthRequest extends Request {
+  user?: {
+    id: string
+    profile: IProfile
+  }
 }
 
-function checkPermission(functionality, action, permitYourself) {
-  return (req, res, next) => {
+export function checkPermission(
+  functionality: string,
+  action: ACTIONS,
+  permitYourself?: boolean
+) {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
     if (permitYourself) {
       const idParam = Number(req.params.id)
       const idUser = Number(req.user.id)
@@ -19,12 +28,6 @@ function checkPermission(functionality, action, permitYourself) {
         next()
         return
       }
-    }
-
-    const type = req.user.type.toLowerCase()
-
-    if (type === ROLES.CUSTOMER) {
-      return res.status(401).json({ message: 'permission denied' })
     }
 
     const { actions } = req.user.profile.functionalities.find(
@@ -38,10 +41,4 @@ function checkPermission(functionality, action, permitYourself) {
 
     next()
   }
-}
-
-module.exports = {
-  ROLES,
-  ACTIONS,
-  checkPermission
 }

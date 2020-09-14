@@ -1,4 +1,6 @@
-module.exports = {
+import { Options } from 'sequelize'
+
+export const DB_CONFIG: Options = {
   dialect: 'postgres',
   host: process.env.DB_HOST,
   username: process.env.DB_USERNAME,

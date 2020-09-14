@@ -1,5 +1,5 @@
 const { BaseError } = require('sequelize')
-const getErrorMessage = require('../utils/db-errors')
+const getErrorMessage = require('../shared/utils/db-errors')
 
 module.exports = app => {
   app.use((err, req, res, next) => {

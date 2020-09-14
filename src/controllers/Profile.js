@@ -1,4 +1,9 @@
-const { Profile, Functionality, sequelize, Sequelize } = require('../models')
+const {
+  Profile,
+  Functionality,
+  sequelize,
+  Sequelize
+} = require('../database/models')
 
 module.exports = {
   async index(req, res, next) {

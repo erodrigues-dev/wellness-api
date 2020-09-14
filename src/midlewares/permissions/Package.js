@@ -1,4 +1,4 @@
-const { ACTIONS, checkPermission } = require('../../utils/permission')
+const { ACTIONS, checkPermission } = require('../../shared/utils/permission')
 
 module.exports = app => {
   app.post('/packages', checkPermission('packages', ACTIONS.CREATE))
