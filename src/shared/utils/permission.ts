@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { IProfile } from '../../database/models/IProfile'
+import IProfile from '../models/IProfile'
 
 export enum ACTIONS {
   LIST = 1,
