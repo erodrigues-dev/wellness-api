@@ -1,10 +1,10 @@
 export default interface ICustomer {
-  id?: Number
+  id?: number
   name: string
   email: string
   password: string
   imageUrl: string
 
-  createdAt: Date
-  updatedAt: Date
+  createdAt?: Date
+  updatedAt?: Date
 }
