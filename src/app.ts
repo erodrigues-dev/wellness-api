@@ -4,8 +4,8 @@ import cors from 'cors'
 import 'dotenv/config'
 
 import { databaseConfig } from './shared/database/connection'
-import { jwtMidleware } from './midlewares/jwt'
-import sessionRouter from './routes/Session'
+import midlewares from './midlewares'
+import routes from './routes'
 
 databaseConfig()
 
@@ -15,15 +15,9 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('short'))
 
-// app midlewares
-app.use(jwtMidleware)
-//TODO
-//- permissions
-//- uploads
-//- validates
-//- controllers
-//- routes
-app.use(sessionRouter)
+app.use(midlewares)
+app.use(routes)
+
 //- db-error
 //- error-as-json
 

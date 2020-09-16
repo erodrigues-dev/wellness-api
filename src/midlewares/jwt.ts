@@ -1,7 +1,14 @@
 import expressJwt from 'express-jwt'
+import { Router } from 'express'
 
-export const jwtMidleware = expressJwt({
-  secret: process.env.JWT_SECRET
-}).unless({
-  path: ['/sessions']
-})
+const router = Router()
+
+router.use(
+  expressJwt({
+    secret: process.env.JWT_SECRET
+  }).unless({
+    path: ['/sessions']
+  })
+)
+
+export default router
