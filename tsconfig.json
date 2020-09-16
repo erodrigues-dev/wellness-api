@@ -5,9 +5,10 @@
     "allowJs": true,
     "outDir": "./dist",
     "strict": false,
-    "rootDirs": ["./src"],
+    "rootDirs": ["./"],
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true
   }
 }

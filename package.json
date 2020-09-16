@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "node ./src/server.js",
-    "dev": "nodemon --inspect ./src/server.js",
-    "dev:server": "ts-node-dev --respawn --transpile-only --clear src/server.ts",
+    "start": "node ./dist/src/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only --clear src/server.ts",
+    "dev:debug": "ts-node-dev --inspect=0.0.0.0:7001 --exit-child --respawn --transpile-only --clear src/server.ts",
     "build": "tsc",
-    "pwd": "node password"
+    "pwd": "node dist/password"
   },
   "keywords": [],
   "author": "",

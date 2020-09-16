@@ -1,9 +1,9 @@
-const util = require('shared/utils/hash-password')
+import { hash, compare } from './src/shared/utils/hash-password'
 
 const [, , command, arg1, arg2] = process.argv
 
 if (command === 'create' && arg1) {
-  util.hash(arg1).then(hash => {
+  hash(arg1).then(hash => {
     console.log(`
       >>> create:\n
       > pwd: ${arg1}
@@ -11,7 +11,7 @@ if (command === 'create' && arg1) {
     `)
   })
 } else if (command === 'compare' && arg1 && arg2) {
-  util.compare(arg1, arg2).then(match => {
+  compare(arg1, arg2).then(match => {
     console.log(`
       >>> compare:\n
       > pwd: ${arg1}
