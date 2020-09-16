@@ -1,4 +1,4 @@
-export interface IFunctionality {
+export default interface IFunctionality {
   id?: number
   name: string
   actions: number

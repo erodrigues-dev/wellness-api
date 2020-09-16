@@ -3,7 +3,7 @@ const {
   Functionality,
   sequelize,
   Sequelize
-} = require('../database/models')
+} = require('../shared/database/models')
 
 module.exports = {
   async index(req, res, next) {

@@ -1,9 +1,9 @@
-import express from 'express'
+import { Router } from 'express'
 
-import { create } from '../controllers/Session'
+import sessionController from '../controllers/Session'
 
-const router = express.Router()
+const router = Router()
 
-router.post('/sessions', create)
+router.post('/sessions', (req, res) => sessionController.login(req, res))
 
 export default router

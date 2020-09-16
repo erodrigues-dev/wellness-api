@@ -1,4 +1,4 @@
-const { Activity, Sequelize } = require('../database/models')
+const { Activity, Sequelize } = require('../shared/database/models')
 const { deleteFileFromUrl } = require('../shared/utils/google-cloud-storage')
 
 module.exports = {

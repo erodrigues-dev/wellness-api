@@ -1,7 +1,7 @@
-import { IEmployee } from './IEmployee'
-import { IPackage } from './IPackage'
+import IEmployee from './IEmployee'
+import IPackage from './IPackage'
 
-export interface IActivity {
+export default interface IActivity {
   id?: number
   name: string
   description: string

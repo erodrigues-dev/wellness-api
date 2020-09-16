@@ -1,4 +1,4 @@
-export interface IPackage {
+export default interface IPackage {
   id?: number
   name: string
   price: number

@@ -1,4 +1,4 @@
-export interface IPackageActivity {
+export default interface IPackageActivity {
   id?: number
   quantity: number
 

@@ -3,9 +3,8 @@ import morgan from 'morgan'
 import cors from 'cors'
 import 'dotenv/config'
 
-import { databaseConfig } from './database/db'
+import { databaseConfig } from './shared/database/connection'
 import { jwtMidleware } from './midlewares/jwt'
-import activityPermission from './midlewares/permissions/Activity'
 import sessionRouter from './routes/Session'
 
 databaseConfig()
@@ -18,7 +17,6 @@ app.use(morgan('short'))
 
 // app midlewares
 app.use(jwtMidleware)
-app.use(activityPermission)
 //TODO
 //- permissions
 //- uploads

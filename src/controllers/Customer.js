@@ -1,5 +1,5 @@
 const { hash } = require('../shared/utils/hash-password')
-const { Customer, Sequelize } = require('../database/models')
+const { Customer, Sequelize } = require('../shared/database/models')
 const { deleteFileFromUrl } = require('../shared/utils/google-cloud-storage')
 
 function buildQuery({ name, email }) {

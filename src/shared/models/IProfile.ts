@@ -1,7 +1,7 @@
-import { IEmployee } from './IEmployee'
-import { IFunctionality } from './IFunctionality'
+import IEmployee from './IEmployee'
+import IFunctionality from './IFunctionality'
 
-export interface IProfile {
+export default interface IProfile {
   id?: number
   name: string
   description: string

@@ -1,59 +1,24 @@
 import jwt from 'jsonwebtoken'
 import { Response, Request } from 'express'
 
-import * as hashPassword from '../shared/utils/hash-password'
-import { Employee } from '../database/models/Employee'
-import { IEmployee } from '../database/models/IEmployee'
-import { Profile } from '../database/models/Profile'
+import IUserService from '../shared/services/interfaces/IUserService'
+import userService from '../shared/services/UserService'
 
-export async function create(req: Request, res: Response) {
-  const { email, password } = req.body
-  const user: IEmployee = await Employee.findOne({
-    where: { email },
-    include: [
-      {
-        association: Employee.associations.profile,
-        include: [Profile.associations.functionalities]
-      }
-    ]
-  })
+export class SessionController {
+  constructor(private service: IUserService) {}
 
-  if (!user) {
-    return res.status(401).json()
+  async login(req: Request, res: Response) {
+    const { email, password } = req.body
+    const payload = await this.service.login(email, password)
+
+    if (!payload) return res.status(401).json()
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: '12h'
+    })
+
+    return res.json({ token })
   }
-
-  const match = await hashPassword.compare(password, user.password)
-
-  if (!match) {
-    return res.status(401).json()
-  }
-
-  const payload = {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    imageUrl: user.imageUrl,
-    profile: {},
-    type: 'employee'
-  }
-
-  if (user.profile) {
-    const { id, name, functionalities: list } = user.profile
-    const functionalities = list.map(item => ({
-      name: item.name,
-      actions: item.actions
-    }))
-
-    payload.profile = {
-      id,
-      name,
-      functionalities
-    }
-  }
-
-  const token = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: '12h'
-  })
-
-  return res.json({ token })
 }
+
+export default new SessionController(userService)

@@ -1,6 +1,6 @@
-import { IProfile } from './IProfile'
+import IProfile from './IProfile'
 
-export interface IEmployee {
+export default interface IEmployee {
   id?: number
   name: string
   email: string
