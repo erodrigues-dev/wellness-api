@@ -19,6 +19,7 @@ export class UserService implements IUserService {
       name: user.name,
       email: user.email,
       imageUrl: user.imageUrl,
+      type: 'employee',
       profile: {}
     };
 
