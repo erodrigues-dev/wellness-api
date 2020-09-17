@@ -1,6 +1,11 @@
-module.exports = app => {
-  app.get('/activities', app.controllers.Activity.index);
-  app.get('/activities/:id', app.controllers.Activity.get);
-  app.post('/activities', app.controllers.Activity.store);
-  app.put('/activities', app.controllers.Activity.update);
-};
+import { Router } from 'express';
+import controller from '../controllers/ActivityController';
+
+const router = Router();
+
+router.get('/activities', controller.index.bind(controller));
+router.get('/activities/:id', controller.get.bind(controller));
+router.post('/activities', controller.store.bind(controller));
+router.put('/activities', controller.update.bind(controller));
+
+export default router;

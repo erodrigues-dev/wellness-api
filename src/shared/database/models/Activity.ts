@@ -16,6 +16,8 @@ export default class Activity extends Model<IActivity> implements IActivity {
   duration: number;
   imageUrl: string;
 
+  employeeId: number;
+
   employee: IEmployee;
   packages: IPackage[];
 

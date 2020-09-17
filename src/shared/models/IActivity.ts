@@ -7,11 +7,12 @@ export default interface IActivity {
   description: string;
   price: number;
   duration: number;
-  imageUrl: string;
+  imageUrl?: string;
 
-  employee: IEmployee;
-  packages: IPackage[];
+  employeeId: number;
+  employee?: IEmployee;
+  packages?: IPackage[];
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

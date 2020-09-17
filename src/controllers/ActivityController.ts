@@ -1,0 +1,93 @@
+import { Response, NextFunction } from 'express';
+
+import IActivityService from '../shared/services/interfaces/IActivityService';
+import IActivityController, {
+  IGetRequest,
+  IIndexRequest,
+  IStoreRequest,
+  IUpdateRequest
+} from './interfaces/IActivityController';
+
+import activityService from '../shared/services/ActivityService';
+
+export class ActivityController implements IActivityController {
+  constructor(private service: IActivityService) {}
+
+  async index(
+    req: IIndexRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response> {
+    try {
+      const { name, employeeId, page, limit } = req.query;
+      const total = await this.service.count({ name, employeeId });
+      const list = await this.service.list({ name, employeeId }, page, limit);
+      return res.header('X-Total-Count', total.toString()).json(list);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async get(
+    req: IGetRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response> {
+    try {
+      const { id } = req.params;
+      const model = await this.service.get(id);
+      return res.json(model);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async store(
+    req: IStoreRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response> {
+    try {
+      const { name, description, price, duration, employeeId } = req.body;
+      const imageUrl = req.file?.url;
+      const model = await this.service.create({
+        name,
+        description,
+        price,
+        duration,
+        employeeId,
+        imageUrl
+      });
+      return res.json(model);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async update(
+    req: IUpdateRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response> {
+    try {
+      const { id, name, description, price, duration, employeeId } = req.body;
+      const imageUrl = req.file?.url;
+      const model = await this.service.update({
+        id,
+        name,
+        description,
+        price,
+        duration,
+        employeeId,
+        imageUrl
+      });
+      return res.json(model);
+    } catch (error) {
+      next(error);
+    }
+  }
+}
+
+const controller: IActivityController = new ActivityController(activityService);
+
+export default controller;
