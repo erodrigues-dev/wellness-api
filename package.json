@@ -6,7 +6,7 @@
     "start": "node ./dist/src/server.js",
     "dev": "ts-node-dev --inspect=0.0.0.0:7001 --exit-child --respawn --transpile-only --clear src/server.ts",
     "build": "tsc",
-    "pwd": "node dist/password"
+    "pwd": "ts-node ./password.ts"
   },
   "keywords": [],
   "author": "",
