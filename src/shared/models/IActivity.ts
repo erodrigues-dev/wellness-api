@@ -8,11 +8,11 @@ export default interface IActivity {
   price: number;
   duration: number;
   imageUrl?: string;
-
   employeeId: number;
+
   employee?: IEmployee;
   packages?: IPackage[];
-
+  quantity?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

@@ -15,11 +15,14 @@ export default class Activity extends Model<IActivity> implements IActivity {
   price: number;
   duration: number;
   imageUrl: string;
-
   employeeId: number;
 
-  employee: IEmployee;
-  packages: IPackage[];
+  employee?: IEmployee;
+  packages?: IPackage[];
+
+  //through of PackageActivity
+  quantity?: number;
+  PackageActivity?: PackageActivity;
 
   readonly createdAt: Date;
   readonly updatedAt: Date;

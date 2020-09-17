@@ -1,13 +1,17 @@
+import IActivity from './IActivity';
+
 export default interface IPackage {
   id?: number;
   name: string;
   price: number;
   description: string;
-  imageUrl: string;
-  expiration: Date;
+  imageUrl?: string;
+  expiration?: Date;
   showInApp: boolean;
   showInWeb: boolean;
 
-  createdAt: Date;
-  updatedAt: Date;
+  activities?: IActivity[];
+
+  createdAt?: Date;
+  updatedAt?: Date;
 }

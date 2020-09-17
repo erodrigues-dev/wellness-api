@@ -46,7 +46,7 @@ router.post(
       price: Joi.number().min(0.01).positive().required(),
       description: Joi.string().required(),
       expiration: Joi.date().min(getCurrentDate()).allow(null).default(null),
-      showInrouter: Joi.boolean().default(true),
+      showInApp: Joi.boolean().default(true),
       showInWeb: Joi.boolean().default(true),
       activities: Joi.array()
         .items({
@@ -68,7 +68,7 @@ router.put(
       price: Joi.number().min(0.01).positive().required(),
       description: Joi.string().required(),
       expiration: Joi.date().min(getCurrentDate()).allow(null).default(null),
-      showInrouter: Joi.boolean().default(true),
+      showInApp: Joi.boolean().default(true),
       showInWeb: Joi.boolean().default(true),
       activities: Joi.array()
         .items({

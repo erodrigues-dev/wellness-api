@@ -1,6 +1,13 @@
-import { Model, DataTypes, Association, Sequelize } from 'sequelize';
+import {
+  Model,
+  DataTypes,
+  Association,
+  Sequelize,
+  HasManyAddAssociationMixin,
+  BelongsToManyAddAssociationMixin,
+  BelongsToManySetAssociationsMixin
+} from 'sequelize';
 
-import connection from '../connection';
 import Activity from './Activity';
 import PackageActivity from './PackageActivity';
 
@@ -11,13 +18,18 @@ export default class Package extends Model<IPackage> implements IPackage {
   name: string;
   price: number;
   description: string;
-  imageUrl: string;
-  expiration: Date;
+  imageUrl?: string;
+  expiration?: Date;
   showInApp: boolean;
   showInWeb: boolean;
 
+  activities?: Activity[];
+
   readonly createdAt: Date;
   readonly updatedAt: Date;
+
+  addActivity: BelongsToManyAddAssociationMixin<Package, number>;
+  setActivities: BelongsToManySetAssociationsMixin<Package, number>;
 
   static associations: {
     activities: Association<Package, Activity>;
