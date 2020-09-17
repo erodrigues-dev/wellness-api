@@ -43,7 +43,7 @@ export default interface ICustomerController {
     next: NextFunction
   ): Promise<Response>
 
-  index(req: IGetRequest, res: Response, next: NextFunction): Promise<Response>
+  get(req: IGetRequest, res: Response, next: NextFunction): Promise<Response>
 
   store(
     req: IStoreRequest,
