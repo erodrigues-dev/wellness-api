@@ -73,4 +73,8 @@ export class CustomerController implements ICustomerController {
   }
 }
 
-export default new CustomerController(customerService)
+const customerController: ICustomerController = new CustomerController(
+  customerService
+)
+
+export default customerController
