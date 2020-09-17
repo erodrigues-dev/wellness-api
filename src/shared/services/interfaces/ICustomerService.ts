@@ -1,8 +1,8 @@
-import ICustomer from '../../models/ICustomer'
+import ICustomer from '../../models/ICustomer';
 
 export interface ICustomerFilter {
-  name?: string
-  email?: string
+  name?: string;
+  email?: string;
 }
 
 export default interface ICustomerService {
@@ -10,9 +10,9 @@ export default interface ICustomerService {
     filter: ICustomerFilter,
     page: number,
     limit: number
-  ): Promise<ICustomer[]>
-  count(filter: ICustomerFilter): Promise<number>
-  get(id: number): Promise<ICustomer>
-  create(data: ICustomer): Promise<ICustomer>
-  update(data: ICustomer): Promise<ICustomer>
+  ): Promise<ICustomer[]>;
+  count(filter: ICustomerFilter): Promise<number>;
+  get(id: number): Promise<ICustomer>;
+  create(data: ICustomer): Promise<ICustomer>;
+  update(data: ICustomer): Promise<ICustomer>;
 }

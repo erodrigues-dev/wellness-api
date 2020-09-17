@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -10,10 +10,10 @@ module.exports = {
       },
       onUpdate: 'cascade',
       onDelete: 'cascade'
-    })
+    });
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.removeColumn('employees', 'profile_id')
+    return queryInterface.removeColumn('employees', 'profile_id');
   }
-}
+};

@@ -1,15 +1,15 @@
-import IProfile from './IProfile'
+import IProfile from './IProfile';
 
 export default interface IEmployee {
-  id?: number
-  name: string
-  email: string
-  password: string
-  specialty: string
-  imageUrl: string
+  id?: number;
+  name: string;
+  email: string;
+  password: string;
+  specialty: string;
+  imageUrl: string;
 
-  profile: IProfile
+  profile: IProfile;
 
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date;
+  updatedAt: Date;
 }

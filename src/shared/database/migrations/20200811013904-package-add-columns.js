@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -12,7 +12,7 @@ module.exports = {
       queryInterface.addColumn('packages', 'expiration', {
         type: Sequelize.DATE
       })
-    ])
+    ]);
   },
 
   down: (queryInterface, Sequelize) => {
@@ -20,6 +20,6 @@ module.exports = {
       queryInterface.removeColumn('packages', 'show_in_app'),
       queryInterface.removeColumn('packages', 'show_in_web'),
       queryInterface.removeColumn('packages', 'expiration')
-    ])
+    ]);
   }
-}
+};

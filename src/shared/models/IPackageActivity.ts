@@ -1,7 +1,7 @@
 export default interface IPackageActivity {
-  id?: number
-  quantity: number
+  id?: number;
+  quantity: number;
 
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date;
+  updatedAt: Date;
 }

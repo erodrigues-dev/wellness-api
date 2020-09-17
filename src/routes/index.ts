@@ -1,9 +1,9 @@
-import { Router } from 'express'
+import { Router } from 'express';
 
-import session from './Session'
-import customer from './Customer'
+import session from './Session';
+import customer from './Customer';
 
-const router = Router()
+const router = Router();
 
 //TODO
 //- permissions
@@ -12,7 +12,7 @@ const router = Router()
 //- controllers
 //- routes
 
-router.use(session)
-router.use(customer)
+router.use(session);
+router.use(customer);
 
-export default router
+export default router;

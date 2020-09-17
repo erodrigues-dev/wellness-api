@@ -1,12 +1,12 @@
-import { Router } from 'express'
+import { Router } from 'express';
 
-import controller from '../controllers/Customer'
+import controller from '../controllers/Customer';
 
-const router = Router()
+const router = Router();
 
-router.get('/customers', controller.index.bind(controller))
-router.get('/customers/:id', controller.get.bind(controller))
-router.post('/customers', controller.store.bind(controller))
-router.put('/customers', controller.update.bind(controller))
+router.get('/customers', controller.index.bind(controller));
+router.get('/customers/:id', controller.get.bind(controller));
+router.post('/customers', controller.store.bind(controller));
+router.put('/customers', controller.update.bind(controller));
 
-export default router
+export default router;

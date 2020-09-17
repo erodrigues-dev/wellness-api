@@ -1,13 +1,13 @@
 export default interface IPackage {
-  id?: number
-  name: string
-  price: number
-  description: string
-  imageUrl: string
-  expiration: Date
-  showInApp: boolean
-  showInWeb: boolean
+  id?: number;
+  name: string;
+  price: number;
+  description: string;
+  imageUrl: string;
+  expiration: Date;
+  showInApp: boolean;
+  showInWeb: boolean;
 
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date;
+  updatedAt: Date;
 }

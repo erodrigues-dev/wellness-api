@@ -1,39 +1,39 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response, NextFunction } from 'express';
 
-import IFile from '../../shared/utils/interfaces/IFile'
+import IFile from '../../shared/utils/interfaces/IFile';
 
 export interface IIndexRequest extends Request<any, any, any, any> {
   query: {
-    name?: string
-    email?: string
-    page?: number
-    limit?: number
-  }
+    name?: string;
+    email?: string;
+    page?: number;
+    limit?: number;
+  };
 }
 
 export interface IGetRequest extends Request<any, any, any, any> {
   params: {
-    id: number
-  }
+    id: number;
+  };
 }
 
 export interface IStoreRequest extends Request<any, any, any, any> {
-  file?: IFile
+  file?: IFile;
   body: {
-    name: string
-    email: string
-    password: string
-  }
+    name: string;
+    email: string;
+    password: string;
+  };
 }
 
 export interface IUpdateRequest extends Request<any, any, any, any> {
-  file?: IFile
+  file?: IFile;
   body: {
-    id: number
-    name: string
-    email: string
-    password: string
-  }
+    id: number;
+    name: string;
+    email: string;
+    password: string;
+  };
 }
 
 export default interface ICustomerController {
@@ -41,19 +41,19 @@ export default interface ICustomerController {
     req: IIndexRequest,
     res: Response,
     next: NextFunction
-  ): Promise<Response>
+  ): Promise<Response>;
 
-  get(req: IGetRequest, res: Response, next: NextFunction): Promise<Response>
+  get(req: IGetRequest, res: Response, next: NextFunction): Promise<Response>;
 
   store(
     req: IStoreRequest,
     res: Response,
     next: NextFunction
-  ): Promise<Response>
+  ): Promise<Response>;
 
   update(
     req: IUpdateRequest,
     res: Response,
     next: NextFunction
-  ): Promise<Response>
+  ): Promise<Response>;
 }

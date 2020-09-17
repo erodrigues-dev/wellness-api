@@ -1,7 +1,7 @@
-import { Router } from 'express'
-import { celebrate, Joi, Segments } from 'celebrate'
+import { Router } from 'express';
+import { celebrate, Joi, Segments } from 'celebrate';
 
-const router = Router()
+const router = Router();
 
 router.get(
   '/customers',
@@ -13,7 +13,7 @@ router.get(
       limit: Joi.number()
     })
   })
-)
+);
 
 router.get(
   '/customers/:id',
@@ -22,7 +22,7 @@ router.get(
       id: Joi.number().required()
     })
   })
-)
+);
 
 router.post(
   '/customers',
@@ -33,7 +33,7 @@ router.post(
       password: Joi.string().required().min(8).max(20)
     })
   })
-)
+);
 
 router.put(
   '/customers',
@@ -45,6 +45,6 @@ router.put(
       password: Joi.string().min(8).max(20).optional().allow('')
     })
   })
-)
+);
 
-export default router
+export default router;

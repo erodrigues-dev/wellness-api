@@ -1,14 +1,14 @@
-import IEmployee from './IEmployee'
-import IFunctionality from './IFunctionality'
+import IEmployee from './IEmployee';
+import IFunctionality from './IFunctionality';
 
 export default interface IProfile {
-  id?: number
-  name: string
-  description: string
+  id?: number;
+  name: string;
+  description: string;
 
-  functionalities: IFunctionality[]
-  employees: IEmployee[]
+  functionalities: IFunctionality[];
+  employees: IEmployee[];
 
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date;
+  updatedAt: Date;
 }

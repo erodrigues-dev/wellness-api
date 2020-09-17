@@ -1,4 +1,4 @@
-import { Options } from 'sequelize'
+import { Options } from 'sequelize';
 
 export const DB_CONFIG: Options = {
   dialect: 'postgres',
@@ -10,4 +10,4 @@ export const DB_CONFIG: Options = {
     timestamps: true,
     underscored: true
   }
-}
+};

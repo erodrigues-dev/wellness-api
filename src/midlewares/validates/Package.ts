@@ -1,20 +1,20 @@
-import { celebrate, Joi, Segments } from 'celebrate'
-import { Router, Request, Response, NextFunction } from 'express'
+import { celebrate, Joi, Segments } from 'celebrate';
+import { Router, Request, Response, NextFunction } from 'express';
 
-const router = Router()
+const router = Router();
 
 const parseActivities = (req: Request, res: Response, next: NextFunction) => {
   req.body.activities = (req.body.activities || []).map(json =>
     JSON.parse(json)
-  )
-  next()
-}
+  );
+  next();
+};
 
 const getCurrentDate = () => {
-  const date = new Date()
+  const date = new Date();
 
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate())
-}
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+};
 
 router.get(
   '/packages',
@@ -26,7 +26,7 @@ router.get(
       limit: Joi.number().min(1).optional()
     })
   })
-)
+);
 
 router.get(
   '/packages/:id',
@@ -35,7 +35,7 @@ router.get(
       id: Joi.number().required()
     })
   })
-)
+);
 
 router.post(
   '/packages',
@@ -56,7 +56,7 @@ router.post(
         .required()
     })
   })
-)
+);
 
 router.put(
   '/packages',
@@ -78,7 +78,7 @@ router.put(
         .required()
     })
   })
-)
+);
 
 router.delete(
   '/packages/:id',
@@ -87,6 +87,6 @@ router.delete(
       id: Joi.number().required()
     })
   })
-)
+);
 
-export default router
+export default router;

@@ -1,7 +1,7 @@
-import expressJwt from 'express-jwt'
-import { Router } from 'express'
+import expressJwt from 'express-jwt';
+import { Router } from 'express';
 
-const router = Router()
+const router = Router();
 
 router.use(
   expressJwt({
@@ -9,6 +9,6 @@ router.use(
   }).unless({
     path: ['/sessions']
   })
-)
+);
 
-export default router
+export default router;
