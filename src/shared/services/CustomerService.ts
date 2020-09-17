@@ -57,7 +57,7 @@ export class CustomerService implements ICustomerService {
 
     if (customer.email !== data.email) {
       const emailExist = await this.checkEmail(data.id, data.email);
-      if (emailExist) throw new CustomError('email in use', 404);
+      if (emailExist) throw new CustomError('Email in use', 400);
     }
 
     customer.name = data.name;

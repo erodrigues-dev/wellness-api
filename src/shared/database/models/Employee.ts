@@ -11,9 +11,10 @@ export default class Employee extends Model<IEmployee> implements IEmployee {
   email: string;
   password: string;
   specialty: string;
-  imageUrl: string;
+  imageUrl?: string;
 
-  profile: IProfile;
+  profileId: number;
+  profile?: IProfile;
 
   readonly createdAt: Date;
   readonly updatedAt: Date;

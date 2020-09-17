@@ -6,10 +6,11 @@ export default interface IEmployee {
   email: string;
   password: string;
   specialty: string;
-  imageUrl: string;
+  imageUrl?: string;
 
-  profile: IProfile;
+  profileId: number;
+  profile?: IProfile;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
