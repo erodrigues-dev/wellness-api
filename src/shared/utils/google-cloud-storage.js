@@ -11,6 +11,7 @@ function deleteFileFromUrl(url) {
 }
 
 function deleteFile(filename) {
+  console.log(`deleting file ${filename}`);
   return bucket.file(filename).delete();
 }
 

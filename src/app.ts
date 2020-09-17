@@ -6,6 +6,7 @@ import 'dotenv/config';
 import { databaseConfig } from './shared/database/connection';
 import midlewares from './midlewares';
 import routes from './routes';
+import useErrorHandlers from './midlewares/error-handlers';
 
 databaseConfig();
 
@@ -19,7 +20,6 @@ app.use(morgan('short'));
 app.use(midlewares);
 app.use(routes);
 
-//- db-error
-//- error-as-json
+useErrorHandlers(app);
 
 export default app;
