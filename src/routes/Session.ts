@@ -1,9 +1,9 @@
-import { Router } from 'express'
+import { Router } from 'express';
 
-import sessionController from '../controllers/Session'
+import controller from '../controllers/Session';
 
-const router = Router()
+const router = Router();
 
-router.post('/sessions', (req, res) => sessionController.login(req, res))
+router.post('/sessions', controller.login.bind(controller));
 
-export default router
+export default router;
