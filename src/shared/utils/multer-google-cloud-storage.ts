@@ -1,14 +1,10 @@
-import { Request, Express } from 'express';
+import { Request } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 
+import { ICloudFile } from './interfaces/ICloudFile';
 import { createFileFromStream, deleteFile } from './google-cloud-storage';
 
-type Callback = (err?: any, info?: Partial<CloudFile>) => void;
-
-interface CloudFile extends Express.Multer.File {
-  url: string;
-  filename: string;
-}
+type Callback = (err?: any, info?: Partial<ICloudFile>) => void;
 
 function handleFile(req: Request, file: Express.Multer.File, cb: Callback) {
   createFileFromStream(file.stream, file.originalname)
@@ -16,7 +12,7 @@ function handleFile(req: Request, file: Express.Multer.File, cb: Callback) {
     .catch(cb);
 }
 
-function removeFile(req: Request, file: CloudFile, cb: Callback) {
+function removeFile(req: Request, file: ICloudFile, cb: Callback) {
   deleteFile(file.filename)
     .then(() => cb(null))
     .catch(cb);

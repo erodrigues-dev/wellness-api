@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-
-import IFile from '../../shared/utils/interfaces/IFile';
+import { ICloudFile } from '../../shared/utils/interfaces/ICloudFile';
 
 export interface IIndexRequest extends Request<any, any, any, any> {
   query: {
@@ -18,7 +17,7 @@ export interface IGetRequest extends Request<any, any, any, any> {
 }
 
 export interface IStoreRequest extends Request<any, any, any, any> {
-  file?: IFile;
+  file: ICloudFile;
   body: {
     name: string;
     description: string;
@@ -29,7 +28,7 @@ export interface IStoreRequest extends Request<any, any, any, any> {
 }
 
 export interface IUpdateRequest extends Request<any, any, any, any> {
-  file?: IFile;
+  file: ICloudFile;
   body: {
     id: number;
     name: string;

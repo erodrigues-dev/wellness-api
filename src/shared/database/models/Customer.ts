@@ -3,7 +3,7 @@ import { Sequelize, Model, DataTypes } from 'sequelize';
 import ICustomer from '../../models/ICustomer';
 
 export default class Customer extends Model<ICustomer> implements ICustomer {
-  id?: Number;
+  id?: number;
   name: string;
   email: string;
   password: string;
