@@ -10,6 +10,8 @@ export default class Functionality
   name: string;
   actions: number;
 
+  profileId: number;
+
   readonly createdAt: Date;
   readonly updatedAt: Date;
 

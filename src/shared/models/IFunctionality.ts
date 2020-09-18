@@ -3,6 +3,8 @@ export default interface IFunctionality {
   name: string;
   actions: number;
 
-  createdAt: Date;
-  updatedAt: Date;
+  profileId: number;
+
+  createdAt?: Date;
+  updatedAt?: Date;
 }
