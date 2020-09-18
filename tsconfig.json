@@ -3,12 +3,13 @@
     "target": "es6",
     "module": "commonjs",
     "allowJs": true,
-    "outDir": "./dist",
     "strict": false,
-    "rootDirs": ["./"],
-    "esModuleInterop": true,
     "skipLibCheck": true,
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "rootDirs": ["src"],
     "forceConsistentCasingInFileNames": true
   },
+  "include": ["src"],
   "exclude": ["src/shared/database/migrations"]
 }
