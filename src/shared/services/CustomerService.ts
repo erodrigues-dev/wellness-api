@@ -68,7 +68,8 @@ export class CustomerService implements ICustomerService {
 
     if (data.imageUrl) {
       // delete old image
-      if (customer.imageUrl) await deleteFileFromUrl(customer.imageUrl);
+      if (customer.imageUrl)
+        await deleteFileFromUrl(customer.imageUrl).catch(() => {});
 
       customer.imageUrl = data.imageUrl;
     }
