@@ -8,7 +8,7 @@
     "build": "rm -rf dist/* && tsc",
     "pwd": "ts-node ./password.ts",
     "build:migrations": "tsc src/shared/database/migrations/*.ts",
-    "migrate:create": "sequelize migration:create --name",
+    "migration:create": "sequelize migration:create --name",
     "db:migrate": "sequelize db:migrate",
     "db:migrate:undo": "sequelize db:migrate:undo"
   },
