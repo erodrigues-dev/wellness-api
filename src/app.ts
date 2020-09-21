@@ -1,12 +1,12 @@
+import expressJwt from 'express-jwt';
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import 'dotenv/config';
 
 import { databaseConfig } from './shared/database/connection';
-import midlewares from './midlewares';
-import routes from './routes';
-import useErrorHandlers from './midlewares/error-handlers';
+import useErrorHandlers from './shared/error-handlers';
+import useAdminModule from './admin/admin-module';
 
 databaseConfig();
 
@@ -17,8 +17,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('short'));
 
-app.use(midlewares);
-app.use(routes);
+app.use(
+  expressJwt({
+    secret: process.env.JWT_SECRET
+  }).unless({
+    path: ['/admin/sessions']
+  })
+);
+
+useAdminModule(app);
+//useSiteModule(app)
+//useAppEmployeeModule(app)
+//useAppCustomerModule(app)
 
 useErrorHandlers(app);
 
