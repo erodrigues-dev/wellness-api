@@ -2,7 +2,12 @@ import { QueryInterface, DataTypes, fn } from 'sequelize/types';
 
 export function up(queryInterface: QueryInterface) {
   return queryInterface.createTable('activity_schedule', {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, allowNull: false },
+    id: {
+      primaryKey: true,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      allowNull: false
+    },
     activity_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

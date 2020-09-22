@@ -39,7 +39,8 @@ export default class Activity extends Model<IActivity> implements IActivity {
         description: DataTypes.STRING,
         price: DataTypes.DECIMAL,
         duration: DataTypes.INTEGER,
-        imageUrl: DataTypes.STRING
+        imageUrl: DataTypes.STRING,
+        employeeId: DataTypes.NUMBER
       },
       { sequelize: connection, tableName: 'activities' }
     );
