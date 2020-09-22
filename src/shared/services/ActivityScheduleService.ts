@@ -71,11 +71,11 @@ export class ActivityScheduleService implements IActivityScheduleService {
           date: { [Op.gte]: start }
         },
         {
-          recurrentEndsIn: [EndsInEnum.NEVER, EndsInEnum.AFTER]
+          endsIn: [EndsInEnum.NEVER, EndsInEnum.AFTER]
         },
         {
-          recurrentEndsIn: EndsInEnum.IN,
-          recurrentUntil: { [Op.lte]: end }
+          endsIn: EndsInEnum.IN,
+          until: { [Op.lte]: end }
         }
       ]
     };

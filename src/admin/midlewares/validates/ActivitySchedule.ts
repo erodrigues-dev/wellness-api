@@ -36,31 +36,31 @@ router.post(
         .pattern(timePattern)
         .message(timeInvalidMessage('end')),
       recurrent: Joi.boolean().optional().default(false),
-      recurrentRepeatEvery: Joi.number().integer().when('recurrent', {
+      repeatEvery: Joi.number().integer().when('recurrent', {
         is: true,
         then: Joi.required()
       }),
-      recurrentFrequency: Joi.string()
+      frequency: Joi.string()
         .valid(...Object.values(FrequencyEnum))
         .when('recurrent', {
           is: true,
           then: Joi.required()
         }),
-      recurrentWeekdays: Joi.string().when('recurrentFrequency', {
+      weekdays: Joi.string().when('frequency', {
         is: FrequencyEnum.WEEKLY,
         then: Joi.required()
       }),
-      recurrentEndsIn: Joi.string()
+      endsIn: Joi.string()
         .valid(...Object.values(EndsInEnum))
         .when('recurrent', {
           is: true,
           then: Joi.required()
         }),
-      recurrentUntil: Joi.date().when('recurrentEndsIn', {
+      until: Joi.date().when('endsIn', {
         is: EndsInEnum.IN,
         then: Joi.required()
       }),
-      recurrentOcurrences: Joi.number().integer().when('recurrentEndsIn', {
+      ocurrences: Joi.number().integer().when('endsIn', {
         is: EndsInEnum.AFTER,
         then: Joi.required()
       })
@@ -86,31 +86,31 @@ router.put(
         .pattern(timePattern)
         .message(timeInvalidMessage('end')),
       recurrent: Joi.boolean().optional().default(false),
-      recurrentRepeatEvery: Joi.number().integer().when('recurrent', {
+      repeatEvery: Joi.number().integer().when('recurrent', {
         is: true,
         then: Joi.required()
       }),
-      recurrentFrequency: Joi.string()
+      frequency: Joi.string()
         .valid(...Object.values(FrequencyEnum))
         .when('recurrent', {
           is: true,
           then: Joi.required()
         }),
-      recurrentWeekdays: Joi.string().when('recurrentFrequency', {
+      weekdays: Joi.string().when('frequency', {
         is: FrequencyEnum.WEEKLY,
         then: Joi.required()
       }),
-      recurrentEndsIn: Joi.string()
+      endsIn: Joi.string()
         .valid(...Object.values(EndsInEnum))
         .when('recurrent', {
           is: true,
           then: Joi.required()
         }),
-      recurrentUntil: Joi.date().when('recurrentEndsIn', {
+      until: Joi.date().when('endsIn', {
         is: EndsInEnum.IN,
         then: Joi.required()
       }),
-      recurrentOcurrences: Joi.number().integer().when('recurrentEndsIn', {
+      ocurrences: Joi.number().integer().when('endsIn', {
         is: EndsInEnum.AFTER,
         then: Joi.required()
       })
