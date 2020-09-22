@@ -17,12 +17,12 @@ export default class ActivitySchedule
   end: string;
 
   recurrent: boolean;
-  recurrentRepeatEvery?: number;
-  recurrentFrequency?: FrequencyEnum;
-  recurrentWeekdays?: string;
-  recurrentEndsIn?: EndsInEnum;
-  recurrentUntil?: Date;
-  recurrentOcurrences?: number;
+  repeatEvery?: number;
+  frequency?: FrequencyEnum;
+  weekdays?: string;
+  endsIn?: EndsInEnum;
+  until?: Date;
+  ocurrences?: number;
 
   activity?: Activity;
 
@@ -42,12 +42,12 @@ export default class ActivitySchedule
         start: DataTypes.TIME,
         end: DataTypes.TIME,
         recurrent: DataTypes.BOOLEAN,
-        recurrentRepeatEvery: DataTypes.INTEGER,
-        recurrentFrequency: DataTypes.STRING,
-        recurrentWeekdays: DataTypes.STRING,
-        recurrentEndsIn: DataTypes.STRING,
-        recurrentUntil: DataTypes.DATEONLY,
-        recurrentOcurrences: DataTypes.INTEGER
+        repeatEvery: DataTypes.INTEGER,
+        frequency: DataTypes.STRING,
+        weekdays: DataTypes.STRING,
+        endsIn: DataTypes.STRING,
+        until: DataTypes.DATEONLY,
+        ocurrences: DataTypes.INTEGER
       },
       { sequelize: connection, tableName: 'activities_schedules' }
     );

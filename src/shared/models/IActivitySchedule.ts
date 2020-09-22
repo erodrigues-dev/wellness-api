@@ -10,12 +10,12 @@ export default interface IActivitySchedule {
   end: string;
 
   recurrent: boolean;
-  recurrentRepeatEvery?: number;
-  recurrentFrequency?: FrequencyEnum;
-  recurrentWeekdays?: string;
-  recurrentEndsIn?: EndsInEnum;
-  recurrentUntil?: Date;
-  recurrentOcurrences?: number;
+  repeatEvery?: number;
+  frequency?: FrequencyEnum;
+  weekdays?: string;
+  endsIn?: EndsInEnum;
+  until?: Date;
+  ocurrences?: number;
 
   createdAt?: Date;
   updatedAt?: Date;

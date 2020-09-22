@@ -22,12 +22,12 @@ export function up(queryInterface: QueryInterface) {
     end: { type: DataTypes.TIME, allowNull: false },
 
     recurrent: DataTypes.BOOLEAN,
-    recurrent_repeat_every: DataTypes.INTEGER,
-    recurrent_frequency: DataTypes.STRING(12),
-    recurrent_weekdays: DataTypes.STRING(30),
-    recurrent_ends_in: DataTypes.STRING(12),
-    recurrent_until: DataTypes.DATEONLY,
-    recurrent_ocurrences: DataTypes.INTEGER,
+    repeat_every: DataTypes.INTEGER,
+    frequency: DataTypes.STRING(12),
+    weekdays: DataTypes.STRING(30),
+    ends_in: DataTypes.STRING(12),
+    until: DataTypes.DATEONLY,
+    ocurrences: DataTypes.INTEGER,
 
     created_at: {
       type: DataTypes.DATE,

@@ -45,12 +45,12 @@ export class ActivityScheduleService implements IActivityScheduleService {
     model.start = data.start;
     model.end = data.end;
     model.recurrent = data.recurrent ?? false;
-    model.recurrentRepeatEvery = data.recurrentRepeatEvery || null;
-    model.recurrentFrequency = data.recurrentFrequency || null;
-    model.recurrentWeekdays = data.recurrentWeekdays || null;
-    model.recurrentEndsIn = data.recurrentEndsIn || null;
-    model.recurrentUntil = data.recurrentUntil || null;
-    model.recurrentOcurrences = data.recurrentOcurrences || null;
+    model.repeatEvery = data.repeatEvery || null;
+    model.frequency = data.frequency || null;
+    model.weekdays = data.weekdays || null;
+    model.endsIn = data.endsIn || null;
+    model.until = data.until || null;
+    model.ocurrences = data.ocurrences || null;
 
     await model.save();
   }
@@ -86,12 +86,12 @@ export class ActivityScheduleService implements IActivityScheduleService {
   }
 
   private filterWithRRule(start: Date, end: Date, item: IActivitySchedule) {
-    if (item.recurrentEndsIn === EndsInEnum.AFTER) {
+    if (item.endsIn === EndsInEnum.AFTER) {
       const rrule = new RRule({
         dtstart: new Date(item.date),
-        interval: item.recurrentRepeatEvery,
-        freq: convertToRRuleFrequency(item.recurrentFrequency),
-        count: item.recurrentOcurrences
+        interval: item.repeatEvery,
+        freq: convertToRRuleFrequency(item.frequency),
+        count: item.ocurrences
       });
       return rrule.between(start, end, true).length;
     }
