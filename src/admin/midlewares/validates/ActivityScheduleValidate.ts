@@ -1,8 +1,8 @@
 import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
 
-import { EndsInEnum } from './../../../shared/models/enums/EndsInEnum';
-import { FrequencyEnum } from './../../../shared/models/enums/FrequencyEnum';
+import { EndsInEnum } from '../../../shared/models/enums/EndsInEnum';
+import { FrequencyEnum } from '../../../shared/models/enums/FrequencyEnum';
 
 const router = Router();
 const routeName = '/activities-schedules';

@@ -1,13 +1,13 @@
 import { errors } from 'celebrate';
 import { Router } from 'express';
 
-import sessionValidate from './Session';
-import activityValidate from './Activity';
-import activityScheduleValidate from './ActivitySchedule';
-import customerValidate from './Customer';
-import employeeValidate from './Employee';
-import packageValidate from './Package';
-import profileValidate from './Profile';
+import sessionValidate from './SessionValidate';
+import activityValidate from './ActivityValidate';
+import activityScheduleValidate from './ActivityScheduleValidate';
+import customerValidate from './CustomerValidate';
+import employeeValidate from './EmployeeValidate';
+import packageValidate from './PackageValidate';
+import profileValidate from './ProfileValidate';
 
 const router = Router();
 
