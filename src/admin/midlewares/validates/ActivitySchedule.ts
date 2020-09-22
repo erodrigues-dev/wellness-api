@@ -1,12 +1,16 @@
-import { EndsInEnum } from './../../../shared/models/enums/EndsInEnum';
-import { FrequencyEnum } from './../../../shared/models/enums/FrequencyEnum';
 import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
+
+import { EndsInEnum } from './../../../shared/models/enums/EndsInEnum';
+import { FrequencyEnum } from './../../../shared/models/enums/FrequencyEnum';
 
 const router = Router();
 const routeName = '/activities-schedules';
 const timePattern = /\d{1,2}:\d{2}(:\d{2})?/;
 const timeInvalidMessage = (field: string) => `"${field}" time is invalid`;
+
+const colorPattern = /^#[\d|a-f]{6}$/i;
+const colorErrorMessage = '"color" is invalid';
 
 router.get(
   routeName,
@@ -25,7 +29,11 @@ router.post(
     [Segments.BODY]: Joi.object().keys({
       activityId: Joi.number().integer().required(),
       title: Joi.string().max(120).required(),
-      color: Joi.string().max(7).required(),
+      color: Joi.string()
+        .max(7)
+        .required()
+        .pattern(colorPattern)
+        .message(colorErrorMessage),
       date: Joi.date().required(),
       start: Joi.string()
         .required()
@@ -75,7 +83,11 @@ router.put(
       id: Joi.number().integer().required(),
       activityId: Joi.number().integer().required(),
       title: Joi.string().max(120).required(),
-      color: Joi.string().max(7).required(),
+      color: Joi.string()
+        .max(7)
+        .required()
+        .pattern(colorPattern)
+        .message(colorErrorMessage),
       date: Joi.date().required(),
       start: Joi.string()
         .required()
