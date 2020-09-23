@@ -14,7 +14,7 @@ export class ActivityScheduleService implements IActivityScheduleService {
   async list(
     start: Date,
     end: Date,
-    activityId?: number
+    activityId: number
   ): Promise<IActivitySchedule[]> {
     const where = this.buildQuery(start, end, activityId);
     const rows: ActivitySchedule[] = await this.db.findAll({

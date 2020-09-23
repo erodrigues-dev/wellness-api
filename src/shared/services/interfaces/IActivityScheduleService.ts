@@ -4,7 +4,7 @@ export default interface IActivityScheduleService {
   list(
     start: Date,
     end: Date,
-    activityId?: number
+    activityId: number
   ): Promise<IActivitySchedule[]>;
   create(data: IActivitySchedule): Promise<number>;
   update(data: IActivitySchedule): Promise<void>;
