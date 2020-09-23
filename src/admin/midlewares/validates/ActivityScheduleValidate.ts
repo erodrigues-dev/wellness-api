@@ -5,7 +5,7 @@ import { EndsInEnum } from '../../../shared/models/enums/EndsInEnum';
 import { FrequencyEnum } from '../../../shared/models/enums/FrequencyEnum';
 
 const router = Router();
-const routeName = '/activities-schedules';
+const routeName = '/activities/schedules';
 const timePattern = /\d{1,2}:\d{2}(:\d{2})?/;
 const timeInvalidMessage = (field: string) => `"${field}" time is invalid`;
 
@@ -13,12 +13,14 @@ const colorPattern = /^#[\d|a-f]{6}$/i;
 const colorErrorMessage = '"color" is invalid';
 
 router.get(
-  routeName,
+  '/activities/:id/schedules',
   celebrate({
+    [Segments.PARAMS]: Joi.object({
+      id: Joi.number().integer()
+    }),
     [Segments.QUERY]: Joi.object().keys({
       start: Joi.date().required(),
-      end: Joi.date().required(),
-      activityId: Joi.number().integer()
+      end: Joi.date().required()
     })
   })
 );

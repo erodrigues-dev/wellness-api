@@ -15,7 +15,8 @@ export class ActivityScheduleController implements IActivityScheduleController {
 
   async index(req: IIndexRequest, res: Response, next: NextFunction) {
     try {
-      const { start, end, activityId } = req.query;
+      const { id: activityId } = req.params;
+      const { start, end } = req.query;
       const rows = await this.service.list(
         new Date(start),
         new Date(end),

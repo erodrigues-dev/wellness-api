@@ -4,10 +4,13 @@ import { EndsInEnum } from '../../../shared/models/enums/EndsInEnum';
 import { FrequencyEnum } from '../../../shared/models/enums/FrequencyEnum';
 
 export interface IIndexRequest extends Request<any, any, any, any> {
+  params: {
+    id: number;
+  };
+
   query: {
     start: string;
     end: string;
-    activityId?: number;
   };
 }
 
