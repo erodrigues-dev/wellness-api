@@ -1,4 +1,4 @@
-import { QueryInterface, DataTypes, fn } from 'sequelize/types';
+import { QueryInterface, DataTypes, fn } from 'sequelize';
 
 export function up(queryInterface: QueryInterface) {
   return queryInterface.createTable('activity_schedule', {
