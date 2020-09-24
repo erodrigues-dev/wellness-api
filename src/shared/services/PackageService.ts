@@ -58,7 +58,7 @@ export class PackageService implements IPackageService {
     return this.serialize(model);
   }
 
-  async create(data: IPackage): Promise<IPackage> {
+  async create(data: IPackageWithActivity): Promise<IPackage> {
     const { activities, ...dataModel } = data;
     const transaction: Transaction = await Package.sequelize.transaction();
     const model: Package = await Package.create(dataModel, { transaction });
@@ -86,7 +86,7 @@ export class PackageService implements IPackageService {
     return this.serialize(model);
   }
 
-  async update(data: IPackage): Promise<IPackage> {
+  async update(data: IPackageWithActivity): Promise<IPackage> {
     const model: Package = await Package.findByPk(data.id);
     if (!model) throw new CustomError('Package not found', 404);
 

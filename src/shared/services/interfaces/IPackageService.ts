@@ -1,3 +1,4 @@
+import { IPackageWithActivity } from './../../models/IPackage';
 import IPackage from '../../models/IPackage';
 
 export interface IFilter {
@@ -9,6 +10,6 @@ export default interface IPackageService {
   list(filter: IFilter, page: number, limit: number): Promise<IPackage[]>;
   count(filter: IFilter): Promise<number>;
   get(id: number): Promise<IPackage>;
-  create(data: IPackage): Promise<IPackage>;
-  update(data: IPackage): Promise<IPackage>;
+  create(data: IPackageWithActivity): Promise<IPackage>;
+  update(data: IPackageWithActivity): Promise<IPackage>;
 }
