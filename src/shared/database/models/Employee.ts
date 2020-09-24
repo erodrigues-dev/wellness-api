@@ -2,7 +2,6 @@ import { Model, DataTypes, Association, Sequelize } from 'sequelize';
 
 import Profile from './Profile';
 
-import IProfile from '../../models/IProfile';
 import IEmployee from '../../models/IEmployee';
 
 export default class Employee extends Model<IEmployee> implements IEmployee {
@@ -14,7 +13,7 @@ export default class Employee extends Model<IEmployee> implements IEmployee {
   imageUrl?: string;
 
   profileId: number;
-  profile?: IProfile;
+  profile?: Profile;
 
   readonly createdAt: Date;
   readonly updatedAt: Date;

@@ -17,3 +17,9 @@ export interface IActivityWithPackageActivity extends IActivity {
     quantity: number;
   };
 }
+
+export interface IActivityWithCustomPackageActivity extends IActivity {
+  CustomPackageActivity?: {
+    quantity: number;
+  };
+}
