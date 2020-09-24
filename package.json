@@ -7,10 +7,10 @@
     "dev": "ts-node-dev --inspect=0.0.0.0:7001 --exit-child --respawn --transpile-only --clear --rs src/server.ts",
     "build": "rm -rf dist/* && tsc",
     "pwd": "ts-node ./password.ts",
-    "build:migrations": "tsc src/shared/database/migrations/*.ts",
+    "migration:build": "tsc src/shared/database/migrations/*.ts",
     "migration:create": "sequelize migration:create --name",
-    "db:migrate": "sequelize db:migrate",
-    "db:migrate:undo": "sequelize db:migrate:undo"
+    "migration:up": "sequelize db:migrate",
+    "migration:down": "sequelize db:migrate:undo"
   },
   "keywords": [],
   "author": "",
