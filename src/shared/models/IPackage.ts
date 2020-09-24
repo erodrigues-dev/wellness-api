@@ -1,4 +1,4 @@
-import IActivity, { IActivityWithPackageActivity } from './IActivity';
+import { IActivityWithPackageActivity } from './IActivity';
 
 export default interface IPackage {
   id?: number;
@@ -10,12 +10,10 @@ export default interface IPackage {
   showInApp: boolean;
   showInWeb: boolean;
 
-  activities?: IActivity[];
-
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-export interface IPackageWithPackageActivity extends IPackage {
+export interface IPackageWithActivity extends IPackage {
   activities?: IActivityWithPackageActivity[];
 }
