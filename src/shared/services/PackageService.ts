@@ -1,6 +1,6 @@
 import { Op, Transaction } from 'sequelize';
 
-import IPackage, { IPackageWithPackageActivity } from '../models/IPackage';
+import IPackage, { IPackageWithActivity } from '../models/IPackage';
 import IPackageService, { IFilter } from './interfaces/IPackageService';
 
 import Package from '../database/models/Package';
@@ -138,7 +138,7 @@ export class PackageService implements IPackageService {
       activities,
       price,
       ...restPackage
-    } = item.toJSON() as IPackageWithPackageActivity;
+    } = item.toJSON() as IPackageWithActivity;
     return <IPackage>{
       ...restPackage,
       price: Number(price),
