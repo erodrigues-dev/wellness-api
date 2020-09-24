@@ -7,6 +7,7 @@ import customerRouter from './CustomerRouter';
 import employeeRouter from './EmployeeRouter';
 import packageRouter from './PackageRouter';
 import profileRouter from './ProfileRouter';
+import customPackageRouter from './CustomPackageRouter';
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.use(customerRouter);
 router.use(employeeRouter);
 router.use(packageRouter);
 router.use(profileRouter);
+router.use(customPackageRouter);
 
 export default router;

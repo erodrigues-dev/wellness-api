@@ -11,6 +11,8 @@ import CustomPackage from '../database/models/CustomPackage';
 import CustomError from '../custom-error/CustomError';
 
 export class CustomPackageService implements ICustomPackageService {
+  private db = CustomPackage;
+
   async list(
     filter: IFilter,
     page: number = 1,
@@ -18,13 +20,14 @@ export class CustomPackageService implements ICustomPackageService {
   ): Promise<ICustomPackage[]> {
     const [where, whereActivity] = this.buildQuery(filter);
 
-    const rows: CustomPackage[] = await CustomPackage.findAll({
+    const rows: CustomPackage[] = await this.db.findAll({
       where,
       limit: limit,
       offset: (page - 1) * limit,
       include: [
         {
           association: CustomPackage.associations.activities,
+          attributes: ['id', 'name'],
           where: { ...whereActivity }
         }
       ],
@@ -36,7 +39,7 @@ export class CustomPackageService implements ICustomPackageService {
 
   count(filter: IFilter): Promise<number> {
     const [where, whereActivity] = this.buildQuery(filter);
-    return CustomPackage.count({
+    return this.db.count({
       where,
       include: [
         {
@@ -47,23 +50,29 @@ export class CustomPackageService implements ICustomPackageService {
     });
   }
 
-  async get(id: number): Promise<ICustomPackage> {
-    const model: CustomPackage = await CustomPackage.findByPk(id, {
+  async get(customerId: number, id: number): Promise<ICustomPackage> {
+    const model: CustomPackage = await this.db.findByPk(id, {
       include: [
         {
-          association: CustomPackage.associations.activities
+          association: this.db.associations.activities,
+          attributes: ['id', 'name', 'price', 'duration']
+        },
+        {
+          association: this.db.associations.customer,
+          attributes: ['id', 'name', 'imageUrl']
         }
       ]
     });
-    if (!model) throw new CustomError('Package not found', 404);
+    if (!model || model.customerId !== customerId)
+      throw new CustomError('Package not found', 404);
 
     return this.serialize(model);
   }
 
   async create(data: ICustomPackageWithActivity): Promise<number> {
     const { activities, ...dataModel } = data;
-    const transaction: Transaction = await CustomPackage.sequelize.transaction();
-    const model: CustomPackage = await CustomPackage.create(dataModel, {
+    const transaction: Transaction = await this.db.sequelize.transaction();
+    const model: CustomPackage = await this.db.create(dataModel, {
       transaction
     });
 
@@ -82,10 +91,11 @@ export class CustomPackageService implements ICustomPackageService {
   }
 
   async update(data: ICustomPackageWithActivity): Promise<number> {
-    const model: CustomPackage = await CustomPackage.findByPk(data.id);
-    if (!model) throw new CustomError('Package not found', 404);
+    const model: CustomPackage = await this.db.findByPk(data.id);
+    if (!model || model.customerId !== data.customerId)
+      throw new CustomError('Package not found', 404);
 
-    const transaction: Transaction = await CustomPackage.sequelize.transaction();
+    const transaction: Transaction = await this.db.sequelize.transaction();
 
     model.name = data.name;
     model.description = data.description;
@@ -109,6 +119,17 @@ export class CustomPackageService implements ICustomPackageService {
     return model.id;
   }
 
+  async destroy(customerId: number, id: number): Promise<void> {
+    const rows = this.db.destroy({
+      where: {
+        customerId,
+        id
+      }
+    });
+
+    if (rows === 0) throw new CustomError('Package not found', 404);
+  }
+
   private serialize(item: CustomPackage) {
     const {
       activities,
@@ -128,7 +149,9 @@ export class CustomPackageService implements ICustomPackageService {
   }
 
   private buildQuery(filter: IFilter) {
-    const where = {};
+    const where = {
+      customerId: filter.customerId
+    };
     const whereActivity = {};
 
     if (filter.name) where['name'] = { [Op.iLike]: `%${filter.name}%` };

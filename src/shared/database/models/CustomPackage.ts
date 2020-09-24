@@ -7,19 +7,21 @@ import {
   BelongsToManySetAssociationsMixin
 } from 'sequelize';
 
+import ICustomPackage from '../../models/ICustomPackage';
+
 import Activity from './Activity';
 import Customer from './Customer';
 
-export default class CustomPackage extends Model {
+export default class CustomPackage extends Model<ICustomPackage> {
   id: number;
   customerId: number;
   name: string;
   price: number;
   description: string;
-  expiration: Date;
+  expiration?: Date;
 
   customer?: Customer;
-  activities?: Activity[];
+  activities: Activity[];
 
   readonly createdAt: Date;
   readonly updatedAt: Date;
