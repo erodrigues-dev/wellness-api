@@ -8,7 +8,6 @@ import Customer from './models/Customer';
 import Employee from './models/Employee';
 import Functionality from './models/Functionality';
 import Package from './models/Package';
-import PackageActivity from './models/PackageActivity';
 import Profile from './models/Profile';
 
 const connection = new Sequelize(DB_CONFIG);
@@ -20,7 +19,6 @@ export function databaseConfig() {
   Employee.setup(connection);
   Functionality.setup(connection);
   Package.setup(connection);
-  PackageActivity.setup(connection);
   Profile.setup(connection);
 
   Activity.setupAssociations();
@@ -29,7 +27,6 @@ export function databaseConfig() {
   Employee.setupAssociations();
   Functionality.setupAssociations();
   Package.setupAssociations();
-  PackageActivity.setupAssociations();
   Profile.setupAssociations();
 }
 

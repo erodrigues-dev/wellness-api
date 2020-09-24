@@ -1,9 +1,11 @@
 import { Op, Transaction } from 'sequelize';
-import IPackage from '../models/IPackage';
+
+import IPackage, { IPackageWithPackageActivity } from '../models/IPackage';
 import IPackageService, { IFilter } from './interfaces/IPackageService';
 
 import Package from '../database/models/Package';
 import CustomError from '../custom-error/CustomError';
+
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 
 export class PackageService implements IPackageService {
@@ -21,9 +23,6 @@ export class PackageService implements IPackageService {
       include: [
         {
           association: Package.associations.activities,
-          through: {
-            attributes: ['quantity']
-          },
           where: { ...whereActivity }
         }
       ],
@@ -135,7 +134,11 @@ export class PackageService implements IPackageService {
   }
 
   private serialize(item: Package) {
-    const { activities, price, ...restPackage } = item.toJSON() as Package;
+    const {
+      activities,
+      price,
+      ...restPackage
+    } = item.toJSON() as IPackageWithPackageActivity;
     return <IPackage>{
       ...restPackage,
       price: Number(price),

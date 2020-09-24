@@ -1,6 +1,3 @@
-import IEmployee from './IEmployee';
-import IPackage from './IPackage';
-
 export default interface IActivity {
   id?: number;
   name: string;
@@ -10,9 +7,13 @@ export default interface IActivity {
   imageUrl?: string;
   employeeId: number;
 
-  employee?: IEmployee;
-  packages?: IPackage[];
   quantity?: number;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface IActivityWithPackageActivity extends IActivity {
+  PackageActivity?: {
+    quantity: number;
+  };
 }

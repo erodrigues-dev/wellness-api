@@ -3,13 +3,11 @@ import {
   DataTypes,
   Association,
   Sequelize,
-  HasManyAddAssociationMixin,
   BelongsToManyAddAssociationMixin,
   BelongsToManySetAssociationsMixin
 } from 'sequelize';
 
 import Activity from './Activity';
-import PackageActivity from './PackageActivity';
 
 import IPackage from '../../models/IPackage';
 
@@ -28,8 +26,8 @@ export default class Package extends Model<IPackage> implements IPackage {
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
-  addActivity: BelongsToManyAddAssociationMixin<Package, number>;
-  setActivities: BelongsToManySetAssociationsMixin<Package, number>;
+  addActivity: BelongsToManyAddAssociationMixin<Activity, number>;
+  setActivities: BelongsToManySetAssociationsMixin<Activity, number>;
 
   static associations: {
     activities: Association<Package, Activity>;
@@ -43,15 +41,25 @@ export default class Package extends Model<IPackage> implements IPackage {
         description: DataTypes.STRING,
         imageUrl: DataTypes.STRING,
         expiration: DataTypes.DATE,
-        showInApp: DataTypes.BOOLEAN
+        showInApp: DataTypes.BOOLEAN,
+        showInWeb: DataTypes.BOOLEAN
       },
       { sequelize: connection, tableName: 'packages' }
+    );
+
+    //through table m:m
+    connection.define(
+      'PackageActivity',
+      {
+        quantity: DataTypes.NUMBER
+      },
+      { tableName: 'package_activities' }
     );
   }
 
   static setupAssociations() {
     Package.belongsToMany(Activity, {
-      through: PackageActivity,
+      through: 'PackageActivity',
       as: 'activities'
     });
   }

@@ -1,12 +1,6 @@
-import { Sequelize, Model, DataTypes, Association } from 'sequelize';
-
-import Employee from './Employee';
-import PackageActivity from './PackageActivity';
-import Package from './Package';
+import { Sequelize, Model, DataTypes } from 'sequelize';
 
 import IActivity from '../../models/IActivity';
-import IEmployee from '../../models/IEmployee';
-import IPackage from '../../models/IPackage';
 
 export default class Activity extends Model<IActivity> implements IActivity {
   id?: number;
@@ -17,20 +11,8 @@ export default class Activity extends Model<IActivity> implements IActivity {
   imageUrl: string;
   employeeId: number;
 
-  employee?: IEmployee;
-  packages?: IPackage[];
-
-  //through of PackageActivity
-  quantity?: number;
-  PackageActivity?: PackageActivity;
-
   readonly createdAt: Date;
   readonly updatedAt: Date;
-
-  static associations: {
-    employee: Association<Activity, Employee>;
-    packages: Association<Activity, Package>;
-  };
 
   static setup(connection: Sequelize) {
     Activity.init(
@@ -46,15 +28,5 @@ export default class Activity extends Model<IActivity> implements IActivity {
     );
   }
 
-  static setupAssociations() {
-    Activity.belongsToMany(Package, {
-      through: PackageActivity,
-      as: 'packages'
-    });
-
-    Activity.belongsTo(Employee, {
-      foreignKey: 'employeeId',
-      as: 'employee'
-    });
-  }
+  static setupAssociations() {}
 }
