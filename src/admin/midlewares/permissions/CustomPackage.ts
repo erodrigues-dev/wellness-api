@@ -1,28 +1,23 @@
 import { Router } from 'express';
-
-import controller from '../controllers/CustomPackageController';
+import { ACTIONS, checkPermission } from '../../../shared/utils/permission';
 
 const router = Router();
 
 router.get(
   '/customers/:customerId/custom-packages',
-  controller.index.bind(controller)
+  checkPermission('packages', ACTIONS.LIST)
 );
 router.get(
   '/customers/:customerId/custom-packages/:id',
-  controller.get.bind(controller)
+  checkPermission('packages', ACTIONS.LIST)
 );
 router.post(
   '/customers/:customerId/custom-packages',
-  controller.store.bind(controller)
+  checkPermission('packages', ACTIONS.CREATE)
 );
 router.put(
   '/customers/:customerId/custom-packages',
-  controller.update.bind(controller)
-);
-router.delete(
-  '/customers/:customerId/custom-packages/:id',
-  controller.destroy.bind(controller)
+  checkPermission('packages', ACTIONS.UPDATE)
 );
 
 export default router;
