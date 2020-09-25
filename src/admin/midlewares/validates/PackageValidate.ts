@@ -12,8 +12,7 @@ const parseActivities = (req: Request, res: Response, next: NextFunction) => {
 
 const getCurrentDate = () => {
   const date = new Date();
-
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 };
 
 router.get(
