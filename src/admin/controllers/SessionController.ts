@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken';
-import { Response } from 'express';
+import { Response, NextFunction } from 'express';
 
 import IUserService from '../../shared/services/interfaces/IUserService';
 import userService from '../../shared/services/UserService';
 import ISessionController, {
-  ILoginRequest
+  ILoginRequest,
+  IUpdateRequest
 } from './interfaces/ISessionController';
 
 export class SessionController implements ISessionController {
@@ -21,6 +22,24 @@ export class SessionController implements ISessionController {
     });
 
     return res.json({ token });
+  }
+
+  async update(req: IUpdateRequest, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.user;
+      const { name, email, password, specialty } = req.body;
+      await this.service.update({
+        id,
+        name,
+        email,
+        password,
+        specialty,
+        imageUrl: req.file?.url
+      });
+      return res.status(204).json();
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

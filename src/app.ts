@@ -22,10 +22,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('short'));
 
 app.use(
-  expressJwt({
-    secret: process.env.JWT_SECRET
-  }).unless({
-    path: ['/admin/sessions']
+  expressJwt({ secret: process.env.JWT_SECRET }).unless({
+    path: {
+      url: '/admin/sessions',
+      methods: ['POST']
+    }
   })
 );
 

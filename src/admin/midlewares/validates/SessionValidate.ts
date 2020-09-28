@@ -13,4 +13,16 @@ router.post(
   })
 );
 
+router.put(
+  '/sessions',
+  celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      name: Joi.string().required(),
+      email: Joi.string().email().required(),
+      specialty: Joi.string().required(),
+      password: Joi.string().optional().allow(null)
+    })
+  })
+);
+
 export default router;
