@@ -28,7 +28,7 @@ export class SessionController implements ISessionController {
     try {
       const { id } = req.user;
       const { name, email, password, specialty } = req.body;
-      await this.service.update({
+      const payload = await this.service.update({
         id,
         name,
         email,
@@ -36,7 +36,12 @@ export class SessionController implements ISessionController {
         specialty,
         imageUrl: req.file?.url
       });
-      return res.status(204).json();
+
+      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: '12h'
+      });
+
+      return res.json({ token });
     } catch (error) {
       next(error);
     }

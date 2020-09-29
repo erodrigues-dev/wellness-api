@@ -11,5 +11,5 @@ export interface IUpdateData {
 
 export default interface IUserService {
   login(email: string, password: string): Promise<ILoginResponse>;
-  update(data: IUpdateData): Promise<void>;
+  update(data: IUpdateData): Promise<ILoginResponse>;
 }

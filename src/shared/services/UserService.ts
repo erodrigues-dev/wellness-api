@@ -17,33 +17,18 @@ export class UserService implements IUserService {
     const match = await compare(password, user.password);
     if (!match) return null;
 
-    const payload = <ILoginResponse>{
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      imageUrl: user.imageUrl,
-      profile: {}
-    };
-
-    if (user.profile) {
-      const { id, name, functionalities: list } = user.profile;
-      const functionalities = list.map(item => ({
-        name: item.name,
-        actions: item.actions
-      }));
-
-      payload.profile = {
-        id,
-        name,
-        functionalities
-      };
-    }
-
-    return payload;
+    return this.transformInLoginResponse(user);
   }
 
   async update(data: IUpdateData) {
-    const model: Employee = await Employee.findByPk(data.id);
+    const model: Employee = await Employee.findByPk(data.id, {
+      include: [
+        {
+          association: Employee.associations.profile,
+          include: [Profile.associations.functionalities]
+        }
+      ]
+    });
     if (!model) throw new CustomError('Employee not found', 404);
 
     if (model.email !== data.email) {
@@ -64,6 +49,8 @@ export class UserService implements IUserService {
     }
 
     await model.save();
+
+    return this.transformInLoginResponse(model);
   }
 
   private getUserWithProfileBy(email: string): Promise<Employee> {
@@ -87,6 +74,32 @@ export class UserService implements IUserService {
     });
 
     return matchs > 0;
+  }
+
+  transformInLoginResponse(model: Employee) {
+    const payload = <ILoginResponse>{
+      id: model.id,
+      name: model.name,
+      email: model.email,
+      imageUrl: model.imageUrl,
+      profile: {}
+    };
+
+    if (model.profile) {
+      const { id, name, functionalities: list } = model.profile;
+      const functionalities = list.map(item => ({
+        name: item.name,
+        actions: item.actions
+      }));
+
+      payload.profile = {
+        id,
+        name,
+        functionalities
+      };
+    }
+
+    return payload;
   }
 }
 
