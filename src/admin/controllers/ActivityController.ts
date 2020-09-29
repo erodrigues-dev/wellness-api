@@ -19,9 +19,13 @@ export class ActivityController implements IActivityController {
     next: NextFunction
   ): Promise<Response> {
     try {
-      const { name, employeeId, page, limit } = req.query;
-      const total = await this.service.count({ name, employeeId });
-      const list = await this.service.list({ name, employeeId }, page, limit);
+      const { name, employeeId, categoryId, page, limit } = req.query;
+      const total = await this.service.count({ name, employeeId, categoryId });
+      const list = await this.service.list(
+        { name, employeeId, categoryId },
+        page,
+        limit
+      );
       return res.header('X-Total-Count', total.toString()).json(list);
     } catch (error) {
       next(error);
@@ -48,7 +52,14 @@ export class ActivityController implements IActivityController {
     next: NextFunction
   ): Promise<Response> {
     try {
-      const { name, description, price, duration, employeeId } = req.body;
+      const {
+        name,
+        description,
+        price,
+        duration,
+        employeeId,
+        categoryId
+      } = req.body;
       const imageUrl = req.file?.url;
       const model = await this.service.create({
         name,
@@ -56,6 +67,7 @@ export class ActivityController implements IActivityController {
         price,
         duration,
         employeeId,
+        categoryId,
         imageUrl
       });
       return res.json(model);
@@ -70,7 +82,15 @@ export class ActivityController implements IActivityController {
     next: NextFunction
   ): Promise<Response> {
     try {
-      const { id, name, description, price, duration, employeeId } = req.body;
+      const {
+        id,
+        name,
+        description,
+        price,
+        duration,
+        employeeId,
+        categoryId
+      } = req.body;
       const imageUrl = req.file?.url;
       const model = await this.service.update({
         id,
@@ -79,6 +99,7 @@ export class ActivityController implements IActivityController {
         price,
         duration,
         employeeId,
+        categoryId,
         imageUrl
       });
       return res.json(model);

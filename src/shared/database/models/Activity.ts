@@ -1,6 +1,7 @@
 import { Sequelize, Model, DataTypes, Association } from 'sequelize';
 
 import IActivity from '../../models/IActivity';
+import Category from './Category';
 import Employee from './Employee';
 
 export default class Activity extends Model<IActivity> implements IActivity {
@@ -11,14 +12,17 @@ export default class Activity extends Model<IActivity> implements IActivity {
   duration: number;
   imageUrl: string;
   employeeId: number;
+  categoryId: number;
 
   employee?: Employee;
+  category?: Category;
 
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
   static associations: {
     employee: Association<Activity, Employee>;
+    category: Association<Activity, Category>;
   };
 
   static setup(connection: Sequelize) {
@@ -39,6 +43,11 @@ export default class Activity extends Model<IActivity> implements IActivity {
     Activity.belongsTo(Employee, {
       foreignKey: 'employeeId',
       as: 'employee'
+    });
+
+    Activity.belongsTo(Category, {
+      foreignKey: 'categoryId',
+      as: 'category'
     });
   }
 }

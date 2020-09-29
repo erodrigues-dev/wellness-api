@@ -26,6 +26,10 @@ export class ActivityService implements IActivityService {
         {
           association: Activity.associations.employee,
           attributes: ['id', 'name', 'email', 'imageUrl']
+        },
+        {
+          association: Activity.associations.category,
+          attributes: ['id', 'name']
         }
       ]
     });
@@ -42,6 +46,10 @@ export class ActivityService implements IActivityService {
         {
           association: Activity.associations.employee,
           attributes: ['id', 'name', 'email', 'imageUrl']
+        },
+        {
+          association: Activity.associations.category,
+          attributes: ['id', 'name']
         }
       ]
     });
@@ -63,6 +71,7 @@ export class ActivityService implements IActivityService {
     model.price = data.price;
     model.duration = data.duration;
     model.employeeId = data.employeeId;
+    model.categoryId = data.categoryId;
 
     if (data.imageUrl) {
       if (model.imageUrl) await deleteFileFromUrl(model.imageUrl);
@@ -76,7 +85,8 @@ export class ActivityService implements IActivityService {
   private buildQuery(filter: IActivityFilter) {
     const where = {
       name: { [Op.iLike]: `%${filter.name}%` },
-      employeeId: filter.employeeId
+      employeeId: filter.employeeId,
+      categoryId: filter.categoryId
     };
 
     if (!filter.name) {
@@ -85,6 +95,10 @@ export class ActivityService implements IActivityService {
 
     if (!filter.employeeId) {
       delete where.employeeId;
+    }
+
+    if (!filter.categoryId) {
+      delete where.categoryId;
     }
 
     return where;

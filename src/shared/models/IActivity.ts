@@ -6,6 +6,7 @@ export default interface IActivity {
   duration: number;
   imageUrl?: string;
   employeeId: number;
+  categoryId: number;
 
   quantity?: number;
   createdAt?: Date;

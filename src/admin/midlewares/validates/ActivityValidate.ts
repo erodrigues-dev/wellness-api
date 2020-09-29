@@ -9,6 +9,7 @@ router.get(
     [Segments.QUERY]: Joi.object().keys({
       name: Joi.string().allow('').optional(),
       employeeId: Joi.string().allow('').optional(),
+      categoryId: Joi.string().allow('').optional(),
       page: Joi.number().min(1).optional(),
       limit: Joi.number().min(1).optional()
     })
@@ -32,7 +33,8 @@ router.post(
       description: Joi.string().required(),
       price: Joi.number().precision(2).required(),
       duration: Joi.number().integer().required(),
-      employeeId: Joi.number().integer().required()
+      employeeId: Joi.number().integer().required(),
+      categoryId: Joi.number().integer().required()
     })
   })
 );
@@ -46,7 +48,8 @@ router.put(
       description: Joi.string().required(),
       price: Joi.number().precision(2).required(),
       duration: Joi.number().integer().required(),
-      employeeId: Joi.number().integer().required()
+      employeeId: Joi.number().integer().required(),
+      categoryId: Joi.number().integer().required()
     })
   })
 );

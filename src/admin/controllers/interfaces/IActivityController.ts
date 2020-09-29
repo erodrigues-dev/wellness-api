@@ -5,6 +5,7 @@ export interface IIndexRequest extends Request<any, any, any, any> {
   query: {
     name?: string;
     employeeId?: number;
+    categoryId?: number;
     page?: number;
     limit?: number;
   };
@@ -24,6 +25,7 @@ export interface IStoreRequest extends Request<any, any, any, any> {
     price: number;
     duration: number;
     employeeId: number;
+    categoryId: number;
   };
 }
 
@@ -36,6 +38,7 @@ export interface IUpdateRequest extends Request<any, any, any, any> {
     price: number;
     duration: number;
     employeeId: number;
+    categoryId: number;
   };
 }
 

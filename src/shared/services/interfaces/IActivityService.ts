@@ -3,6 +3,7 @@ import IActivity from '../../models/IActivity';
 export interface IActivityFilter {
   name?: string;
   employeeId?: number;
+  categoryId?: number;
 }
 
 export default interface IActivityService {
