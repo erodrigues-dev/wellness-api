@@ -7,6 +7,7 @@ import employee from './Employee';
 import package_ from './Package';
 import profile from './Profile';
 import customPackage from './CustomPackage';
+import category from './Category';
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.use(employee);
 router.use(package_);
 router.use(profile);
 router.use(customPackage);
+router.use(category);
 
 export default router;

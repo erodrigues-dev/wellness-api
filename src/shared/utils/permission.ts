@@ -32,7 +32,7 @@ export function checkPermission(
 
     const { actions } = req.user.profile.functionalities.find(
       item => item.name.toLowerCase() === functionality
-    );
+    ) || { actions: 0 };
     const hasPermission = (action & actions) === action;
 
     if (!hasPermission) {

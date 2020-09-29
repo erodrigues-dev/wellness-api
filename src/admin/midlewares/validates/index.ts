@@ -9,6 +9,7 @@ import employeeValidate from './EmployeeValidate';
 import packageValidate from './PackageValidate';
 import profileValidate from './ProfileValidate';
 import customPackageValidate from './CustomPackageValidate';
+import categoryValidate from './CategoryValidate';
 
 const router = Router();
 
@@ -20,6 +21,7 @@ router.use(employeeValidate);
 router.use(packageValidate);
 router.use(profileValidate);
 router.use(customPackageValidate);
+router.use(categoryValidate);
 
 // required in last position
 router.use(errors());

@@ -10,6 +10,7 @@ import Functionality from './models/Functionality';
 import Package from './models/Package';
 import Profile from './models/Profile';
 import CustomPackage from './models/CustomPackage';
+import Category from './models/Category';
 
 const connection = new Sequelize(DB_CONFIG);
 
@@ -22,6 +23,7 @@ export function databaseConfig() {
   Package.setup(connection);
   Profile.setup(connection);
   CustomPackage.setup(connection);
+  Category.setup(connection);
 
   Activity.setupAssociations();
   ActivitySchedule.setupAssociations();
@@ -31,6 +33,7 @@ export function databaseConfig() {
   Package.setupAssociations();
   Profile.setupAssociations();
   CustomPackage.setupAssociations();
+  Category.setupAssociations();
 }
 
 export default connection;
