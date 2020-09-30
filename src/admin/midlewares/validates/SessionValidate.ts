@@ -19,7 +19,7 @@ router.put(
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().required(),
       email: Joi.string().email().required(),
-      specialty: Joi.string().required(),
+      specialty: Joi.string().max(100).optional().allow(null, ''),
       password: Joi.string().optional().allow(null)
     })
   })
