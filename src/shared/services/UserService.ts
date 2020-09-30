@@ -82,6 +82,7 @@ export class UserService implements IUserService {
       name: model.name,
       email: model.email,
       imageUrl: model.imageUrl,
+      specialty: model.specialty,
       profile: {}
     };
 

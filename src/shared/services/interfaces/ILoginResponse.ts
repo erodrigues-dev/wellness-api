@@ -3,6 +3,7 @@ export default interface ILoginResponse {
   name: string;
   email: string;
   imageUrl: string;
+  specialty: string;
   profile: {
     id: number;
     name: string;
