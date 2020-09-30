@@ -5,6 +5,7 @@ export interface IIndexRequest extends Request<any, any, any, any> {
   query: {
     name?: string;
     activityName?: string;
+    categoryId?: number;
     page?: number;
     limit?: number;
   };
@@ -25,6 +26,7 @@ export interface IStoreRequest extends Request<any, any, any, any> {
     expiration?: Date;
     showInApp: boolean;
     showInWeb: boolean;
+    categoryId: number;
     activities: {
       id: number;
       quantity: number;
@@ -42,6 +44,7 @@ export interface IUpdateRequest extends Request<any, any, any, any> {
     expiration?: Date;
     showInApp: boolean;
     showInWeb: boolean;
+    categoryId: number;
     activities: {
       id: number;
       quantity: number;

@@ -6,12 +6,13 @@ import {
   BelongsToManyAddAssociationMixin,
   BelongsToManySetAssociationsMixin
 } from 'sequelize';
+import IPackage from '../../models/IPackage';
 
 import Activity from './Activity';
 
-import IPackage from '../../models/IPackage';
+import Category from './Category';
 
-export default class Package extends Model<IPackage> implements IPackage {
+export default class Package extends Model<IPackage> {
   id?: number;
   name: string;
   price: number;
@@ -20,8 +21,10 @@ export default class Package extends Model<IPackage> implements IPackage {
   expiration?: Date;
   showInApp: boolean;
   showInWeb: boolean;
+  categoryId: number;
 
   activities?: Activity[];
+  category?: Category;
 
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -31,6 +34,7 @@ export default class Package extends Model<IPackage> implements IPackage {
 
   static associations: {
     activities: Association<Package, Activity>;
+    category: Association<Package, Category>;
   };
 
   static setup(connection: Sequelize) {
@@ -42,7 +46,8 @@ export default class Package extends Model<IPackage> implements IPackage {
         imageUrl: DataTypes.STRING,
         expiration: DataTypes.DATE,
         showInApp: DataTypes.BOOLEAN,
-        showInWeb: DataTypes.BOOLEAN
+        showInWeb: DataTypes.BOOLEAN,
+        categoryId: DataTypes.INTEGER
       },
       { sequelize: connection, tableName: 'packages' }
     );
@@ -61,6 +66,11 @@ export default class Package extends Model<IPackage> implements IPackage {
     Package.belongsToMany(Activity, {
       through: 'PackageActivity',
       as: 'activities'
+    });
+
+    Package.belongsTo(Category, {
+      foreignKey: 'categoryId',
+      as: 'category'
     });
   }
 }

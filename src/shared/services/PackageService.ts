@@ -1,6 +1,6 @@
 import { Op, Transaction } from 'sequelize';
 
-import IPackage, { IPackageWithActivity } from '../models/IPackage';
+import IPackage, { IPackageWithIncludes } from '../models/IPackage';
 import IPackageService, { IFilter } from './interfaces/IPackageService';
 
 import Package from '../database/models/Package';
@@ -24,6 +24,10 @@ export class PackageService implements IPackageService {
         {
           association: Package.associations.activities,
           where: { ...whereActivity }
+        },
+        {
+          association: Package.associations.category,
+          attributes: ['id', 'name']
         }
       ],
       order: ['name']
@@ -50,6 +54,10 @@ export class PackageService implements IPackageService {
       include: [
         {
           association: Package.associations.activities
+        },
+        {
+          association: Package.associations.category,
+          attributes: ['id', 'name']
         }
       ]
     });
@@ -58,7 +66,7 @@ export class PackageService implements IPackageService {
     return this.serialize(model);
   }
 
-  async create(data: IPackageWithActivity): Promise<IPackage> {
+  async create(data: IPackageWithIncludes): Promise<IPackageWithIncludes> {
     const { activities, ...dataModel } = data;
     const transaction: Transaction = await Package.sequelize.transaction();
     const model: Package = await Package.create(dataModel, { transaction });
@@ -79,6 +87,10 @@ export class PackageService implements IPackageService {
         {
           association: Package.associations.activities,
           through: { attributes: ['quantity'] }
+        },
+        {
+          association: Package.associations.category,
+          attributes: ['id', 'name']
         }
       ]
     });
@@ -86,7 +98,7 @@ export class PackageService implements IPackageService {
     return this.serialize(model);
   }
 
-  async update(data: IPackageWithActivity): Promise<IPackage> {
+  async update(data: IPackageWithIncludes): Promise<IPackageWithIncludes> {
     const model: Package = await Package.findByPk(data.id);
     if (!model) throw new CustomError('Package not found', 404);
 
@@ -98,6 +110,7 @@ export class PackageService implements IPackageService {
     model.expiration = data.expiration;
     model.showInApp = data.showInApp;
     model.showInWeb = data.showInWeb;
+    model.categoryId = data.categoryId;
 
     if (data.imageUrl) {
       if (model.imageUrl) {
@@ -127,6 +140,10 @@ export class PackageService implements IPackageService {
         {
           association: Package.associations.activities,
           through: { attributes: ['quantity'] }
+        },
+        {
+          association: Package.associations.category,
+          attributes: ['id', 'name']
         }
       ]
     });
@@ -138,8 +155,8 @@ export class PackageService implements IPackageService {
       activities,
       price,
       ...restPackage
-    } = item.toJSON() as IPackageWithActivity;
-    return <IPackage>{
+    } = item.toJSON() as IPackageWithIncludes;
+    return <IPackageWithIncludes>{
       ...restPackage,
       price: Number(price),
       activities: activities.map(({ PackageActivity, ...restActivity }) => ({
@@ -157,6 +174,8 @@ export class PackageService implements IPackageService {
 
     if (filter.activityName)
       whereActivity['name'] = { [Op.iLike]: `%${filter.activityName}%` };
+
+    if (filter.categoryId) where['categoryId'] = filter.categoryId;
 
     return [where, whereActivity];
   }

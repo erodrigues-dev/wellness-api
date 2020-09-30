@@ -21,6 +21,7 @@ router.get(
     [Segments.QUERY]: Joi.object({
       name: Joi.string().allow('').optional(),
       activityName: Joi.string().allow('').optional(),
+      categoryId: Joi.number().integer().positive().allow('').optional(),
       page: Joi.number().min(1),
       limit: Joi.number().min(1).optional()
     })
@@ -47,6 +48,7 @@ router.post(
       expiration: Joi.date().min(getCurrentDate()).allow(null).default(null),
       showInApp: Joi.boolean().default(true),
       showInWeb: Joi.boolean().default(true),
+      categoryId: Joi.number().required(),
       activities: Joi.array()
         .items({
           id: Joi.number().required(),
@@ -69,6 +71,7 @@ router.put(
       expiration: Joi.date().min(getCurrentDate()).allow(null).default(null),
       showInApp: Joi.boolean().default(true),
       showInWeb: Joi.boolean().default(true),
+      categoryId: Joi.number().required(),
       activities: Joi.array()
         .items({
           id: Joi.number().required(),

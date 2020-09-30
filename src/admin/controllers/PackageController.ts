@@ -8,7 +8,6 @@ import IPackageController, {
   IUpdateRequest
 } from './interfaces/IPackageController';
 import IActivity from '../../shared/models/IActivity';
-import { deleteFileFromUrl } from '../../shared/utils/google-cloud-storage';
 
 export class PackageController implements IPackageController {
   constructor(private service: IPackageService) {}
@@ -19,9 +18,17 @@ export class PackageController implements IPackageController {
     next: NextFunction
   ): Promise<Response> {
     try {
-      const { name, activityName, page, limit } = req.query;
-      const count = await this.service.count({ name, activityName });
-      const list = await this.service.list({ name, activityName }, page, limit);
+      const { name, activityName, categoryId, page, limit } = req.query;
+      const count = await this.service.count({
+        name,
+        activityName,
+        categoryId
+      });
+      const list = await this.service.list(
+        { name, activityName, categoryId },
+        page,
+        limit
+      );
       return res.header('X-Total-count', count.toString()).json(list);
     } catch (error) {
       next(error);
@@ -55,6 +62,7 @@ export class PackageController implements IPackageController {
         expiration,
         showInApp,
         showInWeb,
+        categoryId,
         activities
       } = req.body;
       const model = await this.service.create({
@@ -64,6 +72,7 @@ export class PackageController implements IPackageController {
         expiration,
         showInApp,
         showInWeb,
+        categoryId,
         activities: activities as IActivity[],
         imageUrl: req.file?.url
       });
@@ -88,6 +97,7 @@ export class PackageController implements IPackageController {
         expiration,
         showInApp,
         showInWeb,
+        categoryId,
         activities
       } = req.body;
       const model = await this.service.update({
@@ -98,6 +108,7 @@ export class PackageController implements IPackageController {
         expiration,
         showInApp,
         showInWeb,
+        categoryId,
         activities: activities as IActivity[],
         imageUrl: req.file?.url
       });
@@ -110,71 +121,3 @@ export class PackageController implements IPackageController {
 }
 
 export default new PackageController(packageService);
-
-//   async update(req, res, next) {
-//     const transaction = await sequelize.transaction();
-//     try {
-//       const {
-//         id,
-//         name,
-//         price,
-//         description,
-//         activities,
-//         expiration,
-//         showInWeb,
-//         showInApp
-//       } = req.body;
-//       const storePackage = await Package.findByPk(id);
-//       if (!storePackage) {
-//         return res.status(404).json({ message: 'package not found' });
-//       }
-//       storePackage.name = name;
-//       storePackage.price = price;
-//       storePackage.description = description;
-//       storePackage.expiration = expiration;
-//       storePackage.showInWeb = showInWeb;
-//       storePackage.showInApp = showInApp;
-
-//       if (req.file) {
-//         if (storePackage.imageUrl) {
-//           deleteFileFromUrl(storePackage.imageUrl);
-//         }
-
-//         storePackage.imageUrl = req.file.url;
-//       }
-
-//       await storePackage.save({ transaction });
-//       await storePackage.setActivities([], { transaction });
-
-//       await Promise.all(
-//         activities.map(item =>
-//           storePackage.addActivity(item.id, {
-//             through: { quantity: item.quantity },
-//             transaction
-//           })
-//         )
-//       );
-
-//       await transaction.commit();
-//       return res.status(204).json();
-//     } catch (error) {
-//       await transaction.rollback();
-//       next(error);
-//     }
-//   },
-
-//   async destroy(req, res, next) {
-//     try {
-//       const { id } = req.params;
-//       const result = await Package.destroy({ where: { id } });
-
-//       if (result === 0) {
-//         return res.status(404).json({ message: 'package not found' });
-//       }
-
-//       return res.json();
-//     } catch (error) {
-//       next(error);
-//     }
-//   }
-// };
