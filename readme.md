@@ -44,7 +44,7 @@ docker run \
 -d postgres
 ```
 
-### 🤯 Sequelize
+### 🤯 Migrations
 
 ```sh
 # create migration
