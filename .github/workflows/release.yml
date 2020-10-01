@@ -43,4 +43,4 @@ jobs:
             ls -lah
             docker load -i image.tar.gz
             rm image.tar.gz
-            docker-compose up --build -d .
+            docker-compose up --build -d
