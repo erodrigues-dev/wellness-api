@@ -1,7 +1,7 @@
 name: Release CI
 on:
   push:
-    branches: [docker-ci]
+    branches: [release]
 
 jobs:
   build:
@@ -44,3 +44,4 @@ jobs:
             docker load -i image.tar.gz
             rm image.tar.gz
             docker-compose up --build -d
+            docker ps
