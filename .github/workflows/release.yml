@@ -17,13 +17,18 @@ jobs:
           docker save wellness/api | gzip -c > image.tar.gz
           ls -lh image.tar.gz
 
+      - name: Prepare release docker-compose.yml
+        run: |
+          mv docker/release/docker-compose.yml ./
+          ls -l docker-compose.yml
+
       - name: Copy files via ssh
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: 'image.tar.gz,docker/release/docker-compose.yml'
+          source: 'image.tar.gz,docker-compose.yml'
           target: '/www'
 
       - name: Connect via ssh
@@ -34,6 +39,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /www
+            mv docker/release
             ls -lah
             docker load -i image.tar.gz
             rm image.tar.gz
