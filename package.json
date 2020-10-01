@@ -3,14 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "node server.js",
+    "start": "node src/server.js",
     "dev": "ts-node-dev --inspect=0.0.0.0:7001 --exit-child --respawn --transpile-only --clear --rs src/server.ts",
     "build": "rm -rf dist/* && tsc",
     "pwd": "ts-node ./password.ts",
-    "migration:build": "tsc src/shared/database/migrations/*.ts",
+    "build:migration": "tsc src/shared/database/migrations/*.ts",
+    "build:seed": "tsc src/shared/database/seeders/*.ts",
     "migration:create": "sequelize migration:create --name",
     "migration:up": "sequelize db:migrate",
-    "migration:down": "sequelize db:migrate:undo"
+    "migration:down": "sequelize db:migrate:undo",
+    "seed:create": "sequelize seed:create --name",
+    "seed:up": "sequelize db:seed --seed",
+    "seed:down": "sequelize db:seed:undo --seed",
+    "seed:up:all": "sequelize db:seed:all",
+    "seed:down:all": "sequelize db:seed:undo:all"
   },
   "keywords": [],
   "author": "",

@@ -10,5 +10,12 @@ module.exports = {
     'shared',
     'database',
     'migrations'
+  ),
+  'seeders-path': path.resolve(
+    __dirname,
+    'src',
+    'shared',
+    'database',
+    'seeders'
   )
 };

@@ -3,3 +3,6 @@ node_modules
 package-lock.json
 google-cloud-key.json
 dist/
+
+**/*/migrations/*.js
+**/*/seeders/*.js
