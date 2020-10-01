@@ -34,6 +34,15 @@ GOOGLE_STORAGE_BUCKET_FOLDER=dev
 yarn pwd
 ```
 
+### 🐋 Docker Compose
+
+Execute the command below, this will raise postgres and nodejs.
+Will automatically run migrations and seeders
+
+```sh
+docker-compose up
+```
+
 ### 🐋 Docker postgres database
 
 ```sh
