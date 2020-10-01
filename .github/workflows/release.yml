@@ -23,5 +23,18 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: 'image.tar.gz,docker-compose.yml'
+          source: 'image.tar.gz,docker/release/docker-compose.yml'
           target: '/www'
+
+      - name: Connect via ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /www
+            ls -lah
+            docker load -i image.tar.gz
+            rm image.tar.gz
+            docker-compose up --build -d .

@@ -5,6 +5,7 @@ COPY package.json ./
 RUN npm i
 
 COPY . .
+
 RUN npm run build
 
 
@@ -12,9 +13,10 @@ FROM node:12-alpine
 
 WORKDIR /usr/app
 
-COPY --from=builder /usr/build/package*.json ./
-COPY --from=builder /usr/build/dist ./
 COPY --from=builder /usr/build/node_modules ./node_modules
+COPY --from=builder /usr/build/package*.json ./
+COPY --from=builder /usr/build/.sequelize* ./
+COPY --from=builder /usr/build/dist ./src
 
 EXPOSE 3333
 
