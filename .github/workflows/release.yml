@@ -1,7 +1,7 @@
 name: Release CI
 on:
   push:
-    branchs: [docker-ci]
+    branches: [docker-ci]
 
 jobs:
   build:
