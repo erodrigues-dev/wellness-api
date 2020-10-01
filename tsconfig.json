@@ -7,9 +7,8 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "outDir": "./dist",
-    "rootDirs": ["src"],
+    "rootDirs": ["./"],
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src"],
-  "exclude": ["src/shared/database/migrations"]
+  "include": ["src"]
 }
