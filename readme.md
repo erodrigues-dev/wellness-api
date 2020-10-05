@@ -56,6 +56,16 @@ docker run \
 ### 🤯 Migrations
 
 ```sh
+# run migrations
+yarn build:migration
+yarn migration:up
+```
+
+### Sequelize
+
+```sh
+# sequelize reference
+
 # create migration
 yarn sequelize migration:create --name my-migration-name
 
