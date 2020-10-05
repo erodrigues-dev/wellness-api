@@ -1,3 +1,5 @@
+import { RecurrencyPayEnum } from './enums/RecurrencyPayEnum';
+import { PackageTypeEnum } from './enums/PackageTypeEnum';
 import { IActivityWithPackageActivity } from './IActivity';
 import ICategory from './ICategory';
 
@@ -11,6 +13,10 @@ export default interface IPackage {
   showInApp: boolean;
   showInWeb: boolean;
   categoryId: number;
+
+  recurrencyPay: RecurrencyPayEnum;
+  type: PackageTypeEnum;
+  total?: number;
 
   createdAt?: Date;
   updatedAt?: Date;

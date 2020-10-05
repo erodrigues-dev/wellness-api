@@ -1,5 +1,7 @@
+import { RecurrencyPayEnum } from './../../../shared/models/enums/RecurrencyPayEnum';
 import { celebrate, Joi, Segments } from 'celebrate';
 import { Router, Request, Response, NextFunction } from 'express';
+import { PackageTypeEnum } from '../../../shared/models/enums/PackageTypeEnum';
 
 const router = Router();
 
@@ -49,10 +51,30 @@ router.post(
       showInApp: Joi.boolean().default(true),
       showInWeb: Joi.boolean().default(true),
       categoryId: Joi.number().required(),
+      recurrencyPay: Joi.string()
+        .required()
+        .valid(...Object.values(RecurrencyPayEnum)),
+      type: Joi.string()
+        .required()
+        .valid(...Object.values(PackageTypeEnum)),
+      total: Joi.number()
+        .positive()
+        .when('type', {
+          is: Joi.valid(...[PackageTypeEnum.amount, PackageTypeEnum.minutes]),
+          then: Joi.required(),
+          otherwise: Joi.optional()
+        }),
       activities: Joi.array()
         .items({
           id: Joi.number().required(),
-          quantity: Joi.number().integer().positive().required()
+          quantity: Joi.number()
+            .integer()
+            .positive()
+            .when('/type', {
+              is: Joi.valid(PackageTypeEnum.appointments),
+              then: Joi.required(),
+              otherwise: Joi.forbidden()
+            })
         })
         .required()
     })
@@ -72,10 +94,30 @@ router.put(
       showInApp: Joi.boolean().default(true),
       showInWeb: Joi.boolean().default(true),
       categoryId: Joi.number().required(),
+      recurrencyPay: Joi.string()
+        .required()
+        .valid(...Object.values(RecurrencyPayEnum)),
+      type: Joi.string()
+        .required()
+        .valid(...Object.values(PackageTypeEnum)),
+      total: Joi.number()
+        .positive()
+        .when('type', {
+          is: Joi.valid(...[PackageTypeEnum.amount, PackageTypeEnum.minutes]),
+          then: Joi.required(),
+          otherwise: Joi.optional()
+        }),
       activities: Joi.array()
         .items({
           id: Joi.number().required(),
-          quantity: Joi.number().integer().positive().required()
+          quantity: Joi.number()
+            .integer()
+            .positive()
+            .when('/type', {
+              is: Joi.valid(PackageTypeEnum.appointments),
+              then: Joi.required(),
+              otherwise: Joi.forbidden()
+            })
         })
         .required()
     })

@@ -1,5 +1,7 @@
+import { RecurrencyPayEnum } from './../../../shared/models/enums/RecurrencyPayEnum';
 import { ICloudFile } from '../../../shared/utils/interfaces/ICloudFile';
 import { Request, Response, NextFunction } from 'express';
+import { PackageTypeEnum } from '../../../shared/models/enums/PackageTypeEnum';
 
 export interface IIndexRequest extends Request<any, any, any, any> {
   query: {
@@ -27,6 +29,9 @@ export interface IStoreRequest extends Request<any, any, any, any> {
     showInApp: boolean;
     showInWeb: boolean;
     categoryId: number;
+    recurrencyPay: RecurrencyPayEnum;
+    type: PackageTypeEnum;
+    total?: number;
     activities: {
       id: number;
       quantity: number;
@@ -45,6 +50,9 @@ export interface IUpdateRequest extends Request<any, any, any, any> {
     showInApp: boolean;
     showInWeb: boolean;
     categoryId: number;
+    recurrencyPay: RecurrencyPayEnum;
+    type: PackageTypeEnum;
+    total?: number;
     activities: {
       id: number;
       quantity: number;

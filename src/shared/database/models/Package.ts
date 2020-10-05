@@ -1,3 +1,5 @@
+import { RecurrencyPayEnum } from './../../models/enums/RecurrencyPayEnum';
+import { PackageTypeEnum } from './../../models/enums/PackageTypeEnum';
 import {
   Model,
   DataTypes,
@@ -6,14 +8,12 @@ import {
   BelongsToManyAddAssociationMixin,
   BelongsToManySetAssociationsMixin
 } from 'sequelize';
-import IPackage from '../../models/IPackage';
 
 import Activity from './Activity';
-
 import Category from './Category';
 
-export default class Package extends Model<IPackage> {
-  id?: number;
+export default class Package extends Model {
+  id: number;
   name: string;
   price: number;
   description: string;
@@ -22,6 +22,10 @@ export default class Package extends Model<IPackage> {
   showInApp: boolean;
   showInWeb: boolean;
   categoryId: number;
+
+  recurrencyPay: RecurrencyPayEnum;
+  type: PackageTypeEnum;
+  total?: number;
 
   activities?: Activity[];
   category?: Category;
@@ -47,7 +51,10 @@ export default class Package extends Model<IPackage> {
         expiration: DataTypes.DATE,
         showInApp: DataTypes.BOOLEAN,
         showInWeb: DataTypes.BOOLEAN,
-        categoryId: DataTypes.INTEGER
+        categoryId: DataTypes.INTEGER,
+        recurrencyPay: DataTypes.ENUM(...Object.values(RecurrencyPayEnum)),
+        type: DataTypes.ENUM(...Object.values(PackageTypeEnum)),
+        total: DataTypes.DECIMAL
       },
       { sequelize: connection, tableName: 'packages' }
     );

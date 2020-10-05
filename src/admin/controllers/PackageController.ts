@@ -63,7 +63,10 @@ export class PackageController implements IPackageController {
         showInApp,
         showInWeb,
         categoryId,
-        activities
+        activities,
+        recurrencyPay,
+        type,
+        total
       } = req.body;
       const model = await this.service.create({
         name,
@@ -74,7 +77,10 @@ export class PackageController implements IPackageController {
         showInWeb,
         categoryId,
         activities: activities as IActivity[],
-        imageUrl: req.file?.url
+        imageUrl: req.file?.url,
+        recurrencyPay,
+        type,
+        total
       });
 
       return res.json(model);
@@ -98,7 +104,10 @@ export class PackageController implements IPackageController {
         showInApp,
         showInWeb,
         categoryId,
-        activities
+        activities,
+        recurrencyPay,
+        type,
+        total
       } = req.body;
       const model = await this.service.update({
         id,
@@ -110,7 +119,10 @@ export class PackageController implements IPackageController {
         showInWeb,
         categoryId,
         activities: activities as IActivity[],
-        imageUrl: req.file?.url
+        imageUrl: req.file?.url,
+        recurrencyPay,
+        type,
+        total
       });
 
       return res.json(model);

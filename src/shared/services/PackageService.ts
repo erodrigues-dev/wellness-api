@@ -7,6 +7,7 @@ import Package from '../database/models/Package';
 import CustomError from '../custom-error/CustomError';
 
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
+import { number } from '@hapi/joi';
 
 export class PackageService implements IPackageService {
   async list(
@@ -107,10 +108,13 @@ export class PackageService implements IPackageService {
     model.name = data.name;
     model.description = data.description;
     model.price = data.price;
+    model.recurrencyPay = data.recurrencyPay;
     model.expiration = data.expiration;
     model.showInApp = data.showInApp;
     model.showInWeb = data.showInWeb;
     model.categoryId = data.categoryId;
+    model.type = data.type;
+    model.total = data.total;
 
     if (data.imageUrl) {
       if (model.imageUrl) {
@@ -154,15 +158,20 @@ export class PackageService implements IPackageService {
     const {
       activities,
       price,
+      total,
       ...restPackage
     } = item.toJSON() as IPackageWithIncludes;
     return <IPackageWithIncludes>{
       ...restPackage,
       price: Number(price),
-      activities: activities.map(({ PackageActivity, ...restActivity }) => ({
-        ...restActivity,
-        quantity: PackageActivity?.quantity
-      }))
+      total: Number(total) || null,
+      activities: activities.map(
+        ({ PackageActivity, price, ...restActivity }) => ({
+          ...restActivity,
+          price: Number(price) || null,
+          quantity: PackageActivity?.quantity
+        })
+      )
     };
   }
 
