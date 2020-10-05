@@ -19,9 +19,9 @@ export class CategoryController implements ICategoryController {
     next: NextFunction
   ): Promise<Response> {
     try {
-      const { name, page, limit } = req.query;
-      const total = await this.service.count(name);
-      const list = await this.service.list(name, page, limit);
+      const { name, type, page, limit } = req.query;
+      const total = await this.service.count(name, type);
+      const list = await this.service.list(name, type, page, limit);
       return res.header('X-Total-Count', total.toString()).json(list);
     } catch (error) {
       next(error);
@@ -48,9 +48,10 @@ export class CategoryController implements ICategoryController {
     next: NextFunction
   ): Promise<Response> {
     try {
-      const { name } = req.body;
+      const { name, type } = req.body;
       const model = await this.service.create({
-        name
+        name,
+        type
       });
       return res.json(model);
     } catch (error) {
@@ -67,7 +68,8 @@ export class CategoryController implements ICategoryController {
       const { id, name } = req.body;
       const model = await this.service.update({
         id,
-        name
+        name,
+        type: null //dont updated
       });
       return res.json(model);
     } catch (error) {

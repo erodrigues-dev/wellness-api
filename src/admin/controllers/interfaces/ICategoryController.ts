@@ -4,6 +4,7 @@ import { ICloudFile } from '../../../shared/utils/interfaces/ICloudFile';
 export interface IIndexRequest extends Request<any, any, any, any> {
   query: {
     name?: string;
+    type?: string;
     page?: number;
     limit?: number;
   };
@@ -18,6 +19,7 @@ export interface IGetRequest extends Request<any, any, any, any> {
 export interface IStoreRequest extends Request<any, any, any, any> {
   body: {
     name: string;
+    type: string;
   };
 }
 

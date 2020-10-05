@@ -9,10 +9,11 @@ export class CategoryService implements ICategoryService {
 
   list(
     name: string,
+    type: string,
     page: number = 1,
     limit: number = 10
   ): Promise<ICategory[]> {
-    const where = this.buildQuery(name);
+    const where = this.buildQuery(name, type);
     return this.db.findAll({
       where,
       limit,
@@ -21,8 +22,8 @@ export class CategoryService implements ICategoryService {
     });
   }
 
-  count(name: string): Promise<number> {
-    const where = this.buildQuery(name);
+  count(name: string, type: string): Promise<number> {
+    const where = this.buildQuery(name, type);
     return this.db.count({ where });
   }
 
@@ -47,9 +48,10 @@ export class CategoryService implements ICategoryService {
     await model.save();
   }
 
-  private buildQuery(name: string) {
+  private buildQuery(name: string, type: string) {
     const where = {};
     if (name) where['name'] = { [Op.iLike]: `%${name}%` };
+    if (type) where['type'] = type;
     return where;
   }
 }

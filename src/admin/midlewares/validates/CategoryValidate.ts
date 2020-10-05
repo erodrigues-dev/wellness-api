@@ -8,6 +8,7 @@ router.get(
   celebrate({
     [Segments.QUERY]: Joi.object().keys({
       name: Joi.string().allow('').optional(),
+      type: Joi.string().allow('').optional(),
       page: Joi.number().min(1).optional(),
       limit: Joi.number().min(1).optional()
     })
@@ -27,7 +28,8 @@ router.post(
   '/categories',
   celebrate({
     [Segments.BODY]: Joi.object().keys({
-      name: Joi.string().required()
+      name: Joi.string().required(),
+      type: Joi.string().required()
     })
   })
 );
