@@ -29,7 +29,7 @@ router.post(
   celebrate({
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().required(),
-      type: Joi.string().required()
+      type: Joi.string().required().valid('activity', 'package')
     })
   })
 );
