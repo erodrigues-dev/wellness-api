@@ -20,6 +20,6 @@ services:
       - ./google-cloud-key.json:/usr/app/google-cloud-key.json
     depends_on:
       - db
-    command: sh -c "npm run migration:up && npm run seed:up:all &&  npm start"
+    command: sh -c "npm run migration:up && npm start"
 volumes:
   pg_data:
