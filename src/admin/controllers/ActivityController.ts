@@ -58,7 +58,10 @@ export class ActivityController implements IActivityController {
         price,
         duration,
         employeeId,
-        categoryId
+        categoryId,
+        maxPeople,
+        showInApp = true,
+        showInWeb = true
       } = req.body;
       const imageUrl = req.file?.url;
       const model = await this.service.create({
@@ -68,7 +71,10 @@ export class ActivityController implements IActivityController {
         duration,
         employeeId,
         categoryId,
-        imageUrl
+        imageUrl,
+        maxPeople,
+        showInApp,
+        showInWeb
       });
       return res.json(model);
     } catch (error) {
@@ -89,7 +95,10 @@ export class ActivityController implements IActivityController {
         price,
         duration,
         employeeId,
-        categoryId
+        categoryId,
+        maxPeople,
+        showInApp,
+        showInWeb
       } = req.body;
       const imageUrl = req.file?.url;
       const model = await this.service.update({
@@ -100,7 +109,10 @@ export class ActivityController implements IActivityController {
         duration,
         employeeId,
         categoryId,
-        imageUrl
+        imageUrl,
+        maxPeople,
+        showInApp,
+        showInWeb
       });
       return res.json(model);
     } catch (error) {

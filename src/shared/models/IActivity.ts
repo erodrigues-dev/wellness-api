@@ -7,6 +7,9 @@ export default interface IActivity {
   imageUrl?: string;
   employeeId: number;
   categoryId: number;
+  showInApp: boolean;
+  showInWeb: boolean;
+  maxPeople?: number;
 
   quantity?: number;
   createdAt?: Date;

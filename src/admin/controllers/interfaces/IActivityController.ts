@@ -26,6 +26,9 @@ export interface IStoreRequest extends Request<any, any, any, any> {
     duration: number;
     employeeId: number;
     categoryId: number;
+    showInApp: boolean;
+    showInWeb: boolean;
+    maxPeople?: number;
   };
 }
 
@@ -39,6 +42,9 @@ export interface IUpdateRequest extends Request<any, any, any, any> {
     duration: number;
     employeeId: number;
     categoryId: number;
+    showInApp: boolean;
+    showInWeb: boolean;
+    maxPeople?: number;
   };
 }
 

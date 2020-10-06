@@ -4,7 +4,7 @@ import IActivity from '../../models/IActivity';
 import Category from './Category';
 import Employee from './Employee';
 
-export default class Activity extends Model<IActivity> implements IActivity {
+export default class Activity extends Model<IActivity> {
   id?: number;
   name: string;
   description: string;
@@ -13,6 +13,9 @@ export default class Activity extends Model<IActivity> implements IActivity {
   imageUrl: string;
   employeeId: number;
   categoryId: number;
+  maxPeople?: number;
+  showInWeb: boolean;
+  showInApp: boolean;
 
   employee?: Employee;
   category?: Category;
@@ -34,7 +37,10 @@ export default class Activity extends Model<IActivity> implements IActivity {
         duration: DataTypes.INTEGER,
         imageUrl: DataTypes.STRING,
         employeeId: DataTypes.INTEGER,
-        categoryId: DataTypes.INTEGER
+        categoryId: DataTypes.INTEGER,
+        maxPeople: DataTypes.INTEGER,
+        showInApp: DataTypes.BOOLEAN,
+        showInWeb: DataTypes.BOOLEAN
       },
       { sequelize: connection, tableName: 'activities' }
     );
