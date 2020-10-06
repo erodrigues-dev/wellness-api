@@ -37,10 +37,17 @@ yarn pwd
 ### 🐋 Docker Compose
 
 Execute the command below, this will raise postgres and nodejs.
-Will automatically run migrations and seeders
+Will automatically run migrations.
 
 ```sh
-docker-compose up
+docker-compose up -d --build
+```
+
+To run seed in container, execute this command below,
+this seed:up:all is require once time
+
+```sh
+docker exec wellness_api npm run seed:up:all
 ```
 
 ### 🐋 Docker postgres database
