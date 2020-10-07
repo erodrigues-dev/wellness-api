@@ -74,7 +74,7 @@ export class ActivityService implements IActivityService {
     model.categoryId = data.categoryId;
     model.showInApp = data.showInApp;
     model.showInWeb = data.showInWeb;
-    model.maxPeople = data.maxPeople;
+    model.maxPeople = data.maxPeople || null;
 
     if (data.imageUrl) {
       if (model.imageUrl) await deleteFileFromUrl(model.imageUrl);
