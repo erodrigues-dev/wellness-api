@@ -62,7 +62,7 @@ router.post(
         .when('type', {
           is: Joi.valid(...[PackageTypeEnum.amount, PackageTypeEnum.minutes]),
           then: Joi.required(),
-          otherwise: Joi.optional()
+          otherwise: Joi.forbidden()
         }),
       activities: Joi.array()
         .items({
@@ -105,7 +105,7 @@ router.put(
         .when('type', {
           is: Joi.valid(...[PackageTypeEnum.amount, PackageTypeEnum.minutes]),
           then: Joi.required(),
-          otherwise: Joi.optional()
+          otherwise: Joi.forbidden()
         }),
       activities: Joi.array()
         .items({

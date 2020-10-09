@@ -114,7 +114,7 @@ export class PackageService implements IPackageService {
     model.showInWeb = data.showInWeb;
     model.categoryId = data.categoryId;
     model.type = data.type;
-    model.total = data.total;
+    model.total = data.total || null;
 
     if (data.imageUrl) {
       if (model.imageUrl) {
