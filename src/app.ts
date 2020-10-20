@@ -3,6 +3,7 @@ import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import 'dotenv/config';
+import 'express-async-errors';
 
 import { databaseConfig } from './shared/database/connection';
 import useErrorHandlers from './shared/error-handlers';
