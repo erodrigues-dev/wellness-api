@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 import CustomError from '../custom-error/CustomError';
 import Category from '../database/models/Category';
 import ICategory from '../models/ICategory';
@@ -10,16 +10,21 @@ export class CategoryService implements ICategoryService {
   list(
     name: string,
     type: string,
-    page: number = 1,
-    limit: number = 10
+    page: number = null,
+    limit: number = null
   ): Promise<ICategory[]> {
     const where = this.buildQuery(name, type);
-    return this.db.findAll({
+    const findOptions: FindOptions = {
       where,
-      limit,
-      offset: (page - 1) * limit,
       order: ['name']
-    });
+    };
+
+    if (page && limit) {
+      findOptions.limit = limit;
+      findOptions.offset = (page - 1) * limit;
+    }
+
+    return this.db.findAll(findOptions);
   }
 
   count(name: string, type: string): Promise<number> {
