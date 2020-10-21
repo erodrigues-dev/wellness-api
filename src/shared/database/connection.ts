@@ -11,6 +11,7 @@ import Package from './models/Package';
 import Profile from './models/Profile';
 import CustomPackage from './models/CustomPackage';
 import Category from './models/Category';
+import CustomerDiscount from './models/CustomerDiscount';
 
 const connection = new Sequelize(DB_CONFIG);
 
@@ -24,6 +25,7 @@ export function databaseConfig() {
   Profile.setup(connection);
   CustomPackage.setup(connection);
   Category.setup(connection);
+  CustomerDiscount.setup(connection);
 
   Activity.setupAssociations();
   ActivitySchedule.setupAssociations();
@@ -34,6 +36,7 @@ export function databaseConfig() {
   Profile.setupAssociations();
   CustomPackage.setupAssociations();
   Category.setupAssociations();
+  CustomerDiscount.setupAssociations();
 }
 
 export default connection;
