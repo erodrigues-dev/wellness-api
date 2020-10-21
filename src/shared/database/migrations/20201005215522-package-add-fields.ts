@@ -1,5 +1,3 @@
-import { PackageTypeEnum } from './../../models/enums/PackageTypeEnum';
-import { RecurrencyPayEnum } from './../../models/enums/RecurrencyPayEnum';
 import { DataTypes, QueryInterface } from 'sequelize';
 ('use strict');
 
@@ -9,12 +7,12 @@ export default {
       queryInterface.addColumn('packages', 'recurrency_pay', {
         type: DataTypes.STRING(50),
         allowNull: false,
-        defaultValue: RecurrencyPayEnum.oneTime
+        defaultValue: 'one-time'
       }),
       queryInterface.addColumn('packages', 'type', {
         type: DataTypes.STRING(50),
         allowNull: false,
-        defaultValue: PackageTypeEnum.appointments
+        defaultValue: 'appointments'
       }),
       queryInterface.addColumn('packages', 'total', DataTypes.DECIMAL)
     ]);
