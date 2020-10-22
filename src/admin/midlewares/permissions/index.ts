@@ -8,6 +8,7 @@ import package_ from './Package';
 import profile from './Profile';
 import customPackage from './CustomPackage';
 import category from './Category';
+import customerDiscount from './CustomerDiscountPermission';
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use(package_);
 router.use(profile);
 router.use(customPackage);
 router.use(category);
+router.use(customerDiscount);
 
 export default router;
