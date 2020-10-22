@@ -8,9 +8,26 @@ export class CustomerDiscountController {
 
   async index(req: Request, res: Response, next: NextFunction) {
     try {
-      const { customerId } = req.params;
-      const list = await this.service.list(Number(customerId));
-      return res.json(list);
+      const { customerId, relationName, page, limit } = req.query;
+      const filter = {
+        customerId: Number(customerId),
+        relationName: relationName as string,
+        page: Number(page),
+        limit: Number(limit)
+      };
+      const total = await this.service.count(filter);
+      const list = await this.service.list(filter);
+      return res.header('x-total-count', total.toString()).json(list);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async get(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const model = await this.service.get(Number(id));
+      return res.json(model);
     } catch (error) {
       next(error);
     }
@@ -18,13 +35,12 @@ export class CustomerDiscountController {
 
   async store(req: Request, res: Response, next: NextFunction) {
     try {
-      const { customerId } = req.params;
       const { id: userId } = { id: 1 };
-      const { type, value, relationType, relationId } = req.body;
+      const { customerId, type, value, relationType, relationId } = req.body;
 
       console.log(req.body);
 
-      const model = await this.service.store({
+      const id = await this.service.store({
         userId,
         customerId: Number(customerId),
         type,
@@ -33,7 +49,7 @@ export class CustomerDiscountController {
         relationId
       });
 
-      return res.status(201).json(model);
+      return res.status(201).json({ id });
     } catch (error) {
       next(error);
     }
@@ -41,9 +57,15 @@ export class CustomerDiscountController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const { customerId } = req.params;
       const { id: userId } = { id: 1 };
-      const { id, type, value, relationType, relationId } = req.body;
+      const {
+        id,
+        customerId,
+        type,
+        value,
+        relationType,
+        relationId
+      } = req.body;
 
       const model = await this.service.update({
         id: Number(id),
@@ -55,7 +77,7 @@ export class CustomerDiscountController {
         relationId
       });
 
-      return res.status(200).json(model);
+      return res.status(204).json(model);
     } catch (error) {
       next(error);
     }
@@ -63,9 +85,9 @@ export class CustomerDiscountController {
 
   async destroy(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id, customerId } = req.params;
+      const { id } = req.params;
 
-      await this.service.destroy(Number(id), Number(customerId));
+      await this.service.destroy(Number(id));
 
       return res.status(200).json();
     } catch (error) {
