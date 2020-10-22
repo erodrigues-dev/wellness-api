@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import IProfile from '../models/IProfile';
 
 export enum ACTIONS {
   LIST = 1,
@@ -8,19 +7,12 @@ export enum ACTIONS {
   UPDATE = 4
 }
 
-interface AuthRequest extends Request {
-  user?: {
-    id: string;
-    profile: IProfile;
-  };
-}
-
 export function checkPermission(
   functionality: string,
   action: ACTIONS,
   permitYourself?: boolean
 ) {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     if (permitYourself) {
       const idParam = Number(req.params.id);
       const idUser = Number(req.user.id);
