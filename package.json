@@ -16,7 +16,8 @@
     "seed:up": "sequelize db:seed --seed",
     "seed:down": "sequelize db:seed:undo --seed",
     "seed:up:all": "sequelize db:seed:all",
-    "seed:down:all": "sequelize db:seed:undo:all"
+    "seed:down:all": "sequelize db:seed:undo:all",
+    "lint": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
