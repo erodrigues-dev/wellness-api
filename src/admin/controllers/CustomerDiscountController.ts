@@ -17,7 +17,7 @@ export class CustomerDiscountController {
       };
       const total = await this.service.count(filter);
       const list = await this.service.list(filter);
-      return res.header('x-total-count', total.toString()).json(list);
+      return res.header('X-Total-Count', total.toString()).json(list);
     } catch (error) {
       next(error);
     }
@@ -35,10 +35,8 @@ export class CustomerDiscountController {
 
   async store(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id: userId } = { id: 1 };
+      const { id: userId } = req.user;
       const { customerId, type, value, relationType, relationId } = req.body;
-
-      console.log(req.body);
 
       const id = await this.service.store({
         userId,
@@ -57,7 +55,7 @@ export class CustomerDiscountController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id: userId } = { id: 1 };
+      const { id: userId } = req.user;
       const {
         id,
         customerId,
