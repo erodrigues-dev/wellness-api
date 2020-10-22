@@ -9,9 +9,6 @@ export interface ILoginRequest extends Request<any, any, any, any> {
 }
 
 export interface IUpdateRequest extends Request<any, any, any, any> {
-  user: {
-    id: number;
-  };
   file: ICloudFile;
   body: {
     name: string;
