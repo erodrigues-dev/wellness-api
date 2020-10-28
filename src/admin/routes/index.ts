@@ -10,6 +10,7 @@ import profileRouter from './ProfileRouter';
 import customPackageRouter from './CustomPackageRouter';
 import categoryRouter from './CategoryRouter';
 import customerDiscountRouter from './CustomerDiscountRouter';
+import orderRouter from './OrderRouter';
 
 const router = Router();
 
@@ -23,5 +24,6 @@ router.use(profileRouter);
 router.use(customPackageRouter);
 router.use(categoryRouter);
 router.use(customerDiscountRouter);
+router.use(orderRouter);
 
 export default router;
