@@ -11,6 +11,7 @@ import profileValidate from './ProfileValidate';
 import customPackageValidate from './CustomPackageValidate';
 import categoryValidate from './CategoryValidate';
 import customerDiscountValidate from './CustomerDiscountValidate';
+import orderValidate from './OrderValidate';
 
 const router = Router();
 
@@ -24,6 +25,7 @@ router.use(profileValidate);
 router.use(customPackageValidate);
 router.use(categoryValidate);
 router.use(customerDiscountValidate);
+router.use(orderValidate);
 
 // required in last position
 router.use(errors());
