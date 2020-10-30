@@ -1,6 +1,8 @@
-import { Model, Association, Sequelize, DataTypes } from 'sequelize';
+import { Association, DataTypes, Model, Sequelize } from 'sequelize';
+
 import Customer from './Customer';
 import Employee from './Employee';
+import OrderItem from './OrderItem';
 
 export default class Order extends Model {
   id: number;
@@ -17,6 +19,7 @@ export default class Order extends Model {
   static associations: {
     customer: Association<Order, Customer>;
     user: Association<Order, Employee>;
+    items: Association<Order, OrderItem>;
   };
 
   static setup(connection: Sequelize) {
@@ -39,6 +42,11 @@ export default class Order extends Model {
     Order.belongsTo(Employee, {
       foreignKey: 'userId',
       as: 'user'
+    });
+
+    Order.hasMany(OrderItem, {
+      foreignKey: 'orderId',
+      as: 'items'
     });
   }
 }
