@@ -16,5 +16,6 @@
     "titleBar.inactiveForeground": "#e7e7e799"
   },
   "peacock.color": "#215732",
-  "git.rebaseWhenSync": true
+  "git.rebaseWhenSync": true,
+  "importSorter.generalConfiguration.sortOnBeforeSave": true
 }
