@@ -1,4 +1,4 @@
-import ILoginResponse from '../../shared/services/interfaces/ILoginResponse';
+import ILoginResponse from '../../shared/models/responses/ILoginResponse';
 
 declare global {
   namespace Express {
