@@ -1,13 +1,11 @@
 import { NextFunction, Response } from 'express';
-import packageService from '../../shared/services/PackageService';
+
+import IActivity from '../../shared/models/entities/IActivity';
 import IPackageService from '../../shared/services/interfaces/IPackageService';
+import packageService from '../../shared/services/PackageService';
 import IPackageController, {
-  IGetRequest,
-  IIndexRequest,
-  IStoreRequest,
-  IUpdateRequest
+    IGetRequest, IIndexRequest, IStoreRequest, IUpdateRequest
 } from './interfaces/IPackageController';
-import IActivity from '../../shared/models/IActivity';
 
 export class PackageController implements IPackageController {
   constructor(private service: IPackageService) {}

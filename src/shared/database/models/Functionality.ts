@@ -1,6 +1,6 @@
-import { Model, DataTypes, Association, Sequelize } from 'sequelize';
+import { Association, DataTypes, Model, Sequelize } from 'sequelize';
 
-import IFunctionality from '../../models/IFunctionality';
+import IFunctionality from '../../models/entities/IFunctionality';
 import Profile from './Profile';
 
 export default class Functionality

@@ -1,15 +1,10 @@
-import { Response, NextFunction } from 'express';
+import { NextFunction, Response } from 'express';
 
-import ICustomPackageService from '../../shared/services/interfaces/ICustomPackageService';
+import IActivity from '../../shared/models/entities/IActivity';
 import customPackageService from '../../shared/services/CustomPackageService';
-import IActivity from '../../shared/models/IActivity';
-
+import ICustomPackageService from '../../shared/services/interfaces/ICustomPackageService';
 import ICustomPackageController, {
-  IDestroyRequest,
-  IGetRequest,
-  IIndexRequest,
-  IStoreRequest,
-  IUpdateRequest
+    IDestroyRequest, IGetRequest, IIndexRequest, IStoreRequest, IUpdateRequest
 } from './interfaces/ICustomPackageController';
 
 export class CustomPackageController implements ICustomPackageController {

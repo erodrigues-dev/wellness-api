@@ -1,6 +1,6 @@
-import { Sequelize, Model, DataTypes } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 
-import ICustomer from '../../models/ICustomer';
+import ICustomer from '../../models/entities/ICustomer';
 
 export default class Customer extends Model<ICustomer> implements ICustomer {
   id?: number;
