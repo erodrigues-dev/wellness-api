@@ -13,20 +13,27 @@ export default {
       },
       order_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         references: { model: 'orders' },
         onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        onUpdate: 'CASCADE',
+        allowNull: false
       },
       type: {
-        type: DataTypes.STRING(20),
-        allowNull: false
+        type: DataTypes.STRING(12),
+        allowNull: false,
+        comment: 'package|activity'
+      },
+      metadata_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        comment: 'activity_id|package_id'
       },
       parent_id: {
         type: DataTypes.INTEGER,
         references: { model: 'order_items' },
         onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        onUpdate: 'CASCADE',
+        comment: 'activity self relation with package_id'
       },
       name: {
         type: DataTypes.STRING(100),
@@ -36,17 +43,23 @@ export default {
         type: DataTypes.DECIMAL,
         allowNull: false
       },
+      quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
       recurrency: {
         type: DataTypes.STRING(50),
-        allowNull: false
+        comment: 'one-time|weekly|monthly'
       },
       value_type: {
         type: DataTypes.STRING(50),
-        allowNull: false
+        comment: 'minutes|amount|unlimited|appointments'
       },
       value: {
-        type: DataTypes.DECIMAL,
-        allowNull: false
+        type: DataTypes.DECIMAL
+      },
+      expires_in: {
+        type: DataTypes.DATE
       },
       created_at: {
         type: DataTypes.DATE,

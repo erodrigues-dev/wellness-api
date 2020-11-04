@@ -4,22 +4,23 @@ import { DataTypes, fn, QueryInterface } from 'sequelize';
 
 export default {
   up: (queryInterface: QueryInterface) => {
-    return queryInterface.createTable('orders', {
+    return queryInterface.createTable('order_payments', {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false
       },
-      customer_id: {
+      order_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        references: { model: 'customers' },
+        references: { model: 'orders' },
         onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        onUpdate: 'CASCADE',
+        allowNull: false
       },
-      subtotal: {
-        type: DataTypes.DECIMAL,
+      type: {
+        type: DataTypes.STRING(10),
+        comment: 'money|card',
         allowNull: false
       },
       tip: {
@@ -33,13 +34,6 @@ export default {
       amount: {
         type: DataTypes.DECIMAL,
         allowNull: false
-      },
-      user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: { model: 'employees' },
-        onDelete: 'NO ACTION',
-        onUpdate: 'NO ACTION'
       },
       created_at: {
         type: DataTypes.DATE,
@@ -55,6 +49,6 @@ export default {
   },
 
   down: (queryInterface: QueryInterface) => {
-    return queryInterface.dropTable('orders');
+    return queryInterface.dropTable('order_payments');
   }
 };
