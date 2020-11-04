@@ -1,13 +1,18 @@
+import { Transaction } from 'sequelize';
+
 import CustomError from '../custom-error/CustomError';
 import Activity from '../database/models/Activity';
 import CustomerDiscount from '../database/models/CustomerDiscount';
 import Order from '../database/models/Order';
-import Package from '../database/models/Package';
+import OrderItem from '../database/models/OrderItem';
+import OrderPayment from '../database/models/OrderPayment';
 import PayWithMoneyDTO from '../models/dto/PayWithMoneyDTO';
 import IOrder from '../models/entities/IOrder';
 import IOrderItem from '../models/entities/IOrderItem';
+import IOrderIPayment from '../models/entities/IOrderPayment';
 import { DiscountTypeEnum } from '../models/enums/DiscountTypeEnum';
 import { OrderItemTypeEnum } from '../models/enums/OrderItemTypeEnum';
+import { PaymentTypeEnum } from '../models/enums/PaymentTypeEnum';
 import IOrderService from './interfaces/IOrderService';
 
 export class OrderService implements IOrderService {
@@ -32,21 +37,41 @@ export class OrderService implements IOrderService {
       customerDiscount?.type
     );
 
-    const order: IOrder = {
-      amount: activity.price,
-      discount,
+    const subtotal = activity.price * (dto.quantity || 1);
+
+    const transaction: Transaction = await Order.sequelize.transaction();
+
+    const orderData: IOrder = {
+      customerId: dto.customerId,
+      userId: dto.userId,
+      subtotal,
       tip: 0,
-      userId: dto.userId
+      discount,
+      amount: subtotal - discount
     };
 
-    const orderItem: IOrderItem = {
+    const orderCreated: IOrder = await Order.create(orderData, { transaction });
+
+    const orderItemData: IOrderItem = {
+      orderId: orderCreated.id,
       type: OrderItemTypeEnum.Activity,
+      metadataId: dto.itemId,
       name: activity.name,
       price: activity.price,
-      orderId: 0
+      quantity: dto.quantity
     };
 
-    const orderPayment = {};
+    const orderPaymentData: IOrderIPayment = {
+      orderId: orderCreated.id,
+      type: PaymentTypeEnum.Money,
+      tip: orderData.tip,
+      discount: orderData.discount,
+      amount: orderData.amount
+    };
+
+    await OrderItem.create(orderItemData, { transaction });
+    await OrderPayment.create(orderPaymentData, { transaction });
+    await transaction.commit();
   }
 
   private async payPackageWithMoney(dto: PayWithMoneyDTO) {}

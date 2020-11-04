@@ -10,8 +10,9 @@ export class OrderController {
 
   async payWithMoney(req: Request, res: Response, next: NextFunction) {
     try {
-      const dto = new PayWithMoneyDTO().fromRequest(req.body);
-      dto.userId = req.user.id;
+      const dto = new PayWithMoneyDTO()
+        .fromRequest(req.body)
+        .withUserId(req.user.id);
       await this.orderService.payWithMoney(dto);
       return res.status(StatusCodes.NO_CONTENT).json();
     } catch (error) {
