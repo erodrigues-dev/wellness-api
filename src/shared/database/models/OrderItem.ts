@@ -29,17 +29,18 @@ import Order from './Order';
  */
 
 export default class OrderItem extends Model {
-  id: number;
+  id?: number;
   orderId: number;
   type: OrderItemTypeEnum;
-  parentId: number;
+  metadataId: number;
+  parentId?: number;
   name: string;
   price: number;
-
-  recurrency: RecurrencyPayEnum;
-  valueType: PackageTypeEnum;
-  value: number;
-
+  quantity: number;
+  recurrency?: RecurrencyPayEnum;
+  valueType?: PackageTypeEnum;
+  value?: number;
+  expiresIn: Date;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -52,11 +53,14 @@ export default class OrderItem extends Model {
     OrderItem.init(
       {
         type: DataTypes.STRING,
+        metadataId: DataTypes.INTEGER,
         name: DataTypes.STRING,
         price: DataTypes.DECIMAL,
+        quantity: DataTypes.INTEGER,
         recurrency: DataTypes.STRING,
         valueType: DataTypes.STRING,
-        value: DataTypes.DECIMAL
+        value: DataTypes.DECIMAL,
+        expiresIn: DataTypes.DATE
       },
       { sequelize: connection, tableName: 'order_items' }
     );

@@ -2,16 +2,14 @@ import { Association, DataTypes, Model, Sequelize } from 'sequelize';
 
 import Customer from './Customer';
 import Employee from './Employee';
-import OrderItem from './OrderItem';
 
 export default class Order extends Model {
-  id: number;
+  id?: number;
   customerId: number;
-
-  amount: number;
-  discount: number;
+  subtotal: number;
   tip: number;
-
+  discount: number;
+  amount: number;
   userId: number;
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -19,15 +17,15 @@ export default class Order extends Model {
   static associations: {
     customer: Association<Order, Customer>;
     user: Association<Order, Employee>;
-    items: Association<Order, OrderItem>;
   };
 
   static setup(connection: Sequelize) {
     Order.init(
       {
-        amount: DataTypes.DECIMAL,
+        subtotal: DataTypes.DECIMAL,
+        tip: DataTypes.DECIMAL,
         discount: DataTypes.DECIMAL,
-        tip: DataTypes.DECIMAL
+        amount: DataTypes.DECIMAL
       },
       { sequelize: connection, tableName: 'orders' }
     );
@@ -42,11 +40,6 @@ export default class Order extends Model {
     Order.belongsTo(Employee, {
       foreignKey: 'userId',
       as: 'user'
-    });
-
-    Order.hasMany(OrderItem, {
-      foreignKey: 'orderId',
-      as: 'items'
     });
   }
 }
