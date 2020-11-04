@@ -1,15 +1,11 @@
 import { Op } from 'sequelize';
 
-import Customer from '../database/models/Customer';
-
-import ICustomer from '../models/ICustomer';
-import ICustomerService, {
-  ICustomerFilter
-} from './interfaces/ICustomerService';
-
-import { hash } from '../utils/hash-password';
-import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import CustomError from '../custom-error/CustomError';
+import Customer from '../database/models/Customer';
+import ICustomer from '../models/entities/ICustomer';
+import { deleteFileFromUrl } from '../utils/google-cloud-storage';
+import { hash } from '../utils/hash-password';
+import ICustomerService, { ICustomerFilter } from './interfaces/ICustomerService';
 
 export class CustomerService implements ICustomerService {
   async list(

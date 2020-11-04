@@ -1,12 +1,12 @@
-import { Op } from 'sequelize';
 import RRule from 'rrule';
+import { Op } from 'sequelize';
 
-import { EndsInEnum } from './../models/enums/EndsInEnum';
-import { convertToRRuleFrequency } from '../models/enums/FrequencyEnum';
-import IActivitySchedule from '../models/IActivitySchedule';
-import ActivitySchedule from '../database/models/ActivitySchedule';
-import IActivityScheduleService from './interfaces/IActivityScheduleService';
 import CustomError from '../custom-error/CustomError';
+import ActivitySchedule from '../database/models/ActivitySchedule';
+import IActivitySchedule from '../models/entities/IActivitySchedule';
+import { EndsInEnum } from '../models/enums/EndsInEnum';
+import { convertToRRuleFrequency } from '../models/enums/FrequencyEnum';
+import IActivityScheduleService from './interfaces/IActivityScheduleService';
 
 export class ActivityScheduleService implements IActivityScheduleService {
   private db = ActivitySchedule;

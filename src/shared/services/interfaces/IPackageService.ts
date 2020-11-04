@@ -1,5 +1,4 @@
-import { IPackageWithIncludes } from './../../models/IPackage';
-import IPackage from '../../models/IPackage';
+import IPackage, { IPackageWithIncludes } from '../../models/entities/IPackage';
 
 export interface IFilter {
   name?: string;

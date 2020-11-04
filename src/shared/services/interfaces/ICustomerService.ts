@@ -1,4 +1,4 @@
-import ICustomer from '../../models/ICustomer';
+import ICustomer from '../../models/entities/ICustomer';
 
 export interface ICustomerFilter {
   name?: string;

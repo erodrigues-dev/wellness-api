@@ -1,13 +1,12 @@
 import { Op, Transaction } from 'sequelize';
 
-import IPackage, { IPackageWithIncludes } from '../models/IPackage';
-import IPackageService, { IFilter } from './interfaces/IPackageService';
-
-import Package from '../database/models/Package';
-import CustomError from '../custom-error/CustomError';
-
-import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import { number } from '@hapi/joi';
+
+import CustomError from '../custom-error/CustomError';
+import Package from '../database/models/Package';
+import IPackage, { IPackageWithIncludes } from '../models/entities/IPackage';
+import { deleteFileFromUrl } from '../utils/google-cloud-storage';
+import IPackageService, { IFilter } from './interfaces/IPackageService';
 
 export class PackageService implements IPackageService {
   async list(

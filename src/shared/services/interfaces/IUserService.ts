@@ -1,4 +1,4 @@
-import ILoginResponse from './ILoginResponse';
+import ILoginResponse from '../../models/responses/ILoginResponse';
 
 export interface IUpdateData {
   id: number;

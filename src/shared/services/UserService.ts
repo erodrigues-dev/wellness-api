@@ -1,13 +1,12 @@
 import { Op } from 'sequelize';
-import IUserService, { IUpdateData } from './interfaces/IUserService';
 
+import CustomError from '../custom-error/CustomError';
 import Employee from '../database/models/Employee';
 import Profile from '../database/models/Profile';
-
-import { compare, hash } from '../utils/hash-password';
-import ILoginResponse from './interfaces/ILoginResponse';
-import CustomError from '../custom-error/CustomError';
+import ILoginResponse from '../models/responses/ILoginResponse';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
+import { compare, hash } from '../utils/hash-password';
+import IUserService, { IUpdateData } from './interfaces/IUserService';
 
 export class UserService implements IUserService {
   async login(email: string, password: string) {

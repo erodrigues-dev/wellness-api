@@ -1,14 +1,9 @@
 import { Op, Transaction } from 'sequelize';
 
-import ICustomPackage, {
-  ICustomPackageWithActivity
-} from '../models/ICustomPackage';
-import ICustomPackageService, {
-  IFilter
-} from './interfaces/ICustomPackageService';
-
-import CustomPackage from '../database/models/CustomPackage';
 import CustomError from '../custom-error/CustomError';
+import CustomPackage from '../database/models/CustomPackage';
+import ICustomPackage, { ICustomPackageWithActivity } from '../models/entities/ICustomPackage';
+import ICustomPackageService, { IFilter } from './interfaces/ICustomPackageService';
 
 export class CustomPackageService implements ICustomPackageService {
   private db = CustomPackage;
