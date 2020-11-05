@@ -1,3 +1,4 @@
+import CustomerDiscount from '../../database/models/CustomerDiscount';
 import CustomerDiscountViewModel from '../../viewmodels/CustomerDiscountViewModel';
 
 export interface IStore {
@@ -23,6 +24,11 @@ export interface IFilter {
 export default interface ICustomerDiscountService {
   list(filter: IFilter): Promise<CustomerDiscountViewModel[]>;
   get(id: number): Promise<CustomerDiscountViewModel>;
+  find(
+    customerId: number,
+    relationType: string,
+    relationId: number
+  ): Promise<CustomerDiscount>;
   count(filter: IFilter): Promise<number>;
   store(data: IStore): Promise<number>;
   update(data: IUpdate): Promise<void>;

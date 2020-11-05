@@ -1,12 +1,10 @@
 import CustomError from '../custom-error/CustomError';
+import Activity from '../database/models/Activity';
 import CustomerDiscount from '../database/models/CustomerDiscount';
 import Package from '../database/models/Package';
-import Activity from '../database/models/Activity';
 import CustomerDiscountViewModel from '../viewmodels/CustomerDiscountViewModel';
 import ICustomerDiscountService, {
-  IStore,
-  IUpdate,
-  IFilter
+    IFilter, IStore, IUpdate
 } from './interfaces/ICustomerDiscountService';
 
 export class CustomerDiscountService implements ICustomerDiscountService {
@@ -37,6 +35,12 @@ export class CustomerDiscountService implements ICustomerDiscountService {
     if (!item) throw new CustomError('Discount not found', 404);
 
     return CustomerDiscountViewModel.from(item);
+  }
+
+  find(customerId: number, relationType: string, relationId: number) {
+    return CustomerDiscount.findOne({
+      where: { customerId, relationType, relationId }
+    });
   }
 
   async count(filter: IFilter): Promise<number> {

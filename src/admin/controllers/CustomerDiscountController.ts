@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
-import ICustomerDiscountService from '../../shared/services/interfaces/ICustomerDiscountService';
 import customerDiscountService from '../../shared/services/CustomerDiscountService';
+import ICustomerDiscountService from '../../shared/services/interfaces/ICustomerDiscountService';
 
 export class CustomerDiscountController {
   constructor(private service: ICustomerDiscountService) {}
@@ -28,6 +28,21 @@ export class CustomerDiscountController {
       const { id } = req.params;
       const model = await this.service.get(Number(id));
       return res.json(model);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async find(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { customerId } = req.params;
+      const { relationType, relationId } = req.query;
+      const discount = await this.service.find(
+        Number(customerId),
+        String(relationType),
+        Number(relationId)
+      );
+      return res.json(discount);
     } catch (error) {
       next(error);
     }
