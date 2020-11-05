@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 export enum ACTIONS {
   LIST = 1,
@@ -29,8 +29,9 @@ export function checkPermission(
 
     if (!hasPermission) {
       return res.status(401).json({
-        required: `${functionality} with level ${action}`,
-        message: 'permission denied'
+        message: 'permission denied',
+        required: functionality,
+        level: action
       });
     }
 
