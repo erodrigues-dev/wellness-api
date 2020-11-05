@@ -54,6 +54,7 @@
     "@types/morgan": "^1.9.1",
     "@types/multer": "^1.4.4",
     "@types/node": "^14.10.1",
+    "@types/sequelize": "^4.28.9",
     "@types/square-connect": "^3.20200325.2",
     "@types/uuid": "^8.3.0",
     "nodemon": "^2.0.2",

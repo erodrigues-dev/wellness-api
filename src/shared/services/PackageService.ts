@@ -1,7 +1,5 @@
 import { Op, Transaction } from 'sequelize';
 
-import { number } from '@hapi/joi';
-
 import CustomError from '../custom-error/CustomError';
 import Package from '../database/models/Package';
 import IPackage, { IPackageWithIncludes } from '../models/entities/IPackage';
@@ -118,7 +116,11 @@ export class PackageService implements IPackageService {
     if (data.imageUrl) {
       if (model.imageUrl) {
         const url = model.imageUrl;
-        transaction.afterCommit(() => deleteFileFromUrl(url).catch(() => {}));
+        transaction.afterCommit(() => {
+          deleteFileFromUrl(url)
+            .then(() => {})
+            .catch(() => {});
+        });
       }
 
       model.imageUrl = data.imageUrl;

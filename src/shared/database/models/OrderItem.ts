@@ -36,7 +36,7 @@ export default class OrderItem extends Model {
   parentId?: number;
   name: string;
   price: number;
-  quantity: number;
+  quantity?: number;
   recurrency?: RecurrencyPayEnum;
   valueType?: PackageTypeEnum;
   value?: number;

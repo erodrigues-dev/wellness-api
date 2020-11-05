@@ -2,10 +2,12 @@ import { Transaction } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Activity from '../database/models/Activity';
+import Customer from '../database/models/Customer';
 import CustomerDiscount from '../database/models/CustomerDiscount';
 import Order from '../database/models/Order';
 import OrderItem from '../database/models/OrderItem';
 import OrderPayment from '../database/models/OrderPayment';
+import Package from '../database/models/Package';
 import PayWithMoneyDTO from '../models/dto/PayWithMoneyDTO';
 import IOrder from '../models/entities/IOrder';
 import IOrderItem from '../models/entities/IOrderItem';

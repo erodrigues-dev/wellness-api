@@ -10,10 +10,11 @@ export default interface IOrderItem {
   parentId?: number;
   name: string;
   price: number;
-  quantity: number;
+  quantity?: number;
   recurrency?: RecurrencyPayEnum;
   valueType?: PackageTypeEnum;
   value?: number;
+  expiresIn?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }

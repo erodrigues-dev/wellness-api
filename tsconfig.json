@@ -8,7 +8,12 @@
     "esModuleInterop": true,
     "outDir": "./dist",
     "rootDirs": ["./"],
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "src",
+    "paths": {
+      "@shared/*": ["./shared/*"],
+      "@database/*": ["./shared/database/models/*"]
+    }
   },
   "include": ["src"]
 }

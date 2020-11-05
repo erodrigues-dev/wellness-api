@@ -44,8 +44,7 @@ export default {
         allowNull: false
       },
       quantity: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+        type: DataTypes.INTEGER
       },
       recurrency: {
         type: DataTypes.STRING(50),
