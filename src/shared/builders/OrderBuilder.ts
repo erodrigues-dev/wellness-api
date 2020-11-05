@@ -7,9 +7,11 @@ import OrderItem from '../database/models/OrderItem';
 import Package from '../database/models/Package';
 import IOrder from '../models/entities/IOrder';
 import IOrderItem from '../models/entities/IOrderItem';
+import IOrderPayment from '../models/entities/IOrderPayment';
 import { IPackageWithIncludes } from '../models/entities/IPackage';
 import { DiscountTypeEnum } from '../models/enums/DiscountTypeEnum';
 import { OrderItemTypeEnum } from '../models/enums/OrderItemTypeEnum';
+import { PaymentTypeEnum } from '../models/enums/PaymentTypeEnum';
 
 export class OrderBuilder {
   private type: 'activity' | 'package';
@@ -70,7 +72,15 @@ export class OrderBuilder {
     await this.createItems();
   }
 
-  async payWithMoney() {}
+  async payWithMoney() {
+    const data: IOrderPayment = {
+      orderId: this.order.id,
+      type: PaymentTypeEnum.Money,
+      tip: 0,
+      discount: this.order.discount,
+      amount: this.order.amount
+    };
+  }
 
   save() {
     return this.transaction.commit();

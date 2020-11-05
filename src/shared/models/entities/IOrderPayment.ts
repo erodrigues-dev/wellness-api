@@ -1,6 +1,6 @@
 import { PaymentTypeEnum } from '../enums/PaymentTypeEnum';
 
-export default interface IOrderIPayment {
+export default interface IOrderPayment {
   id?: number;
   orderId: number;
   type: PaymentTypeEnum;

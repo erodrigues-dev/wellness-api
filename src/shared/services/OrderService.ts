@@ -11,7 +11,7 @@ import Package from '../database/models/Package';
 import PayWithMoneyDTO from '../models/dto/PayWithMoneyDTO';
 import IOrder from '../models/entities/IOrder';
 import IOrderItem from '../models/entities/IOrderItem';
-import IOrderIPayment from '../models/entities/IOrderPayment';
+import IOrderPayment from '../models/entities/IOrderPayment';
 import { DiscountTypeEnum } from '../models/enums/DiscountTypeEnum';
 import { OrderItemTypeEnum } from '../models/enums/OrderItemTypeEnum';
 import { PaymentTypeEnum } from '../models/enums/PaymentTypeEnum';
@@ -63,7 +63,7 @@ export class OrderService implements IOrderService {
       quantity: dto.quantity
     };
 
-    const orderPaymentData: IOrderIPayment = {
+    const orderPaymentData: IOrderPayment = {
       orderId: orderCreated.id,
       type: PaymentTypeEnum.Money,
       tip: orderData.tip,
