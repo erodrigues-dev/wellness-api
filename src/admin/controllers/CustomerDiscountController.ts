@@ -35,8 +35,7 @@ export class CustomerDiscountController {
 
   async find(req: Request, res: Response, next: NextFunction) {
     try {
-      const { customerId } = req.params;
-      const { relationType, relationId } = req.query;
+      const { customerId, relationType, relationId } = req.params;
       const discount = await this.service.find(
         Number(customerId),
         String(relationType),
