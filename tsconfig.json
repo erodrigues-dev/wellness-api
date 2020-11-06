@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2017",
     "module": "commonjs",
     "allowJs": true,
     "strict": false,
@@ -9,10 +9,11 @@
     "outDir": "./dist",
     "rootDirs": ["./"],
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "src",
+    "removeComments": true,
+    "baseUrl": ".",
     "paths": {
-      "@shared/*": ["./shared/*"],
-      "@database/*": ["./shared/database/models/*"]
+      "@shared/*": ["./src/shared/*"],
+      "@database/*": ["./src/shared/database/models/*"]
     }
   },
   "include": ["src"]

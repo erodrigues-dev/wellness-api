@@ -4,6 +4,7 @@ import Activity from '../database/models/Activity';
 import CustomerDiscount from '../database/models/CustomerDiscount';
 import Order from '../database/models/Order';
 import OrderItem from '../database/models/OrderItem';
+import OrderPayment from '../database/models/OrderPayment';
 import Package from '../database/models/Package';
 import IOrder from '../models/entities/IOrder';
 import IOrderItem from '../models/entities/IOrderItem';
@@ -80,6 +81,8 @@ export class OrderBuilder {
       discount: this.order.discount,
       amount: this.order.amount
     };
+
+    await OrderPayment.create(data, { transaction: this.transaction });
   }
 
   save() {
@@ -123,11 +126,13 @@ export class OrderBuilder {
       return;
     }
 
-    const discount = this.customerDiscount.value;
+    const discountValue = this.customerDiscount.value;
 
-    if (this.customerDiscount.type === DiscountTypeEnum.Percent)
-      this.discount = (discount / 100) * this.price;
-    else this.discount = discount;
+    if (this.customerDiscount.type === DiscountTypeEnum.Percent) {
+      this.discount = (discountValue / 100) * this.price * this.quantity;
+    } else {
+      this.discount = discountValue * this.quantity;
+    }
   }
 
   private async createOrder() {

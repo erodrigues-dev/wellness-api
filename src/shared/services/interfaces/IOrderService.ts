@@ -1,5 +1,5 @@
-import PayWithMoneyDTO from '../../models/dto/PayWithMoneyDTO';
+import Order from '../../database/models/Order';
 
 export default interface IOrderService {
-  payWithMoney(dto: PayWithMoneyDTO): Promise<void>;
+  list(): Promise<Order[]>;
 }
