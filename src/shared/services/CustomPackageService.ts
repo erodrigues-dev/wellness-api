@@ -115,7 +115,7 @@ export class CustomPackageService implements ICustomPackageService {
   }
 
   async destroy(customerId: number, id: number): Promise<void> {
-    const rows = this.db.destroy({
+    const rows = await this.db.destroy({
       where: {
         customerId,
         id

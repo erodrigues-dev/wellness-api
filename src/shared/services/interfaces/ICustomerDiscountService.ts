@@ -1,8 +1,9 @@
 import CustomerDiscount from '../../database/models/CustomerDiscount';
+import { DiscountTypeEnum } from '../../models/enums/DiscountTypeEnum';
 import CustomerDiscountViewModel from '../../viewmodels/CustomerDiscountViewModel';
 
 export interface IStore {
-  type: string;
+  type: DiscountTypeEnum;
   value: number;
   relationType: 'package' | 'activity';
   relationId: number;

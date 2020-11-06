@@ -1,5 +1,5 @@
-import { RecurrencyPayEnum } from './enums/RecurrencyPayEnum';
-import { PackageTypeEnum } from './enums/PackageTypeEnum';
+import { PackageTypeEnum } from '../enums/PackageTypeEnum';
+import { RecurrencyPayEnum } from '../enums/RecurrencyPayEnum';
 import { IActivityWithPackageActivity } from './IActivity';
 import ICategory from './ICategory';
 

@@ -54,7 +54,7 @@ export class CustomerDiscountService implements ICustomerDiscountService {
       }
     );
 
-    const [{ count }] = results;
+    const [{ count }] = results as any;
 
     return Number(count);
   }
