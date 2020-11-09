@@ -9,12 +9,7 @@
     "outDir": "./dist",
     "rootDirs": ["./"],
     "forceConsistentCasingInFileNames": true,
-    "removeComments": true,
-    "baseUrl": ".",
-    "paths": {
-      "@shared/*": ["./src/shared/*"],
-      "@database/*": ["./src/shared/database/models/*"]
-    }
+    "removeComments": true
   },
   "include": ["src"]
 }
