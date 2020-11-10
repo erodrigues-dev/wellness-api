@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { OrderBuilder } from '../../shared/builders/OrderBuilder';
 import IOrderService from '../../shared/services/interfaces/IOrderService';
 import orderService from '../../shared/services/OrderService';
+import { PayWithMoney } from '../../shared/useCases/order/PayWithMoney';
+import PayWithMoneyDTO from '../../shared/useCases/order/PayWithMoneyDTO';
 
 export class OrderController {
   constructor(private service: IOrderService) {}
@@ -19,15 +20,11 @@ export class OrderController {
 
   async payWithMoney(req: Request, res: Response, next: NextFunction) {
     try {
-      const builder = new OrderBuilder()
-        .withCustomer(Number(req.body.customerId))
-        .withItem(req.body.itemType, Number(req.body.itemId))
-        .withQuantity(Number(req.body.quantity))
-        .withUser(req.user.id);
+      const data = new PayWithMoneyDTO()
+        .makeFromBody(req.body)
+        .withUserId(req.user.id);
 
-      await builder.build();
-      await builder.payWithMoney();
-      await builder.save();
+      await new PayWithMoney().pay(data);
 
       return res.status(StatusCodes.NO_CONTENT).json();
     } catch (error) {

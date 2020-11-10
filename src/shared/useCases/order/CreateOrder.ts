@@ -1,28 +1,25 @@
 import { Transaction } from 'sequelize';
 
-import Activity from '../database/models/Activity';
-import CustomerDiscount from '../database/models/CustomerDiscount';
-import Order from '../database/models/Order';
-import OrderItem from '../database/models/OrderItem';
-import OrderPayment from '../database/models/OrderPayment';
-import Package from '../database/models/Package';
-import IOrder from '../models/entities/IOrder';
-import IOrderItem from '../models/entities/IOrderItem';
-import IOrderPayment from '../models/entities/IOrderPayment';
-import { IPackageWithIncludes } from '../models/entities/IPackage';
-import { DiscountTypeEnum } from '../models/enums/DiscountTypeEnum';
-import { OrderItemTypeEnum } from '../models/enums/OrderItemTypeEnum';
-import { PaymentTypeEnum } from '../models/enums/PaymentTypeEnum';
+import Activity from '../../database/models/Activity';
+import CustomerDiscount from '../../database/models/CustomerDiscount';
+import Order from '../../database/models/Order';
+import OrderItem from '../../database/models/OrderItem';
+import Package from '../../database/models/Package';
+import IOrder from '../../models/entities/IOrder';
+import IOrderItem from '../../models/entities/IOrderItem';
+import { IPackageWithIncludes } from '../../models/entities/IPackage';
+import { DiscountTypeEnum } from '../../models/enums/DiscountTypeEnum';
+import { OrderItemTypeEnum } from '../../models/enums/OrderItemTypeEnum';
 
-export class OrderBuilder {
-  private type: 'activity' | 'package';
-  private activityId: number;
-  private packageId: number;
+export default class CreateOrder {
+  private type: OrderItemTypeEnum;
+  private itemId: number;
   private customerId: number;
   private userId: number;
+  private quantity: number;
+
   private discount: number;
   private price: number;
-  private quantity: number;
 
   private activity: Activity;
   private package: IPackageWithIncludes;
@@ -30,15 +27,9 @@ export class OrderBuilder {
   private transaction: Transaction;
   private order: Order;
 
-  withActivity(id: number) {
-    this.type = 'activity';
-    this.activityId = id;
-    return this;
-  }
-
-  withPackage(id: number) {
-    this.type = 'package';
-    this.packageId = id;
+  withItem(id: number, type: OrderItemTypeEnum) {
+    this.itemId = id;
+    this.type = type;
     return this;
   }
 
@@ -57,32 +48,18 @@ export class OrderBuilder {
     return this;
   }
 
-  withItem(type: 'activity' | 'package', itemId: number) {
-    this.type = type;
-    if (type === 'activity') this.activityId = itemId;
-    else this.packageId = itemId;
-
-    return this;
+  useTransaction(transaction: Transaction) {
+    this.transaction = transaction;
   }
 
-  async build() {
-    this.transaction = await this.createTransaction();
+  async create() {
+    await this.createTransaction();
     await this.load();
     this.calculateDiscount();
     await this.createOrder();
     await this.createItems();
-  }
 
-  async payWithMoney() {
-    const data: IOrderPayment = {
-      orderId: this.order.id,
-      type: PaymentTypeEnum.Money,
-      tip: 0,
-      discount: this.order.discount,
-      amount: this.order.amount
-    };
-
-    await OrderPayment.create(data, { transaction: this.transaction });
+    return this.order;
   }
 
   save() {
@@ -90,15 +67,16 @@ export class OrderBuilder {
   }
 
   private async createTransaction() {
-    return Order.sequelize.transaction();
+    if (!this.transaction)
+      this.transaction = await Order.sequelize.transaction();
   }
 
   private async load() {
     if (this.type === 'activity')
-      this.activity = await Activity.findByPk(this.activityId);
+      this.activity = await Activity.findByPk(this.itemId);
 
     if (this.type === 'package') {
-      this.package = await Package.findByPk(this.packageId, {
+      this.package = await Package.findByPk(this.itemId, {
         include: [
           {
             association: Package.associations.activities,
@@ -111,7 +89,7 @@ export class OrderBuilder {
     this.customerDiscount = await CustomerDiscount.findOne({
       where: {
         customerId: this.customerId,
-        relationId: this.type === 'activity' ? this.activityId : this.packageId,
+        relationId: this.type === 'activity' ? this.itemId : this.itemId,
         relationType: this.type
       }
     });
@@ -162,7 +140,7 @@ export class OrderBuilder {
     const orderItemData: IOrderItem = {
       orderId: this.order.id,
       type: OrderItemTypeEnum.Activity,
-      metadataId: this.activityId,
+      metadataId: this.itemId,
       name: this.activity.name,
       price: this.activity.price,
       quantity: this.quantity
@@ -176,7 +154,7 @@ export class OrderBuilder {
       {
         orderId: this.order.id,
         type: OrderItemTypeEnum.Package,
-        metadataId: this.packageId,
+        metadataId: this.itemId,
         name: this.package.name,
         price: this.package.price,
         quantity: this.quantity,

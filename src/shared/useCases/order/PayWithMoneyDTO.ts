@@ -1,11 +1,13 @@
+import { OrderItemTypeEnum } from '../../models/enums/OrderItemTypeEnum';
+
 export default class PayWithMoneyDTO {
   customerId: number;
-  itemType: 'package' | 'activity';
+  itemType: OrderItemTypeEnum;
   itemId: number;
   quantity: number;
   userId: number;
 
-  fromRequest(body: any) {
+  makeFromBody(body: any) {
     this.customerId = Number(body.customerId);
     this.itemType = body.itemType;
     this.itemId = Number(body.itemId);
