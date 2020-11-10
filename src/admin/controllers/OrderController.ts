@@ -4,8 +4,8 @@ import { StatusCodes } from 'http-status-codes';
 import IOrderService from '../../shared/services/interfaces/IOrderService';
 import orderService from '../../shared/services/OrderService';
 import CreateOrderDTO from '../../shared/useCases/order/CreateOrderDTO';
-import { PayWithMoney } from '../../shared/useCases/order/PayWithMoney';
-import PayWithMoneyDTO from '../../shared/useCases/order/PayWithMoneyDTO';
+import CreateOrderWithCardDTO from '../../shared/useCases/order/CreateOrderWithCardDTO';
+import PayWithCard from '../../shared/useCases/order/PayWithCard';
 import PayWithMoney from '../../shared/useCases/order/PayWithMoney';
 
 export class OrderController {
@@ -27,6 +27,20 @@ export class OrderController {
         .withUserId(req.user.id);
 
       await new PayWithMoney().pay(data);
+
+      return res.status(StatusCodes.NO_CONTENT).json();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async payWithCard(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = new CreateOrderWithCardDTO()
+        .parseFromBody(req.body)
+        .withUserId(req.user.id);
+
+      await new PayWithCard().pay(data);
 
       return res.status(StatusCodes.NO_CONTENT).json();
     } catch (error) {

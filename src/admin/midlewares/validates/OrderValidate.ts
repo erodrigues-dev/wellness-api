@@ -15,4 +15,19 @@ router.post(
   })
 );
 
+router.post(
+  '/orders/pay-with-card',
+  celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      customerId: Joi.number().required(),
+      itemType: Joi.string().valid('package', 'activity').required(),
+      itemId: Joi.number().required(),
+      quantity: Joi.number().positive().required(),
+      cardId: Joi.string().required(),
+      tip: Joi.number().min(0).required(),
+      dueDate: Joi.date().optional().allow(null)
+    })
+  })
+);
+
 export default router;
