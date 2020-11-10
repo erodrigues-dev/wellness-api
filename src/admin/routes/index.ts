@@ -1,16 +1,17 @@
 import { Router } from 'express';
 
-import sessionRouter from './SessionRouter';
 import activityRouter from './ActivityRouter';
 import activityScheduleRouter from './ActivityScheduleRouter';
+import categoryRouter from './CategoryRouter';
+import checkoutRouter from './CheckoutRouter';
+import customerDiscountRouter from './CustomerDiscountRouter';
 import customerRouter from './CustomerRouter';
+import customPackageRouter from './CustomPackageRouter';
 import employeeRouter from './EmployeeRouter';
+import orderRouter from './OrderRouter';
 import packageRouter from './PackageRouter';
 import profileRouter from './ProfileRouter';
-import customPackageRouter from './CustomPackageRouter';
-import categoryRouter from './CategoryRouter';
-import customerDiscountRouter from './CustomerDiscountRouter';
-import orderRouter from './OrderRouter';
+import sessionRouter from './SessionRouter';
 
 const router = Router();
 
@@ -25,5 +26,6 @@ router.use(customPackageRouter);
 router.use(categoryRouter);
 router.use(customerDiscountRouter);
 router.use(orderRouter);
+router.use(checkoutRouter);
 
 export default router;

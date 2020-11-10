@@ -2,7 +2,7 @@ import CustomError from '../custom-error/CustomError';
 import Activity from '../database/models/Activity';
 import CustomerDiscount from '../database/models/CustomerDiscount';
 import Package from '../database/models/Package';
-import CustomerDiscountViewModel from '../viewmodels/CustomerDiscountViewModel';
+import CustomerDiscountViewModel from '../models/viewmodels/CustomerDiscountViewModel';
 import ICustomerDiscountService, {
     IFilter, IStore, IUpdate
 } from './interfaces/ICustomerDiscountService';

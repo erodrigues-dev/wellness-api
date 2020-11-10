@@ -1,6 +1,6 @@
 import CustomerDiscount from '../../database/models/CustomerDiscount';
 import { DiscountTypeEnum } from '../../models/enums/DiscountTypeEnum';
-import CustomerDiscountViewModel from '../../viewmodels/CustomerDiscountViewModel';
+import CustomerDiscountViewModel from '../../models/viewmodels/CustomerDiscountViewModel';
 
 export interface IStore {
   type: DiscountTypeEnum;

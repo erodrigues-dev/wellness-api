@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { v4 as uuid } from 'uuid';
 
-import { RecurrencyPayEnum } from './../models/enums/RecurrencyPayEnum';
+import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
 
 export class SquareCatalogService {
   constructor(private api: AxiosInstance) {}
