@@ -9,4 +9,11 @@ router.post(
   controller.calculateDiscount.bind(controller)
 );
 
+router.post(
+  '/checkout/pay-with-money',
+  controller.payWithMoney.bind(controller)
+);
+
+router.post('/checkout/pay-with-card', controller.payWithCard.bind(controller));
+
 export default router;

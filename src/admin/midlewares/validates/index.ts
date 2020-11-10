@@ -1,17 +1,18 @@
 import { errors } from 'celebrate';
 import { Router } from 'express';
 
-import sessionValidate from './SessionValidate';
-import activityValidate from './ActivityValidate';
 import activityScheduleValidate from './ActivityScheduleValidate';
+import activityValidate from './ActivityValidate';
+import categoryValidate from './CategoryValidate';
+import checkoutValidate from './CheckoutValidate';
+import customerDiscountValidate from './CustomerDiscountValidate';
 import customerValidate from './CustomerValidate';
+import customPackageValidate from './CustomPackageValidate';
 import employeeValidate from './EmployeeValidate';
+import orderValidate from './OrderValidate';
 import packageValidate from './PackageValidate';
 import profileValidate from './ProfileValidate';
-import customPackageValidate from './CustomPackageValidate';
-import categoryValidate from './CategoryValidate';
-import customerDiscountValidate from './CustomerDiscountValidate';
-import orderValidate from './OrderValidate';
+import sessionValidate from './SessionValidate';
 
 const router = Router();
 
@@ -26,6 +27,7 @@ router.use(customPackageValidate);
 router.use(categoryValidate);
 router.use(customerDiscountValidate);
 router.use(orderValidate);
+router.use(checkoutValidate);
 
 // required in last position
 router.use(errors());
