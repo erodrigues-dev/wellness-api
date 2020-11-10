@@ -3,8 +3,10 @@ import { StatusCodes } from 'http-status-codes';
 
 import IOrderService from '../../shared/services/interfaces/IOrderService';
 import orderService from '../../shared/services/OrderService';
+import CreateOrderDTO from '../../shared/useCases/order/CreateOrderDTO';
 import { PayWithMoney } from '../../shared/useCases/order/PayWithMoney';
 import PayWithMoneyDTO from '../../shared/useCases/order/PayWithMoneyDTO';
+import PayWithMoney from '../../shared/useCases/order/PayWithMoney';
 
 export class OrderController {
   constructor(private service: IOrderService) {}
@@ -20,8 +22,8 @@ export class OrderController {
 
   async payWithMoney(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = new PayWithMoneyDTO()
-        .makeFromBody(req.body)
+      const data = new CreateOrderDTO()
+        .parseFromBody(req.body)
         .withUserId(req.user.id);
 
       await new PayWithMoney().pay(data);

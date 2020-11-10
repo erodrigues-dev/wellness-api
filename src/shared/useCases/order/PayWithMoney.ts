@@ -6,9 +6,9 @@ import OrderPayment from '../../database/models/OrderPayment';
 import IOrderPayment from '../../models/entities/IOrderPayment';
 import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
 import CreateOrder from './CreateOrder';
-import PayWithMoneyDTO from './PayWithMoneyDTO';
+import CreateOrderDTO from './CreateOrderDTO';
 
-export class PayWithMoney {
+export default class PayWithMoney {
   private createOrder: CreateOrder;
   private transaction: Transaction;
 
@@ -16,27 +16,35 @@ export class PayWithMoney {
     this.createOrder = new CreateOrder();
   }
 
-  async pay(data: PayWithMoneyDTO): Promise<void> {
-    await this.createTransation();
-    const order = await this.createOrderFromData(data);
-    await this.createOrderPayment(order);
+  async pay(data: CreateOrderDTO): Promise<void> {
+    try {
+      await this.createTransation();
+      const order = await this.createOrder
+        .useTransaction(this.transaction)
+        .withData(data)
+        .create();
+      await this.createOrderPayment(order);
+      await this.commit();
+    } catch (error) {
+      await this.rollback();
+      throw error;
+    }
+  }
 
-    this.transaction.commit();
+  private async commit() {
+    await this.transaction.commit();
+  }
+
+  private async rollback() {
+    try {
+      await this.transaction.rollback();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   private async createTransation() {
     this.transaction = await connection.transaction();
-    this.createOrder.useTransaction(this.transaction);
-  }
-
-  private async createOrderFromData(data: PayWithMoneyDTO) {
-    this.createOrder
-      .withCustomer(data.customerId)
-      .withItem(data.itemId, data.itemType)
-      .withQuantity(data.quantity)
-      .withUser(data.userId);
-
-    return this.createOrder.create();
   }
 
   private async createOrderPayment(order: Order) {

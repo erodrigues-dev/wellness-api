@@ -10,51 +10,34 @@ import IOrderItem from '../../models/entities/IOrderItem';
 import { IPackageWithIncludes } from '../../models/entities/IPackage';
 import { DiscountTypeEnum } from '../../models/enums/DiscountTypeEnum';
 import { OrderItemTypeEnum } from '../../models/enums/OrderItemTypeEnum';
+import CreateOrderDTO from './CreateOrderDTO';
 
 export default class CreateOrder {
-  private type: OrderItemTypeEnum;
-  private itemId: number;
-  private customerId: number;
-  private userId: number;
-  private quantity: number;
+  private data: CreateOrderDTO;
 
-  private discount: number;
-  private price: number;
+  private discount: number = 0;
+  private price: number = 0;
 
+  private transaction: Transaction;
   private activity: Activity;
   private package: IPackageWithIncludes;
   private customerDiscount: CustomerDiscount;
-  private transaction: Transaction;
   private order: Order;
-
-  withItem(id: number, type: OrderItemTypeEnum) {
-    this.itemId = id;
-    this.type = type;
-    return this;
-  }
-
-  withUser(id: number) {
-    this.userId = id;
-    return this;
-  }
-
-  withCustomer(id: number) {
-    this.customerId = id;
-    return this;
-  }
-
-  withQuantity(qtd: number) {
-    this.quantity = qtd;
-    return this;
-  }
 
   useTransaction(transaction: Transaction) {
     this.transaction = transaction;
+    return this;
+  }
+
+  withData(data: CreateOrderDTO) {
+    this.data = data;
+
+    return this;
   }
 
   async create() {
-    await this.createTransaction();
     await this.load();
+    this.setPrice();
     this.calculateDiscount();
     await this.createOrder();
     await this.createItems();
@@ -62,21 +45,12 @@ export default class CreateOrder {
     return this.order;
   }
 
-  save() {
-    return this.transaction.commit();
-  }
-
-  private async createTransaction() {
-    if (!this.transaction)
-      this.transaction = await Order.sequelize.transaction();
-  }
-
   private async load() {
-    if (this.type === 'activity')
-      this.activity = await Activity.findByPk(this.itemId);
+    if (this.data.itemType === OrderItemTypeEnum.Activity)
+      this.activity = await Activity.findByPk(this.data.itemId);
 
-    if (this.type === 'package') {
-      this.package = await Package.findByPk(this.itemId, {
+    if (this.data.itemType === OrderItemTypeEnum.Package) {
+      this.package = await Package.findByPk(this.data.itemId, {
         include: [
           {
             association: Package.associations.activities,
@@ -88,17 +62,21 @@ export default class CreateOrder {
 
     this.customerDiscount = await CustomerDiscount.findOne({
       where: {
-        customerId: this.customerId,
-        relationId: this.type === 'activity' ? this.itemId : this.itemId,
-        relationType: this.type
+        customerId: this.data.customerId,
+        relationId: this.data.itemId,
+        relationType: this.data.itemType
       }
     });
   }
 
-  private calculateDiscount() {
+  private setPrice() {
     this.price =
-      this.type === 'activity' ? this.activity.price : this.package.price;
+      this.data.itemType === OrderItemTypeEnum.Activity
+        ? this.activity.price
+        : this.package.price;
+  }
 
+  private calculateDiscount() {
     if (!this.customerDiscount) {
       this.discount = 0;
       return;
@@ -107,18 +85,18 @@ export default class CreateOrder {
     const discountValue = this.customerDiscount.value;
 
     if (this.customerDiscount.type === DiscountTypeEnum.Percent) {
-      this.discount = (discountValue / 100) * this.price * this.quantity;
+      this.discount = (discountValue / 100) * this.price * this.data.quantity;
     } else {
-      this.discount = discountValue * this.quantity;
+      this.discount = discountValue * this.data.quantity;
     }
   }
 
   private async createOrder() {
     const orderData: IOrder = {
-      customerId: this.customerId,
-      userId: this.userId,
+      customerId: this.data.customerId,
+      userId: this.data.userId,
       subtotal: this.price,
-      tip: 0,
+      tip: this.data.tip,
       discount: this.discount,
       amount: this.price - this.discount
     };
@@ -129,7 +107,7 @@ export default class CreateOrder {
   }
 
   private async createItems() {
-    if (this.type === 'activity') {
+    if (this.data.itemType === OrderItemTypeEnum.Activity) {
       await this.createActivityOrdemItem();
     } else {
       await this.createPackageOrdemItems();
@@ -140,10 +118,10 @@ export default class CreateOrder {
     const orderItemData: IOrderItem = {
       orderId: this.order.id,
       type: OrderItemTypeEnum.Activity,
-      metadataId: this.itemId,
+      metadataId: this.data.itemId,
       name: this.activity.name,
       price: this.activity.price,
-      quantity: this.quantity
+      quantity: this.data.quantity
     };
 
     await OrderItem.create(orderItemData, { transaction: this.transaction });
@@ -154,10 +132,10 @@ export default class CreateOrder {
       {
         orderId: this.order.id,
         type: OrderItemTypeEnum.Package,
-        metadataId: this.itemId,
+        metadataId: this.data.itemId,
         name: this.package.name,
         price: this.package.price,
-        quantity: this.quantity,
+        quantity: this.data.quantity,
         recurrency: this.package.recurrencyPay,
         valueType: this.package.type,
         value: this.package.total,
