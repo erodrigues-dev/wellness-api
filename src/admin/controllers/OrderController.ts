@@ -1,18 +1,27 @@
 import { NextFunction, Request, Response } from 'express';
 
-import IOrderService from '../../shared/services/interfaces/IOrderService';
-import orderService from '../../shared/services/OrderService';
+import orderService, { OrderService } from '../../shared/services/OrderService';
 
 export class OrderController {
-  constructor(private service: IOrderService) {}
+  constructor(private service: OrderService) {}
 
   async index(req: Request, res: Response, next: NextFunction) {
     try {
-      const list = await this.service.list();
-      return res.json(list);
+      const { page, limit, customerId } = this.parseIndexParams(req);
+
+      const data = await this.service.list(customerId, page, limit);
+      return res.header('x-total-count', data.count.toString()).json(data.rows);
     } catch (error) {
       next(error);
     }
+  }
+
+  private parseIndexParams(req: Request) {
+    return {
+      page: Number(req.query.page),
+      limit: Number(req.query.limit),
+      customerId: Number(req.query.customerId)
+    };
   }
 }
 

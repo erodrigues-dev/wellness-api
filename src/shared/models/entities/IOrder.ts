@@ -4,7 +4,7 @@ export default interface IOrder {
   subtotal: number;
   tip: number;
   discount: number;
-  amount: number;
+  total: number;
   userId: number;
   createdAt?: Date;
   updatedAt?: Date;

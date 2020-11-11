@@ -2,6 +2,8 @@ import { Association, DataTypes, Model, Sequelize } from 'sequelize';
 
 import Customer from './Customer';
 import Employee from './Employee';
+import OrderItem from './OrderItem';
+import OrderPayment from './OrderPayment';
 
 export default class Order extends Model {
   id?: number;
@@ -9,7 +11,7 @@ export default class Order extends Model {
   subtotal: number;
   tip: number;
   discount: number;
-  amount: number;
+  total: number;
   userId: number;
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -17,6 +19,8 @@ export default class Order extends Model {
   static associations: {
     customer: Association<Order, Customer>;
     user: Association<Order, Employee>;
+    items: Association<Order, OrderItem>;
+    payments: Association<Order, OrderPayment>;
   };
 
   static setup(connection: Sequelize) {
@@ -25,7 +29,7 @@ export default class Order extends Model {
         subtotal: DataTypes.DECIMAL,
         tip: DataTypes.DECIMAL,
         discount: DataTypes.DECIMAL,
-        amount: DataTypes.DECIMAL
+        total: DataTypes.DECIMAL
       },
       { sequelize: connection, tableName: 'orders' }
     );
@@ -40,6 +44,16 @@ export default class Order extends Model {
     Order.belongsTo(Employee, {
       foreignKey: 'userId',
       as: 'user'
+    });
+
+    Order.hasMany(OrderItem, {
+      foreignKey: 'orderId',
+      as: 'items'
+    });
+
+    Order.hasMany(OrderPayment, {
+      foreignKey: 'orderId',
+      as: 'payments'
     });
   }
 }
