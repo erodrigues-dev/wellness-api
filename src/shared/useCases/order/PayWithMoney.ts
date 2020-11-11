@@ -53,7 +53,7 @@ export default class PayWithMoney {
       type: PaymentTypeEnum.Money,
       tip: 0,
       discount: order.discount,
-      amount: order.amount
+      amount: order.total
     };
 
     await OrderPayment.create(payment, { transaction: this.transaction });
