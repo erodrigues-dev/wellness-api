@@ -4,10 +4,12 @@ import { OrderListViewModel } from '../models/viewmodels/OrderListViewModel';
 
 export class OrderService {
   async list(
-    customerId: number,
     page = 1,
-    limit = 10
+    limit = 10,
+    customerId: number = null
   ): Promise<PaginateList<OrderListViewModel>> {
+    const filter = {};
+    if (customerId) filter['customerId'] = customerId;
     const { count, rows } = await Order.findAndCountAll({
       include: [
         {
@@ -17,21 +19,24 @@ export class OrderService {
             parentId: null
           }
         },
+        {
+          association: 'user',
+          attributes: ['id', 'name']
+        },
+        {
+          association: 'customer',
+          attributes: ['id', 'name']
+        }
         //TODO payment status is hard coded
         // {
         //   association: 'payments',
         //   limit: 1
         // },
-        {
-          association: 'user',
-          attributes: ['id', 'name']
-        }
       ],
       limit,
       offset: (page - 1) * limit,
-      where: {
-        customerId: customerId ?? undefined
-      }
+      where: filter,
+      order: [['createdAt', 'DESC']]
     });
 
     return {
