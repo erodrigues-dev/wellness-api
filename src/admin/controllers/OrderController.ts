@@ -9,7 +9,7 @@ export class OrderController {
     try {
       const { page, limit, customerId } = this.parseIndexParams(req);
 
-      const data = await this.service.list(customerId, page, limit);
+      const data = await this.service.list(page, limit, customerId);
       return res.header('x-total-count', data.count.toString()).json(data.rows);
     } catch (error) {
       next(error);
@@ -20,7 +20,7 @@ export class OrderController {
     return {
       page: Number(req.query.page),
       limit: Number(req.query.limit),
-      customerId: Number(req.query.customerId)
+      customerId: Number(req.query.customerId) ?? undefined
     };
   }
 }
