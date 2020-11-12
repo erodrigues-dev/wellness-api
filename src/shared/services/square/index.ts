@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { SquareCustomerService } from './SquareCustomerService';
+import { SquarePaymentService } from './SquarePaymentService';
 
 export const squareApi = axios.create({
   baseURL: process.env.SQUARE_API_URL,
@@ -12,3 +13,4 @@ export const squareApi = axios.create({
 export const DEFAULT_LOCATION = process.env.SQUARE_LOCATION_ID;
 
 export const squareUserService = new SquareCustomerService(squareApi);
+export const squarePaymentService = new SquarePaymentService(squareApi);
