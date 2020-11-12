@@ -35,8 +35,9 @@ router.post(
       itemId: Joi.number().required(),
       quantity: Joi.number().positive().required(),
       cardId: Joi.string().required(),
-      tip: Joi.number().min(0).required(),
-      dueDate: Joi.date().optional().allow(null)
+      tip: Joi.number().positive().optional().allow(''),
+      dueDate: Joi.date().optional().allow(null),
+      saveCard: Joi.boolean().default(false)
     })
   })
 );
