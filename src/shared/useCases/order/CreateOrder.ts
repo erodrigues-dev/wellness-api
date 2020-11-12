@@ -23,6 +23,7 @@ export default class CreateOrder {
   private package: IPackageWithIncludes;
   private customerDiscount: CustomerDiscount;
   private order: Order;
+  private orderItem: OrderItem;
 
   useTransaction(transaction: Transaction) {
     this.transaction = transaction;
@@ -43,6 +44,14 @@ export default class CreateOrder {
     await this.createItems();
 
     return this.order;
+  }
+
+  getCreatedOrder() {
+    return this.order;
+  }
+
+  getCreatedOrderItem() {
+    return this.orderItem;
   }
 
   private async load() {
@@ -107,11 +116,10 @@ export default class CreateOrder {
   }
 
   private async createItems() {
-    if (this.data.itemType === OrderItemTypeEnum.Activity) {
-      await this.createActivityOrdemItem();
-    } else {
-      await this.createPackageOrdemItems();
-    }
+    this.orderItem =
+      this.data.itemType === OrderItemTypeEnum.Activity
+        ? await this.createActivityOrdemItem()
+        : await this.createPackageOrdemItems();
   }
 
   private async createActivityOrdemItem() {
@@ -124,7 +132,7 @@ export default class CreateOrder {
       quantity: this.data.quantity
     };
 
-    await OrderItem.create(orderItemData, { transaction: this.transaction });
+    return OrderItem.create(orderItemData, { transaction: this.transaction });
   }
 
   private async createPackageOrdemItems() {
@@ -160,5 +168,7 @@ export default class CreateOrder {
         )
       )
     );
+
+    return orderItem;
   }
 }
