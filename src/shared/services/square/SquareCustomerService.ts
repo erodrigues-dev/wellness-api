@@ -1,5 +1,6 @@
 import { AxiosInstance } from 'axios';
 
+import { SquareCard } from './models/SquareCard';
 import { SquareCustomer } from './models/SquareCustomer';
 
 export class SquareCustomerService {
@@ -28,13 +29,21 @@ export class SquareCustomerService {
     return new SquareCustomer(customer);
   }
 
-  async create(createCustomer: SquareCustomer): Promise<string> {
+  async create(createCustomer: SquareCustomer): Promise<SquareCustomer> {
     const {
-      data: {
-        customer: { id }
-      }
+      data: { customer }
     } = await this.api.post('/customers', createCustomer);
 
-    return id;
+    return new SquareCustomer(customer);
+  }
+
+  async createCard(customerId: string, cardId: string) {
+    const {
+      data: { card }
+    } = await this.api.post(`/customers/${customerId}/cards`, {
+      card_nonce: cardId
+    });
+
+    return new SquareCard(card);
   }
 }
