@@ -27,8 +27,19 @@ export class SquareController {
   async createCustomer(req: Request, res: Response, next: NextFunction) {
     try {
       const customer = new SquareCustomer(req.body);
-      const id = await squareUserService.create(customer);
-      return res.json({ id });
+      const squareCustomer = await squareUserService.create(customer);
+      return res.json(squareCustomer);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async createCustomerCard(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { customerId } = req.params;
+      const { cardId } = req.body;
+      const data = await squareUserService.createCard(customerId, cardId);
+      return res.json(data);
     } catch (error) {
       next(error);
     }

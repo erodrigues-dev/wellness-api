@@ -13,7 +13,10 @@ router.get(
 
 router.post('/square/customer', controller.createCustomer.bind(controller));
 
-// router.get('/square/customer/:id', controller.getByEmail.bind(controller));
+router.post(
+  '/square/customer/:customerId/cards',
+  controller.createCustomerCard.bind(controller)
+);
 
 router.use((error: any, req: Request, res: Response, next: NextFunction) => {
   if (error.isAxiosError) {
