@@ -26,12 +26,11 @@ export class OrderService {
         {
           association: 'customer',
           attributes: ['id', 'name']
+        },
+        {
+          association: 'payments',
+          attributes: ['type']
         }
-        //TODO payment status is hard coded
-        // {
-        //   association: 'payments',
-        //   limit: 1
-        // },
       ],
       limit,
       offset: (page - 1) * limit,
