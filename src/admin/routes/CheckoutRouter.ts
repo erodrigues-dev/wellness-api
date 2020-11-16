@@ -5,11 +5,6 @@ import controller from '../controllers/CheckoutController';
 const router = Router();
 
 router.post(
-  '/checkout/calculate-discount',
-  controller.calculateDiscount.bind(controller)
-);
-
-router.post(
   '/checkout/pay-with-money',
   controller.payWithMoney.bind(controller)
 );
