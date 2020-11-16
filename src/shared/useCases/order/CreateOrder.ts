@@ -107,7 +107,7 @@ export default class CreateOrder {
       subtotal: this.price,
       tip: this.data.tip,
       discount: this.discount,
-      total: this.price - this.discount
+      total: this.price * this.data.quantity - this.discount
     };
 
     this.order = await Order.create(orderData, {
