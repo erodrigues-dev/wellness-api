@@ -11,24 +11,28 @@ import { squarePaymentService, squareUserService } from '../../services/square/i
 import CreateOrder from './CreateOrder';
 import CreateOrderWithCardDTO from './CreateOrderWithCardDTO';
 
+class PaymentData {
+  customerId: string;
+  cardId: string;
+}
+
 export default class PayWithCard {
   private transaction: Transaction;
-  private createOrder: CreateOrder;
+  private createOrder = new CreateOrder();
+  private payment = new PaymentData();
 
-  constructor() {
-    this.createOrder = new CreateOrder();
-  }
+  constructor(private data: CreateOrderWithCardDTO) {}
 
-  async pay(data: CreateOrderWithCardDTO): Promise<void> {
-    console.log(data);
+  async pay(): Promise<void> {
+    console.log(this.data);
     try {
       await this.createTransaction();
-      await this.createOrderWithData(data);
-      const customerSquareId = await this.getCustomerSquareIdOrCreate(
-        data.customerId
-      );
-      if (data.saveCard) await this.saveCard(customerSquareId, data.cardId);
-      await this.createPaymentInSquare(customerSquareId, data.cardId);
+      await this.createOrderWithData();
+
+      this.payment.customerId = await this.getCustomerSquareIdOrCreate();
+      this.payment.cardId = await this.getCardIdOrCreate();
+
+      await this.createPaymentInSquare();
       await this.createPaymentOrder();
       await this.commit();
     } catch (error) {
@@ -53,16 +57,16 @@ export default class PayWithCard {
     }
   }
 
-  private async createOrderWithData(data: CreateOrderWithCardDTO) {
+  private async createOrderWithData() {
     await this.createOrder
       .useTransaction(this.transaction)
-      .withData(data)
+      .withData(this.data)
       .create();
   }
 
-  private async getCustomerSquareIdOrCreate(customerId: number) {
-    const customer = await Customer.findByPk(customerId);
-    if (!customer) throw new CustomError('Customer not found', 400);
+  private async getCustomerSquareIdOrCreate() {
+    const customer = await Customer.findByPk(this.data.customerId);
+    if (!customer) throw new CustomError('Invalid Customer Id', 400);
     if (customer.squareId) return customer.squareId;
     const { id } = await this.createCustomerInSquare(customer);
     customer.squareId = id;
@@ -81,17 +85,25 @@ export default class PayWithCard {
     });
   }
 
-  private saveCard(customerSquareId: string, cardId: string) {
-    return squareUserService.createCard(customerSquareId, cardId);
+  private async getCardIdOrCreate() {
+    if (!this.data.saveCard) return this.data.cardId;
+
+    const { id } = await squareUserService.createCard(
+      this.payment.customerId,
+      this.data.cardId,
+      this.data.cardName
+    );
+
+    return id;
   }
 
-  private async createPaymentInSquare(customerId: string, cardId: string) {
+  private async createPaymentInSquare() {
     const { total } = this.createOrder.getCreatedOrder();
     const { name } = this.createOrder.getCreatedOrderItem();
     return squarePaymentService.create({
       idempotency_key: uuid(),
-      customer_id: customerId,
-      source_id: cardId,
+      customer_id: this.payment.customerId,
+      source_id: this.payment.cardId,
       note: name,
       amount_money: {
         amount: total * 100,
