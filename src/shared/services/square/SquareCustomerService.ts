@@ -37,11 +37,12 @@ export class SquareCustomerService {
     return new SquareCustomer(customer);
   }
 
-  async createCard(customerId: string, cardId: string) {
+  async createCard(customerId: string, cardId: string, cardName: string) {
     const {
       data: { card }
     } = await this.api.post(`/customers/${customerId}/cards`, {
-      card_nonce: cardId
+      card_nonce: cardId,
+      cardholder_name: cardName
     });
 
     return new SquareCard(card);

@@ -35,6 +35,11 @@ router.post(
       itemId: Joi.number().required(),
       quantity: Joi.number().positive().required(),
       cardId: Joi.string().required(),
+      cardName: Joi.when('saveCard', {
+        is: true,
+        then: Joi.string().required(),
+        otherwise: Joi.string().optional().allow('')
+      }),
       tip: Joi.number().positive().optional().allow(''),
       dueDate: Joi.date().optional().allow(null),
       saveCard: Joi.boolean().default(false)
