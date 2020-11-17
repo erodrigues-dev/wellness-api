@@ -5,7 +5,7 @@ import { ACTIONS, checkPermission } from '../../../shared/utils/permission';
 const router = Router();
 
 router.post(
-  '/checkout/calculate-discount',
+  '/checkout/customers/:customerId/cards',
   checkPermission('checkout', ACTIONS.LIST)
 );
 router.post(
