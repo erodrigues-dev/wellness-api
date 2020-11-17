@@ -41,10 +41,13 @@ router.post(
     [Segments.BODY]: Joi.object().keys({
       customerId: Joi.number().required(),
       type: Joi.string().valid('percent', 'amount').required(),
-      value: Joi.number().positive().required().when('type', {
-        is: 'percent',
-        then: Joi.number().integer()
-      }),
+      value: Joi.number()
+        .positive()
+        .required()
+        .when('type', {
+          is: 'percent',
+          then: Joi.number().integer().max(100)
+        }),
       relationType: Joi.string().valid('package', 'activity').required(),
       relationId: Joi.number().required()
     })

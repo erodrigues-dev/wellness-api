@@ -2,6 +2,7 @@ import CustomError from '../custom-error/CustomError';
 import Activity from '../database/models/Activity';
 import CustomerDiscount from '../database/models/CustomerDiscount';
 import Package from '../database/models/Package';
+import { DiscountTypeEnum } from '../models/enums/DiscountTypeEnum';
 import CustomerDiscountViewModel from '../models/viewmodels/CustomerDiscountViewModel';
 import ICustomerDiscountService, {
     IFilter, IStore, IUpdate
@@ -60,7 +61,9 @@ export class CustomerDiscountService implements ICustomerDiscountService {
   }
 
   async store(data: IStore): Promise<number> {
+    await this.checkDuplicated(data);
     await this.checkRelationId(data.relationType, data.relationId);
+    await this.checkDiscountValue(data);
     const { id }: CustomerDiscount = await this.db.create(data);
     return id;
   }
@@ -68,9 +71,10 @@ export class CustomerDiscountService implements ICustomerDiscountService {
   async update(data: IUpdate): Promise<void> {
     console.log(data);
     const model: CustomerDiscount = await this.db.findByPk(data.id);
-
     if (!model) throw new CustomError('Discount not found', 404);
+    await this.checkDuplicated(data);
     await this.checkRelationId(data.relationType, data.relationId);
+    await this.checkDiscountValue(data);
 
     model.type = data.type;
     model.value = data.value;
@@ -88,6 +92,39 @@ export class CustomerDiscountService implements ICustomerDiscountService {
     });
 
     if (deleteds === 0) throw new CustomError('Discount not found', 404);
+  }
+
+  private async checkDuplicated(data: IStore | IUpdate) {
+    const existent = await this.find(
+      data.customerId,
+      data.relationType,
+      data.relationId
+    );
+
+    if (existent && existent.id !== data['id'])
+      throw new CustomError('Discount duplicated', 400);
+  }
+
+  private async checkDiscountValue(data: IStore | IUpdate) {
+    if (
+      data.type === DiscountTypeEnum.Percent &&
+      (data.value < 1 || data.value > 100)
+    )
+      throw new CustomError('Invalid percent value', 400);
+
+    if (data.relationType === 'activity') {
+      const { price } = await Activity.findByPk(data.relationId);
+      if (data.value > price)
+        throw new CustomError(
+          'Invalid value, must be less than Activity price'
+        );
+    }
+
+    if (data.relationType === 'package') {
+      const { price } = await Package.findByPk(data.relationId);
+      if (data.value > price)
+        throw new CustomError('Invalid value, must be less than Package price');
+    }
   }
 
   private async checkRelationId(type: 'activity' | 'package', id: number) {
