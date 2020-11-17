@@ -106,11 +106,11 @@ export class CustomerDiscountService implements ICustomerDiscountService {
   }
 
   private async checkDiscountValue(data: IStore | IUpdate) {
-    if (
-      data.type === DiscountTypeEnum.Percent &&
-      (data.value < 1 || data.value > 100)
-    )
-      throw new CustomError('Invalid percent value', 400);
+    if (data.type === DiscountTypeEnum.Percent) {
+      if (data.value < 1 || data.value > 100)
+        throw new CustomError('Invalid percent value', 400);
+      return;
+    }
 
     if (data.relationType === 'activity') {
       const { price } = await Activity.findByPk(data.relationId);
