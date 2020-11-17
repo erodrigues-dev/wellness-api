@@ -148,6 +148,10 @@ export class CustomerDiscountService implements ICustomerDiscountService {
           WHEN cd.relation_type = 'activity' THEN a."name"
           WHEN cd.relation_type = 'package' THEN p."name"
         END "relation_name",
+        CASE
+          WHEN cd.relation_type = 'activity' THEN a."price"
+          WHEN cd.relation_type = 'package' THEN p."price"
+        END "relation_price",
         cd.relation_type,
         cd."type",
         cd.value,
