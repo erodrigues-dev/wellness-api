@@ -8,6 +8,7 @@ import OrderPayment from '../../database/models/OrderPayment';
 import IOrderPayment from '../../models/entities/IOrderPayment';
 import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
 import { squareCustomerService, squarePaymentService } from '../../services/square/index';
+import { SquarePaymentCreateData } from '../../services/square/models/SquarePaymentCreateData';
 import CreateOrder from './CreateOrder';
 import CreateOrderWithCardDTO from './CreateOrderWithCardDTO';
 
@@ -98,18 +99,17 @@ export default class PayWithCard {
   }
 
   private async createPaymentInSquare() {
-    const { total } = this.createOrder.getCreatedOrder();
+    const { total, tip } = this.createOrder.getCreatedOrder();
     const { name } = this.createOrder.getCreatedOrderItem();
-    return squarePaymentService.create({
-      idempotency_key: uuid(),
-      customer_id: this.payment.customerId,
-      source_id: this.payment.cardId,
-      note: name,
-      amount_money: {
-        amount: total * 100,
-        currency: 'USD'
-      }
-    });
+
+    const paymentData = new SquarePaymentCreateData();
+    paymentData.note = name;
+    paymentData.customer_id = this.payment.customerId;
+    paymentData.source_id = this.payment.cardId;
+    paymentData.setAmount(total);
+    paymentData.setTip(tip);
+
+    return squarePaymentService.create(paymentData);
   }
 
   private async createPaymentOrder() {
