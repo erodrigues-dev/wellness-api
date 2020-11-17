@@ -12,5 +12,5 @@ export const squareApi = axios.create({
 
 export const DEFAULT_LOCATION = process.env.SQUARE_LOCATION_ID;
 
-export const squareUserService = new SquareCustomerService(squareApi);
+export const squareCustomerService = new SquareCustomerService(squareApi);
 export const squarePaymentService = new SquarePaymentService(squareApi);

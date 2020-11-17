@@ -7,7 +7,7 @@ import Customer from '../../database/models/Customer';
 import OrderPayment from '../../database/models/OrderPayment';
 import IOrderPayment from '../../models/entities/IOrderPayment';
 import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
-import { squarePaymentService, squareUserService } from '../../services/square/index';
+import { squareCustomerService, squarePaymentService } from '../../services/square/index';
 import CreateOrder from './CreateOrder';
 import CreateOrderWithCardDTO from './CreateOrderWithCardDTO';
 
@@ -78,7 +78,7 @@ export default class PayWithCard {
   private async createCustomerInSquare(customer: Customer) {
     const [given_name, ...family_name] = customer.name.split(' ');
 
-    return squareUserService.create({
+    return squareCustomerService.create({
       given_name,
       family_name: family_name.join(' '),
       email_address: customer.email
@@ -88,7 +88,7 @@ export default class PayWithCard {
   private async getCardIdOrCreate() {
     if (!this.data.saveCard) return this.data.cardId;
 
-    const { id } = await squareUserService.createCard(
+    const { id } = await squareCustomerService.createCard(
       this.payment.customerId,
       this.data.cardId,
       this.data.cardName
