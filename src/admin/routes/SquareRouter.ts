@@ -18,14 +18,9 @@ router.post(
   controller.createCustomerCard.bind(controller)
 );
 
-router.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  if (error.isAxiosError) {
-    return res
-      .status(error.response.status)
-      .json({ message: error.response.statusText });
-  }
-
-  next(error);
-});
+router.get(
+  '/square/customer/:customerId/cards',
+  controller.listCards.bind(controller)
+);
 
 export default router;
