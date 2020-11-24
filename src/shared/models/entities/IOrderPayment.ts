@@ -1,4 +1,6 @@
+import { PaymentStatusEnum } from '../enums/PaymentStatusEnum';
 import { PaymentTypeEnum } from '../enums/PaymentTypeEnum';
+import { RecurrencyPayEnum } from '../enums/RecurrencyPayEnum';
 
 export default interface IOrderPayment {
   id?: number;
@@ -7,6 +9,7 @@ export default interface IOrderPayment {
   tip: number;
   discount: number;
   amount: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  transactionId?: string;
+  recurrency?: RecurrencyPayEnum;
+  status: PaymentStatusEnum;
 }

@@ -4,7 +4,6 @@ import OrderPayment from '../../database/models/OrderPayment';
 import { UserDto } from '../dto/UserDto';
 import { OrderItemTypeEnum } from '../enums/OrderItemTypeEnum';
 import { PaymentStatusEnum } from '../enums/PaymentStatusEnum';
-import { PaymentTypeEnum } from '../enums/PaymentTypeEnum';
 
 export class OrderListViewModel {
   id: number;
@@ -18,13 +17,6 @@ export class OrderListViewModel {
   user: UserDto;
   customer: UserDto;
   createdAt: Date;
-
-  setStatus(type: PaymentTypeEnum) {
-    if (type === PaymentTypeEnum.Card)
-      this.status = PaymentStatusEnum.PaidWithCard;
-    if (type === PaymentTypeEnum.Money)
-      this.status = PaymentStatusEnum.PaidWithMoney;
-  }
 
   static fromOrder(order: Order) {
     const viewModel = new OrderListViewModel();
@@ -41,8 +33,8 @@ export class OrderListViewModel {
     viewModel.tip = Number(order.tip);
     viewModel.total = Number(order.total);
     viewModel.user = user;
+    viewModel.status = payment.status;
     viewModel.customer = customer;
-    viewModel.setStatus(payment.type);
     viewModel.createdAt = order.createdAt;
 
     return viewModel;

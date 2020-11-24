@@ -4,6 +4,7 @@ import connection from '../../database/connection';
 import Order from '../../database/models/Order';
 import OrderPayment from '../../database/models/OrderPayment';
 import IOrderPayment from '../../models/entities/IOrderPayment';
+import { PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
 import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
 import CreateOrder from './CreateOrder';
 import CreateOrderDTO from './CreateOrderDTO';
@@ -53,7 +54,8 @@ export default class PayWithMoney {
       type: PaymentTypeEnum.Money,
       tip: 0,
       discount: order.discount,
-      amount: order.total
+      amount: order.total,
+      status: PaymentStatusEnum.Completed
     };
 
     await OrderPayment.create(payment, { transaction: this.transaction });

@@ -1,20 +1,31 @@
 import { Transaction } from 'sequelize';
-import { v4 as uuid } from 'uuid';
 
 import CustomError from '../../custom-error/CustomError';
 import connection from '../../database/connection';
 import Customer from '../../database/models/Customer';
 import OrderPayment from '../../database/models/OrderPayment';
 import IOrderPayment from '../../models/entities/IOrderPayment';
+import { PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
 import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
-import { squareCustomerService, squarePaymentService } from '../../services/square/index';
+import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
+import {
+    squareCustomerService, squarePaymentService, squareSubscriptionService
+} from '../../services/square/index';
+import { SquareCard } from '../../services/square/models/SquareCard';
+import { SquarePayment } from '../../services/square/models/SquarePayment';
 import { SquarePaymentCreateData } from '../../services/square/models/SquarePaymentCreateData';
+import { SquareSubscription } from '../../services/square/models/SquareSubscription';
+import {
+    SquareSubscriptionCreateData
+} from '../../services/square/models/SquareSubscriptionCreateData';
 import CreateOrder from './CreateOrder';
 import CreateOrderWithCardDTO from './CreateOrderWithCardDTO';
 
 class PaymentData {
   customerId: string;
   cardId: string;
+  squarePayment: SquarePayment;
+  squareSubscription: SquareSubscription;
 }
 
 export default class PayWithCard {
@@ -28,12 +39,12 @@ export default class PayWithCard {
     console.log(this.data);
     try {
       await this.createTransaction();
-      await this.createOrderWithData();
+      await this.createOrderData();
 
-      this.payment.customerId = await this.getCustomerSquareIdOrCreate();
-      this.payment.cardId = await this.getCardIdOrCreate();
+      await this.getCustomerSquareIdOrCreate();
+      await this.getCardOrCreate();
 
-      await this.createPaymentInSquare();
+      await this.processPayment();
       await this.createPaymentOrder();
       await this.commit();
     } catch (error) {
@@ -58,7 +69,7 @@ export default class PayWithCard {
     }
   }
 
-  private async createOrderWithData() {
+  private async createOrderData() {
     await this.createOrder
       .useTransaction(this.transaction)
       .withData(this.data)
@@ -68,12 +79,16 @@ export default class PayWithCard {
   private async getCustomerSquareIdOrCreate() {
     const customer = await Customer.findByPk(this.data.customerId);
     if (!customer) throw new CustomError('Invalid Customer Id', 400);
-    if (customer.squareId) return customer.squareId;
+    if (customer.squareId) {
+      this.payment.customerId = customer.squareId;
+      return;
+    }
+
     const { id } = await this.createCustomerInSquare(customer);
     customer.squareId = id;
     await customer.save();
 
-    return id;
+    this.payment.customerId = id;
   }
 
   private async createCustomerInSquare(customer: Customer) {
@@ -86,40 +101,81 @@ export default class PayWithCard {
     });
   }
 
-  private async getCardIdOrCreate() {
-    if (!this.data.saveCard) return this.data.cardId;
+  private async getCardOrCreate() {
+    const { recurrency } = this.createOrder.getCreatedOrderItem();
+    const isRecurrently = recurrency !== RecurrencyPayEnum.oneTime;
 
-    const { id } = await squareCustomerService.createCard(
-      this.payment.customerId,
-      this.data.cardId,
-      this.data.cardName
-    );
+    this.payment.cardId = this.data.cardId;
 
-    return id;
+    if (this.data.saveCard || isRecurrently) {
+      const { id } = await squareCustomerService.createCard(
+        this.payment.customerId,
+        this.data.cardId,
+        this.data.cardName
+      );
+
+      this.payment.cardId = id;
+    }
+  }
+
+  private async processPayment() {
+    const { recurrency } = this.createOrder.getCreatedOrderItem();
+
+    if (recurrency === RecurrencyPayEnum.oneTime)
+      await this.createPaymentInSquare();
+    else await this.createSubscriptionInSquare();
   }
 
   private async createPaymentInSquare() {
     const { total, tip } = this.createOrder.getCreatedOrder();
     const { name } = this.createOrder.getCreatedOrderItem();
 
-    const paymentData = new SquarePaymentCreateData();
-    paymentData.note = name;
-    paymentData.customer_id = this.payment.customerId;
-    paymentData.source_id = this.payment.cardId;
-    paymentData.setAmount(total);
-    paymentData.setTip(tip);
+    const data = new SquarePaymentCreateData();
+    data.note = name;
+    data.customer_id = this.payment.customerId;
+    data.source_id = this.payment.cardId;
+    data.setAmount(total);
+    data.setTip(tip);
 
-    return squarePaymentService.create(paymentData);
+    this.payment.squarePayment = await squarePaymentService.create(data);
+  }
+
+  private async createSubscriptionInSquare() {
+    const { total } = this.createOrder.getCreatedOrder();
+    const { recurrency } = this.createOrder.getCreatedOrderItem();
+
+    const data = new SquareSubscriptionCreateData();
+    data.customer_id = this.payment.customerId;
+    data.card_id = this.payment.cardId;
+    data.setPrice(total);
+    data.setDueDate(this.data.dueDate);
+    data.setSubscriptionPlan(recurrency);
+
+    this.payment.squareSubscription = await squareSubscriptionService.create(
+      data
+    );
   }
 
   private async createPaymentOrder() {
-    const order = this.createOrder.getCreatedOrder();
+    const {
+      id: orderId,
+      tip,
+      discount,
+      total: amount
+    } = this.createOrder.getCreatedOrder();
+    const { recurrency } = this.createOrder.getCreatedOrderItem();
+    const { id: transactionId, status } =
+      this.payment.squarePayment || this.payment.squareSubscription;
+
     const data: IOrderPayment = {
-      orderId: order.id,
       type: PaymentTypeEnum.Card,
-      tip: order.tip,
-      discount: order.discount,
-      amount: order.total
+      orderId,
+      tip,
+      discount,
+      amount,
+      recurrency,
+      transactionId,
+      status
     };
 
     return OrderPayment.create(data, { transaction: this.transaction });

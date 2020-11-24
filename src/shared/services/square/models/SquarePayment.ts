@@ -1,3 +1,4 @@
+import { PaymentStatusEnum } from '../../../models/enums/PaymentStatusEnum';
 import { SquareMoney } from './SquareMoney';
 
 export class SquarePayment {
@@ -7,7 +8,7 @@ export class SquarePayment {
   customer_id: string;
   note: string;
   amount_money: SquareMoney;
-  status: string;
+  status: PaymentStatusEnum;
   created_at: Date;
 
   constructor(obj?: any) {
