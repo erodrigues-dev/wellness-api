@@ -36,6 +36,6 @@ export class SquareSubscriptionCreateData {
   }
 
   setDueDate(date: Date) {
-    this.start_date = format(date, 'YYYY-MM-dd');
+    this.start_date = format(date, 'yyyy-MM-dd');
   }
 }
