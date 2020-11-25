@@ -12,4 +12,5 @@ export default interface IOrderPayment {
   transactionId?: string;
   recurrency?: RecurrencyPayEnum;
   status: PaymentStatusEnum;
+  dueDate?: Date;
 }

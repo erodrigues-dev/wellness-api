@@ -16,6 +16,7 @@ export default class OrderPayment extends Model implements IOrderPayment {
   transactionId: string;
   recurrency: RecurrencyPayEnum;
   status: PaymentStatusEnum;
+  dueDate: Date;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -32,7 +33,8 @@ export default class OrderPayment extends Model implements IOrderPayment {
         amount: DataTypes.DECIMAL,
         transactionId: DataTypes.STRING,
         recurrency: DataTypes.STRING,
-        status: DataTypes.STRING
+        status: DataTypes.STRING,
+        dueDate: DataTypes.DATEONLY
       },
       {
         sequelize: connection,
