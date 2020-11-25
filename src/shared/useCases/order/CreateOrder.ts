@@ -10,6 +10,7 @@ import IOrderItem from '../../models/entities/IOrderItem';
 import { IPackageWithIncludes } from '../../models/entities/IPackage';
 import { DiscountTypeEnum } from '../../models/enums/DiscountTypeEnum';
 import { OrderItemTypeEnum } from '../../models/enums/OrderItemTypeEnum';
+import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
 import CreateOrderDTO from './CreateOrderDTO';
 
 export default class CreateOrder {
@@ -104,7 +105,7 @@ export default class CreateOrder {
     const orderData: IOrder = {
       customerId: this.data.customerId,
       userId: this.data.userId,
-      subtotal: this.price,
+      subtotal: this.price * this.data.quantity,
       tip: this.data.tip,
       discount: this.discount,
       total: this.price * this.data.quantity - this.discount
@@ -129,7 +130,8 @@ export default class CreateOrder {
       metadataId: this.data.itemId,
       name: this.activity.name,
       price: this.activity.price,
-      quantity: this.data.quantity
+      quantity: this.data.quantity,
+      recurrency: RecurrencyPayEnum.oneTime
     };
 
     return OrderItem.create(orderItemData, { transaction: this.transaction });
