@@ -99,6 +99,8 @@ export default class CreateOrder {
     } else {
       this.discount = discountValue * this.data.quantity;
     }
+
+    this.discount = +this.discount.toFixed(2);
   }
 
   private async createOrder() {
@@ -108,7 +110,7 @@ export default class CreateOrder {
       subtotal: this.price * this.data.quantity,
       tip: this.data.tip,
       discount: this.discount,
-      total: this.price * this.data.quantity - this.discount
+      total: +(this.price * this.data.quantity - this.discount).toFixed(2)
     };
 
     this.order = await Order.create(orderData, {
