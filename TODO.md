@@ -13,10 +13,3 @@
 
 - [ ] create payment and annotate hooks fireds
 - [ ] create subscription and annotate hooks fireds
-
-## Checkout
-
-- [ ] adjust and run migration
-- [ ] create recurrency payment with insomnia
-
-##
