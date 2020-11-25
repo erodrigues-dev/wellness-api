@@ -5,19 +5,18 @@ import connection from '../../database/connection';
 import Customer from '../../database/models/Customer';
 import OrderPayment from '../../database/models/OrderPayment';
 import IOrderPayment from '../../models/entities/IOrderPayment';
-import { PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
 import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
 import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
 import {
-    squareCustomerService, squarePaymentService, squareSubscriptionService
+  squareCustomerService,
+  squarePaymentService,
+  squareSubscriptionService
 } from '../../services/square/index';
 import { SquareCard } from '../../services/square/models/SquareCard';
 import { SquarePayment } from '../../services/square/models/SquarePayment';
 import { SquarePaymentCreateData } from '../../services/square/models/SquarePaymentCreateData';
 import { SquareSubscription } from '../../services/square/models/SquareSubscription';
-import {
-    SquareSubscriptionCreateData
-} from '../../services/square/models/SquareSubscriptionCreateData';
+import { SquareSubscriptionCreateData } from '../../services/square/models/SquareSubscriptionCreateData';
 import CreateOrder from './CreateOrder';
 import CreateOrderWithCardDTO from './CreateOrderWithCardDTO';
 
@@ -36,18 +35,24 @@ export default class PayWithCard {
   constructor(private data: CreateOrderWithCardDTO) {}
 
   async pay(): Promise<void> {
-    console.log(this.data);
     try {
+      console.log('pay with card');
+      console.log('creating transaction');
       await this.createTransaction();
+      console.log('creating order and items');
       await this.createOrderData();
-
+      console.log('customer get square id');
       await this.getCustomerSquareIdOrCreate();
+      console.log('card get square id');
       await this.getCardOrCreate();
-
+      console.log('processing payment');
       await this.processPayment();
+      console.log('creating payment order');
       await this.createPaymentOrder();
+      console.log('commit');
       await this.commit();
     } catch (error) {
+      console.log(error);
       await this.rollback();
       throw error;
     }
@@ -108,13 +113,22 @@ export default class PayWithCard {
     this.payment.cardId = this.data.cardId;
 
     if (this.data.saveCard || isRecurrently) {
-      const { id } = await squareCustomerService.createCard(
-        this.payment.customerId,
-        this.data.cardId,
-        this.data.cardName
+      const customerCards = squareCustomerService.listCards(
+        this.payment.customerId
+      );
+      const isSavedCard = (await customerCards).some(
+        card => card.id === this.data.cardId
       );
 
-      this.payment.cardId = id;
+      if (!isSavedCard) {
+        const { id } = await squareCustomerService.createCard(
+          this.payment.customerId,
+          this.data.cardId,
+          this.data.cardName
+        );
+
+        this.payment.cardId = id;
+      }
     }
   }
 
@@ -127,6 +141,7 @@ export default class PayWithCard {
   }
 
   private async createPaymentInSquare() {
+    console.log('creating square payment');
     const { total, tip } = this.createOrder.getCreatedOrder();
     const { name } = this.createOrder.getCreatedOrderItem();
 
@@ -141,8 +156,12 @@ export default class PayWithCard {
   }
 
   private async createSubscriptionInSquare() {
+    console.log('creating square subscription');
     const { total } = this.createOrder.getCreatedOrder();
     const { recurrency } = this.createOrder.getCreatedOrderItem();
+
+    if (!this.data.dueDate)
+      throw new CustomError('Due date is required for recurrency items', 400);
 
     const data = new SquareSubscriptionCreateData();
     data.customer_id = this.payment.customerId;
@@ -175,7 +194,8 @@ export default class PayWithCard {
       amount,
       recurrency,
       transactionId,
-      status
+      status,
+      dueDate: this.data.dueDate
     };
 
     return OrderPayment.create(data, { transaction: this.transaction });
