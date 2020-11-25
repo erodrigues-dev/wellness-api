@@ -6,6 +6,7 @@ import OrderPayment from '../../database/models/OrderPayment';
 import IOrderPayment from '../../models/entities/IOrderPayment';
 import { PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
 import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
+import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
 import CreateOrder from './CreateOrder';
 import CreateOrderDTO from './CreateOrderDTO';
 
@@ -55,7 +56,8 @@ export default class PayWithMoney {
       tip: 0,
       discount: order.discount,
       amount: order.total,
-      status: PaymentStatusEnum.Completed
+      status: PaymentStatusEnum.Completed,
+      recurrency: RecurrencyPayEnum.oneTime
     };
 
     await OrderPayment.create(payment, { transaction: this.transaction });

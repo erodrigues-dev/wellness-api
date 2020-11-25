@@ -10,7 +10,7 @@ export default interface IOrderPayment {
   discount: number;
   amount: number;
   transactionId?: string;
-  recurrency?: RecurrencyPayEnum;
+  recurrency: RecurrencyPayEnum;
   status: PaymentStatusEnum;
   dueDate?: Date;
 }
