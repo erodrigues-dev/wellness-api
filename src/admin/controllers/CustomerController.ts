@@ -1,13 +1,12 @@
-import { Response, NextFunction } from 'express';
+import { NextFunction, Response } from 'express';
 
 import customerService from '../../shared/services/CustomerService';
 import ICustomerService from '../../shared/services/interfaces/ICustomerService';
-
+import CreateCustomer from '../../shared/useCases/customer/CreateCustomer';
+import { CustomerDTO } from '../../shared/useCases/customer/CustomerDTO';
+import UpdateCustomer from '../../shared/useCases/customer/UpdateCustomer';
 import ICustomerController, {
-  IGetRequest,
-  IIndexRequest,
-  IStoreRequest,
-  IUpdateRequest
+    IGetRequest, IIndexRequest, IStoreRequest, IUpdateRequest
 } from './interfaces/ICustomerController';
 
 export class CustomerController implements ICustomerController {
@@ -40,15 +39,11 @@ export class CustomerController implements ICustomerController {
 
   async store(req: IStoreRequest, res: Response, next: NextFunction) {
     try {
-      const { name, email, password } = req.body;
-      const imageUrl = req.file?.url;
+      const dto = new CustomerDTO()
+        .parseFromBody(req.body)
+        .withImageUrl(req.file?.url);
 
-      const model = await this.service.create({
-        name: name,
-        email: email,
-        password: password,
-        imageUrl: imageUrl
-      });
+      const model = await new CreateCustomer(dto).create();
 
       return res.json(model);
     } catch (error) {
@@ -58,14 +53,11 @@ export class CustomerController implements ICustomerController {
 
   async update(req: IUpdateRequest, res: Response<any>, next: NextFunction) {
     try {
-      const { id, name, email, password } = req.body;
-      const model = await this.service.update({
-        id,
-        name,
-        email,
-        password,
-        imageUrl: req.file?.url
-      });
+      const dto = new CustomerDTO()
+        .parseFromBody(req.body)
+        .withImageUrl(req.file?.url);
+
+      const model = await new UpdateCustomer(dto).update();
 
       return res.json(model);
     } catch (error) {

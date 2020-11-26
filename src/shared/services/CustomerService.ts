@@ -28,7 +28,7 @@ export class CustomerService implements ICustomerService {
     return Customer.count({ where });
   }
 
-  async get(id: number): Promise<ICustomer> {
+  async get(id: number): Promise<Customer> {
     const query: Customer = await Customer.findByPk(id, {
       attributes: {
         exclude: ['password']
@@ -37,17 +37,15 @@ export class CustomerService implements ICustomerService {
 
     if (!query) return null;
 
-    return query.toJSON() as ICustomer;
+    return query;
   }
 
-  async create(data: ICustomer): Promise<ICustomer> {
+  async create(data: ICustomer): Promise<Customer> {
     data.password = await hash(data.password);
-    const model: Customer = await Customer.create(data);
-
-    return model.toJSON() as ICustomer;
+    return Customer.create(data);
   }
 
-  async update(data: ICustomer): Promise<ICustomer> {
+  async update(data: ICustomer): Promise<Customer> {
     const customer: Customer = await Customer.findByPk(data.id);
     if (!customer) throw new CustomError('customer not found', 404);
 
@@ -71,7 +69,7 @@ export class CustomerService implements ICustomerService {
     }
 
     await customer.save();
-    return customer.toJSON() as ICustomer;
+    return customer;
   }
 
   private buildQuery(filter: ICustomerFilter) {

@@ -1,3 +1,4 @@
+import Customer from '../../database/models/Customer';
 import ICustomer from '../../models/entities/ICustomer';
 
 export interface ICustomerFilter {
@@ -12,7 +13,7 @@ export default interface ICustomerService {
     limit: number
   ): Promise<ICustomer[]>;
   count(filter: ICustomerFilter): Promise<number>;
-  get(id: number): Promise<ICustomer>;
-  create(data: ICustomer): Promise<ICustomer>;
-  update(data: ICustomer): Promise<ICustomer>;
+  get(id: number): Promise<Customer>;
+  create(data: ICustomer): Promise<Customer>;
+  update(data: ICustomer): Promise<Customer>;
 }

@@ -37,6 +37,14 @@ export class SquareCustomerService {
     return new SquareCustomer(customer);
   }
 
+  async update(updateData: SquareCustomer): Promise<SquareCustomer> {
+    const {
+      data: { customer }
+    } = await this.api.put(`/customers/${updateData.id}`, updateData);
+
+    return new SquareCustomer(customer);
+  }
+
   async createCard(customerId: string, cardId: string, cardName: string) {
     const {
       data: { card }
