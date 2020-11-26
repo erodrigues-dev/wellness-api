@@ -40,7 +40,7 @@ router.post(
         then: Joi.string().required(),
         otherwise: Joi.string().optional().allow('')
       }),
-      tip: Joi.number().positive().optional().allow(''),
+      tip: Joi.number().positive().optional().allow('', null, 0).default(0),
       dueDate: Joi.date().optional().allow(null),
       saveCard: Joi.boolean().default(false)
     })
