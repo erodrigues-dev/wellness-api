@@ -8,15 +8,14 @@ import IOrderPayment from '../../models/entities/IOrderPayment';
 import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
 import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
 import {
-  squareCustomerService,
-  squarePaymentService,
-  squareSubscriptionService
+    squareCustomerService, squarePaymentService, squareSubscriptionService
 } from '../../services/square/index';
-import { SquareCard } from '../../services/square/models/SquareCard';
 import { SquarePayment } from '../../services/square/models/SquarePayment';
 import { SquarePaymentCreateData } from '../../services/square/models/SquarePaymentCreateData';
 import { SquareSubscription } from '../../services/square/models/SquareSubscription';
-import { SquareSubscriptionCreateData } from '../../services/square/models/SquareSubscriptionCreateData';
+import {
+    SquareSubscriptionCreateData
+} from '../../services/square/models/SquareSubscriptionCreateData';
 import CreateOrder from './CreateOrder';
 import CreateOrderWithCardDTO from './CreateOrderWithCardDTO';
 
@@ -157,18 +156,13 @@ export default class PayWithCard {
 
   private async createSubscriptionInSquare() {
     console.log('creating square subscription');
-    const { total } = this.createOrder.getCreatedOrder();
-    const { recurrency } = this.createOrder.getCreatedOrderItem();
-
-    if (!this.data.dueDate)
-      throw new CustomError('Due date is required for recurrency items', 400);
+    const subscriptionPlanId = this.createOrder.getSubscriptionPlanId();
 
     const data = new SquareSubscriptionCreateData();
     data.customer_id = this.payment.customerId;
     data.card_id = this.payment.cardId;
-    data.setPrice(total);
-    data.setDueDate(this.data.dueDate);
-    data.setSubscriptionPlan(recurrency);
+    data.setDueDate(this.data.dueDate || new Date());
+    data.setSubscriptionPlan(subscriptionPlanId);
 
     this.payment.squareSubscription = await squareSubscriptionService.create(
       data

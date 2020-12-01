@@ -20,19 +20,8 @@ export class SquareSubscriptionCreateData {
     this.location_id = process.env.SQUARE_LOCATION_ID;
   }
 
-  setSubscriptionPlan(type: RecurrencyPayEnum) {
-    if (type === RecurrencyPayEnum.monthly)
-      this.plan_id = process.env.SQUARE_SUBSCRIPTION_PLAN_MONTHLY;
-
-    if (type === RecurrencyPayEnum.weekly)
-      this.plan_id = process.env.SQUARE_SUBSCRIPTION_PLAN_WEEKLY;
-  }
-
-  setPrice(price: number) {
-    this.price_override_money = {
-      amount: price * 100,
-      currency: 'USD'
-    };
+  setSubscriptionPlan(planId: string) {
+    this.plan_id = planId;
   }
 
   setDueDate(date: Date) {

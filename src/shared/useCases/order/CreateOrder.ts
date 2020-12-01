@@ -21,7 +21,7 @@ export default class CreateOrder {
 
   private transaction: Transaction;
   private activity: Activity;
-  private package: IPackageWithIncludes;
+  private package: Package;
   private customerDiscount: CustomerDiscount;
   private order: Order;
   private orderItem: OrderItem;
@@ -53,6 +53,10 @@ export default class CreateOrder {
 
   getCreatedOrderItem() {
     return this.orderItem;
+  }
+
+  getSubscriptionPlanId() {
+    return this.package?.squareId;
   }
 
   private async load() {
@@ -166,7 +170,7 @@ export default class CreateOrder {
             name: item.name,
             price: item.price,
             parentId: orderItem.id,
-            value: item.PackageActivity.quantity
+            value: (item as any).PackageActivity.quantity
           } as IOrderItem,
           { transaction: this.transaction }
         )
