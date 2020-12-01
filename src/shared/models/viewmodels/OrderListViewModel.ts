@@ -4,6 +4,7 @@ import OrderPayment from '../../database/models/OrderPayment';
 import { UserDto } from '../dto/UserDto';
 import { OrderItemTypeEnum } from '../enums/OrderItemTypeEnum';
 import { PaymentStatusEnum } from '../enums/PaymentStatusEnum';
+import { PaymentTypeEnum } from '../enums/PaymentTypeEnum';
 
 export class OrderListViewModel {
   id: number;
@@ -14,7 +15,8 @@ export class OrderListViewModel {
   tip: number;
   total: number;
   status: PaymentStatusEnum;
-  user: UserDto;
+  paymentType: PaymentTypeEnum;
+  user?: UserDto;
   customer: UserDto;
   createdAt: Date;
 
@@ -34,6 +36,7 @@ export class OrderListViewModel {
     viewModel.total = Number(order.total);
     viewModel.user = user;
     viewModel.status = payment.status;
+    viewModel.paymentType = payment.type;
     viewModel.customer = customer;
     viewModel.createdAt = order.createdAt;
 

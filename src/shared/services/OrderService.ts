@@ -29,7 +29,7 @@ export class OrderService {
         },
         {
           association: 'payments',
-          attributes: ['type']
+          attributes: ['type', 'status']
         }
       ],
       limit,
