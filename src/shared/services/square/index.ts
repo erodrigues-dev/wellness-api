@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import { SquareCatalogService } from './SquareCatalogService';
 import { SquareCustomerService } from './SquareCustomerService';
 import { SquarePaymentService } from './SquarePaymentService';
 import { SquareSubscriptionService } from './SquareSubscriptionService';
@@ -18,3 +19,4 @@ export const squarePaymentService = new SquarePaymentService(squareApi);
 export const squareSubscriptionService = new SquareSubscriptionService(
   squareApi
 );
+export const squareCatalogService = new SquareCatalogService(squareApi);

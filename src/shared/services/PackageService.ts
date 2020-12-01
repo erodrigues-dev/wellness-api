@@ -2,6 +2,7 @@ import { Op, Transaction } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Package from '../database/models/Package';
+import { PackageDTO } from '../models/dto/PackageDTO';
 import IPackage, { IPackageWithIncludes } from '../models/entities/IPackage';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import IPackageService, { IFilter } from './interfaces/IPackageService';
@@ -61,97 +62,6 @@ export class PackageService implements IPackageService {
     });
     if (!model) throw new CustomError('Package not found', 404);
 
-    return this.serialize(model);
-  }
-
-  async create(data: IPackageWithIncludes): Promise<IPackageWithIncludes> {
-    const { activities, ...dataModel } = data;
-    const transaction: Transaction = await Package.sequelize.transaction();
-    const model: Package = await Package.create(dataModel, { transaction });
-
-    await Promise.all(
-      activities.map(({ id, quantity }) =>
-        model.addActivity(id, {
-          through: { quantity },
-          transaction
-        })
-      )
-    );
-
-    await transaction.commit();
-
-    await model.reload({
-      include: [
-        {
-          association: Package.associations.activities,
-          through: { attributes: ['quantity'] }
-        },
-        {
-          association: Package.associations.category,
-          attributes: ['id', 'name']
-        }
-      ]
-    });
-
-    return this.serialize(model);
-  }
-
-  async update(data: IPackageWithIncludes): Promise<IPackageWithIncludes> {
-    const model: Package = await Package.findByPk(data.id);
-    if (!model) throw new CustomError('Package not found', 404);
-
-    const transaction: Transaction = await Package.sequelize.transaction();
-
-    model.name = data.name;
-    model.description = data.description;
-    model.price = data.price;
-    model.recurrencyPay = data.recurrencyPay;
-    model.expiration = data.expiration;
-    model.showInApp = data.showInApp;
-    model.showInWeb = data.showInWeb;
-    model.categoryId = data.categoryId;
-    model.type = data.type;
-    model.total = data.total || null;
-
-    if (data.imageUrl) {
-      if (model.imageUrl) {
-        const url = model.imageUrl;
-        transaction.afterCommit(() => {
-          deleteFileFromUrl(url)
-            .then(() => {})
-            .catch(() => {});
-        });
-      }
-
-      model.imageUrl = data.imageUrl;
-    }
-
-    await model.save({ transaction });
-    await model.setActivities([], { transaction });
-
-    await Promise.all(
-      data.activities.map(({ id, quantity }) =>
-        model.addActivity(id, {
-          through: { quantity },
-          transaction
-        })
-      )
-    );
-
-    await transaction.commit();
-
-    await model.reload({
-      include: [
-        {
-          association: Package.associations.activities,
-          through: { attributes: ['quantity'] }
-        },
-        {
-          association: Package.associations.category,
-          attributes: ['id', 'name']
-        }
-      ]
-    });
     return this.serialize(model);
   }
 

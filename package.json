@@ -10,6 +10,7 @@
     "build:migration": "tsc src/shared/database/migrations/*.ts",
     "build:seed": "tsc src/shared/database/seeders/*.ts",
     "migration:create": "sequelize migration:create --name",
+    "migration:build": "yarn build:migration",
     "migration:up": "sequelize db:migrate",
     "migration:down": "sequelize db:migrate:undo",
     "seed:create": "sequelize seed:create --name",

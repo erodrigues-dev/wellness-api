@@ -1,8 +1,11 @@
 import { NextFunction, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
+import { PackageDTO } from '../../shared/models/dto/PackageDTO';
 import IActivity from '../../shared/models/entities/IActivity';
 import IPackageService from '../../shared/services/interfaces/IPackageService';
 import packageService from '../../shared/services/PackageService';
+import { PackageUseCase } from '../../shared/useCases/package/PackageUseCase';
 import IPackageController, {
     IGetRequest, IIndexRequest, IStoreRequest, IUpdateRequest
 } from './interfaces/IPackageController';
@@ -53,35 +56,12 @@ export class PackageController implements IPackageController {
     next: NextFunction
   ): Promise<Response> {
     try {
-      const {
-        name,
-        price,
-        description,
-        expiration,
-        showInApp,
-        showInWeb,
-        categoryId,
-        activities,
-        recurrencyPay,
-        type,
-        total
-      } = req.body;
-      const model = await this.service.create({
-        name,
-        price,
-        description,
-        expiration,
-        showInApp,
-        showInWeb,
-        categoryId,
-        activities: activities as IActivity[],
-        imageUrl: req.file?.url,
-        recurrencyPay,
-        type,
-        total
-      });
+      const dto = new PackageDTO()
+        .parseFromBody(req.body)
+        .withImageUrl(req.file?.url);
+      await new PackageUseCase(dto).create();
 
-      return res.json(model);
+      return res.status(StatusCodes.CREATED).json();
     } catch (error) {
       next(error);
     }
@@ -93,37 +73,12 @@ export class PackageController implements IPackageController {
     next: NextFunction
   ): Promise<Response> {
     try {
-      const {
-        id,
-        name,
-        price,
-        description,
-        expiration,
-        showInApp,
-        showInWeb,
-        categoryId,
-        activities,
-        recurrencyPay,
-        type,
-        total
-      } = req.body;
-      const model = await this.service.update({
-        id,
-        name,
-        price,
-        description,
-        expiration,
-        showInApp,
-        showInWeb,
-        categoryId,
-        activities: activities as IActivity[],
-        imageUrl: req.file?.url,
-        recurrencyPay,
-        type,
-        total
-      });
+      const dto = new PackageDTO()
+        .parseFromBody(req.body)
+        .withImageUrl(req.file?.url);
+      await new PackageUseCase(dto).update();
 
-      return res.json(model);
+      return res.status(StatusCodes.NO_CONTENT).json();
     } catch (error) {
       next(error);
     }

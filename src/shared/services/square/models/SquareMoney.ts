@@ -2,8 +2,8 @@ export class SquareMoney {
   amount: number;
   currency: string;
 
-  constructor(obj?: any) {
-    this.amount = obj?.amount;
-    this.currency = obj?.currency;
+  constructor(amount?: number) {
+    this.amount = amount ? Math.round(amount * 100) : 0;
+    this.currency = 'USD';
   }
 }
