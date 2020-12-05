@@ -18,7 +18,8 @@
     "seed:down": "sequelize db:seed:undo --seed",
     "seed:up:all": "sequelize db:seed:all",
     "seed:down:all": "sequelize db:seed:undo:all",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "tunnel": "lt --port 3333 --subdomain wellness-dev --print-requests --open"
   },
   "keywords": [],
   "author": "",
@@ -58,6 +59,7 @@
     "@types/sequelize": "^4.28.9",
     "@types/uuid": "^8.3.0",
     "commander": "^6.2.0",
+    "localtunnel": "^2.0.0",
     "nodemon": "^2.0.2",
     "prettier": "^2.1.2",
     "sequelize-cli": "^5.5.1",
