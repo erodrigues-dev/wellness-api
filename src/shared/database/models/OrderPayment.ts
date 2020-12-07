@@ -13,10 +13,14 @@ export default class OrderPayment extends Model implements IOrderPayment {
   tip: number;
   discount: number;
   amount: number;
-  transactionId: string;
   recurrency: RecurrencyPayEnum;
-  status: PaymentStatusEnum;
   dueDate: Date;
+
+  transactionId: string;
+  status: PaymentStatusEnum;
+  statusDate: Date;
+  dueDate: Date;
+
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -34,6 +38,8 @@ export default class OrderPayment extends Model implements IOrderPayment {
         transactionId: DataTypes.STRING,
         recurrency: DataTypes.STRING,
         status: DataTypes.STRING,
+        dueDate: DataTypes.DATEONLY,
+        statusDate: DataTypes.DATE,
         dueDate: DataTypes.DATEONLY
       },
       {

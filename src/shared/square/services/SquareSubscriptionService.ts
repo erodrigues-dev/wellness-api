@@ -13,4 +13,9 @@ export class SquareSubscriptionService {
 
     return data.subscription as SquareSubscription;
   }
+
+  async get(id: string) {
+    const { data } = await this.api.get(`/subscriptions/${id}`);
+    return data.subscription as SquareSubscription;
+  }
 }
