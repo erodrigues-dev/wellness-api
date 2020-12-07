@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 
-import { SquareCard } from './models/SquareCard';
-import { SquareCustomer } from './models/SquareCustomer';
+import { SquareCard } from '../models/SquareCard';
+import { SquareCustomer } from '../models/SquareCustomer';
 
 export class SquareCustomerService {
   constructor(private api: AxiosInstance) {}

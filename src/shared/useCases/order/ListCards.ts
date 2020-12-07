@@ -1,5 +1,5 @@
 import Customer from '../../database/models/Customer';
-import { squareCustomerService } from '../../services/square/index';
+import { squareCustomerService } from '../../square/services/index';
 
 export class ListCards {
   constructor(private customerId: number) {}

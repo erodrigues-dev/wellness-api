@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
-import { RecurrencyPayEnum } from '../../../models/enums/RecurrencyPayEnum';
+import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
 
 export class SquareSubscriptionCreateData {
   idempotency_key: string;

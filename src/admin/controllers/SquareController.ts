@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { squareCustomerService } from '../../shared/services/square/index';
-import { SquareCustomer } from '../../shared/services/square/models/SquareCustomer';
+import { SquareCustomer } from '../../shared/square/models/SquareCustomer';
+import { squareCustomerService } from '../../shared/square/services/index';
 
 export class SquareController {
   async getCustomerById(req: Request, res: Response, next: NextFunction) {

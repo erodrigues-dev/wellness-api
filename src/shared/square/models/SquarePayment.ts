@@ -1,4 +1,4 @@
-import { PaymentStatusEnum } from '../../../models/enums/PaymentStatusEnum';
+import { PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
 import { SquareMoney } from './SquareMoney';
 
 export class SquarePayment {

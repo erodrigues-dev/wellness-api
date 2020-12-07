@@ -1,8 +1,8 @@
 import Customer from '../../database/models/Customer';
 import ICustomer from '../../models/entities/ICustomer';
 import customerService from '../../services/CustomerService';
-import { squareCustomerService } from '../../services/square/index';
-import { SquareCustomer } from '../../services/square/models/SquareCustomer';
+import { SquareCustomer } from '../../square/models/SquareCustomer';
+import { squareCustomerService } from '../../square/services/index';
 import { CustomerDTO } from './CustomerDTO';
 
 export default class CreateCustomer {

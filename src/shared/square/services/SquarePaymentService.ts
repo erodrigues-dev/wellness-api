@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 
-import { SquarePayment } from './models/SquarePayment';
-import { SquarePaymentCreateData } from './models/SquarePaymentCreateData';
+import { SquarePayment } from '../models/SquarePayment';
+import { SquarePaymentCreateData } from '../models/SquarePaymentCreateData';
 
 export class SquarePaymentService {
   constructor(private api: AxiosInstance) {}

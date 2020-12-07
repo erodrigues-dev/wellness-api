@@ -5,10 +5,8 @@ import connection from '../../database/connection';
 import Package from '../../database/models/Package';
 import { PackageDTO } from '../../models/dto/PackageDTO';
 import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
-import { squareCatalogService } from '../../services/square';
-import {
-    SquareCatalogUpsertRequestBuilder
-} from '../../services/square/models/SquareCatalogRequest';
+import { SquareCatalogUpsertRequestBuilder } from '../../square/models/SquareCatalogRequest';
+import { squareCatalogService } from '../../square/services';
 import { deleteFileFromUrl } from '../../utils/google-cloud-storage';
 
 export class PackageUseCase {

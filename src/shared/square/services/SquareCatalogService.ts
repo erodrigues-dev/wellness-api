@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 
-import { SquareCatalog } from './models/SquareCatalog';
-import { SquareCatalogUpsertRequest } from './models/SquareCatalogRequest';
+import { SquareCatalog } from '../models/SquareCatalog';
+import { SquareCatalogUpsertRequest } from '../models/SquareCatalogRequest';
 
 export class SquareCatalogService {
   constructor(private api: AxiosInstance) {}

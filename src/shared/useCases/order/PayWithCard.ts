@@ -7,15 +7,13 @@ import OrderPayment from '../../database/models/OrderPayment';
 import IOrderPayment from '../../models/entities/IOrderPayment';
 import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
 import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
+import { SquarePayment } from '../../square/models/SquarePayment';
+import { SquarePaymentCreateData } from '../../square/models/SquarePaymentCreateData';
+import { SquareSubscription } from '../../square/models/SquareSubscription';
+import { SquareSubscriptionCreateData } from '../../square/models/SquareSubscriptionCreateData';
 import {
     squareCustomerService, squarePaymentService, squareSubscriptionService
-} from '../../services/square/index';
-import { SquarePayment } from '../../services/square/models/SquarePayment';
-import { SquarePaymentCreateData } from '../../services/square/models/SquarePaymentCreateData';
-import { SquareSubscription } from '../../services/square/models/SquareSubscription';
-import {
-    SquareSubscriptionCreateData
-} from '../../services/square/models/SquareSubscriptionCreateData';
+} from '../../square/services/index';
 import CreateOrder from './CreateOrder';
 import CreateOrderWithCardDTO from './CreateOrderWithCardDTO';
 
@@ -35,20 +33,12 @@ export default class PayWithCard {
 
   async pay(): Promise<void> {
     try {
-      console.log('pay with card');
-      console.log('creating transaction');
       await this.createTransaction();
-      console.log('creating order and items');
       await this.createOrderData();
-      console.log('customer get square id');
       await this.getCustomerSquareIdOrCreate();
-      console.log('card get square id');
       await this.getCardOrCreate();
-      console.log('processing payment');
       await this.processPayment();
-      console.log('creating payment order');
       await this.createPaymentOrder();
-      console.log('commit');
       await this.commit();
     } catch (error) {
       console.log(error);

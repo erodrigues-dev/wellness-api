@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import CustomError from '../../../custom-error/CustomError';
-import { RecurrencyPayEnum } from '../../../models/enums/RecurrencyPayEnum';
+import CustomError from '../../custom-error/CustomError';
+import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
 import {
     SquareCatalog, SquareCatalogSubscriptionPlan, SquareSusbscriptionPhase
 } from './SquareCatalog';
