@@ -14,4 +14,5 @@ export default interface IOrderPayment {
   status: PaymentStatusEnum;
   dueDate?: Date;
   statusDate?: Date;
+  paidUntilDate?: Date;
 }

@@ -19,7 +19,7 @@ export default class OrderPayment extends Model implements IOrderPayment {
   transactionId: string;
   status: PaymentStatusEnum;
   statusDate: Date;
-  dueDate: Date;
+  paidUntilDate: Date;
 
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -40,7 +40,7 @@ export default class OrderPayment extends Model implements IOrderPayment {
         status: DataTypes.STRING,
         dueDate: DataTypes.DATEONLY,
         statusDate: DataTypes.DATE,
-        dueDate: DataTypes.DATEONLY
+        paidUntilDate: DataTypes.DATE
       },
       {
         sequelize: connection,

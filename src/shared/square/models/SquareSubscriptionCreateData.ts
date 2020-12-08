@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
 import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
+import { SquareMoney } from './SquareMoney';
 
 export class SquareSubscriptionCreateData {
   idempotency_key: string;
@@ -26,5 +27,9 @@ export class SquareSubscriptionCreateData {
 
   setDueDate(date: Date) {
     this.start_date = format(date, 'yyyy-MM-dd');
+  }
+
+  setAmount(amount: number) {
+    this.price_override_money = new SquareMoney(amount);
   }
 }

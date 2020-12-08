@@ -12,7 +12,8 @@ export class UpdateSubscriptionStatusUseCase {
       const [udpates] = await OrderPayment.update(
         {
           status: this.hookData.data.object.subscription.status,
-          statusDate: this.hookData.created_at
+          statusDate: this.hookData.created_at,
+          paidUntilDate: this.hookData.data.object.subscription.paid_until_date
         },
         {
           where: {
