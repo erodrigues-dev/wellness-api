@@ -102,10 +102,10 @@ export default class PayWithCard {
     this.payment.cardId = this.data.cardId;
 
     if (this.data.saveCard || isRecurrently) {
-      const customerCards = squareCustomerService.listCards(
+      const customerCards = await squareCustomerService.listCards(
         this.payment.customerId
       );
-      const isSavedCard = (await customerCards).some(
+      const isSavedCard = customerCards.some(
         card => card.id === this.data.cardId
       );
 
@@ -146,6 +146,7 @@ export default class PayWithCard {
 
   private async createSubscriptionInSquare() {
     console.log('creating square subscription');
+    const { total } = this.createOrder.getCreatedOrder();
     const subscriptionPlanId = this.createOrder.getSubscriptionPlanId();
 
     const data = new SquareSubscriptionCreateData();
@@ -153,6 +154,7 @@ export default class PayWithCard {
     data.card_id = this.payment.cardId;
     data.setDueDate(this.data.dueDate || new Date());
     data.setSubscriptionPlan(subscriptionPlanId);
+    data.setAmount(total);
 
     this.payment.squareSubscription = await squareSubscriptionService.create(
       data
@@ -170,6 +172,10 @@ export default class PayWithCard {
     const { id: transactionId, status } =
       this.payment.squarePayment || this.payment.squareSubscription;
 
+    const paidUntilDate = this.payment.squareSubscription?.paid_until_date
+      ? new Date(this.payment.squareSubscription.paid_until_date)
+      : null;
+
     const data: IOrderPayment = {
       type: PaymentTypeEnum.Card,
       orderId,
@@ -179,7 +185,8 @@ export default class PayWithCard {
       recurrency,
       transactionId,
       status,
-      dueDate: this.data.dueDate
+      dueDate: this.data.dueDate,
+      paidUntilDate
     };
 
     return OrderPayment.create(data, { transaction: this.transaction });
