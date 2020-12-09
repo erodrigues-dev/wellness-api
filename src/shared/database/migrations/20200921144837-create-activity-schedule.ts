@@ -1,7 +1,7 @@
-import { QueryInterface, DataTypes, fn } from 'sequelize';
+import { DataTypes, fn, QueryInterface } from 'sequelize';
 
 export function up(queryInterface: QueryInterface) {
-  return queryInterface.createTable('activity_schedule', {
+  return queryInterface.createTable('activities_schedules', {
     id: {
       primaryKey: true,
       type: DataTypes.INTEGER,
@@ -43,5 +43,5 @@ export function up(queryInterface: QueryInterface) {
 }
 
 export function down(queryInterface: QueryInterface) {
-  return queryInterface.dropTable('activity_schedule');
+  return queryInterface.dropTable('activities_schedules');
 }
