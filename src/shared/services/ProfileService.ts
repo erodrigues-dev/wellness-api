@@ -3,7 +3,7 @@ import { Op, Transaction } from 'sequelize';
 import CustomError from '../custom-error/CustomError';
 import Functionality from '../database/models/Functionality';
 import Profile from '../database/models/Profile';
-import IProfile from '../models/IProfile';
+import IProfile from '../models/entities/IProfile';
 import IProfileService, { IFilter } from './interfaces/IProfileService';
 
 export class ProfileService implements IProfileService {

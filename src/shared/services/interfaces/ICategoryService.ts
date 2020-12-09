@@ -1,4 +1,4 @@
-import ICategory from '../../models/ICategory';
+import ICategory from '../../models/entities/ICategory';
 
 export default interface ICategoryService {
   list(

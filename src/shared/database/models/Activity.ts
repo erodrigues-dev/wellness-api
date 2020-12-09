@@ -1,6 +1,6 @@
-import { Sequelize, Model, DataTypes, Association } from 'sequelize';
+import { Association, DataTypes, Model, Sequelize } from 'sequelize';
 
-import IActivity from '../../models/IActivity';
+import IActivity from '../../models/entities/IActivity';
 import Category from './Category';
 import Employee from './Employee';
 

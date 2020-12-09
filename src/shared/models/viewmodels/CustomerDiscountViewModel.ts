@@ -3,6 +3,7 @@ export default class CustomerDiscountViewModel {
   relationId: number;
   relationName: string;
   relationType: string;
+  relationPrice: number;
   type: string;
   value: number;
   customerId: number;
@@ -19,6 +20,7 @@ export default class CustomerDiscountViewModel {
     view.relationId = obj.relation_id;
     view.relationName = obj.relation_name;
     view.relationType = obj.relation_type;
+    view.relationPrice = Number(obj.relation_price);
     view.type = obj.type;
     view.value = Number(obj.value);
     view.customerId = obj.customer_id;

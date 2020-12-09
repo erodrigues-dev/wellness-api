@@ -1,7 +1,8 @@
 import { FindOptions, Op } from 'sequelize';
+
 import CustomError from '../custom-error/CustomError';
 import Category from '../database/models/Category';
-import ICategory from '../models/ICategory';
+import ICategory from '../models/entities/ICategory';
 import ICategoryService from './interfaces/ICategoryService';
 
 export class CategoryService implements ICategoryService {

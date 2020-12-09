@@ -1,14 +1,10 @@
 import { Op } from 'sequelize';
 
-import Activity from '../database/models/Activity';
-
-import IActivity from '../models/IActivity';
-import IActivityService, {
-  IActivityFilter
-} from './interfaces/IActivityService';
-
-import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import CustomError from '../custom-error/CustomError';
+import Activity from '../database/models/Activity';
+import IActivity from '../models/entities/IActivity';
+import { deleteFileFromUrl } from '../utils/google-cloud-storage';
+import IActivityService, { IActivityFilter } from './interfaces/IActivityService';
 
 export class ActivityService implements IActivityService {
   async list(

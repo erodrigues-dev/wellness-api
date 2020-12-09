@@ -1,15 +1,11 @@
 import { Op } from 'sequelize';
 
-import Customer from '../database/models/Customer';
-
-import ICustomer from '../models/ICustomer';
-import ICustomerService, {
-  ICustomerFilter
-} from './interfaces/ICustomerService';
-
-import { hash } from '../utils/hash-password';
-import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import CustomError from '../custom-error/CustomError';
+import Customer from '../database/models/Customer';
+import ICustomer from '../models/entities/ICustomer';
+import { deleteFileFromUrl } from '../utils/google-cloud-storage';
+import { hash } from '../utils/hash-password';
+import ICustomerService, { ICustomerFilter } from './interfaces/ICustomerService';
 
 export class CustomerService implements ICustomerService {
   async list(
@@ -32,7 +28,7 @@ export class CustomerService implements ICustomerService {
     return Customer.count({ where });
   }
 
-  async get(id: number): Promise<ICustomer> {
+  async get(id: number): Promise<Customer> {
     const query: Customer = await Customer.findByPk(id, {
       attributes: {
         exclude: ['password']
@@ -41,17 +37,15 @@ export class CustomerService implements ICustomerService {
 
     if (!query) return null;
 
-    return query.toJSON() as ICustomer;
+    return query;
   }
 
-  async create(data: ICustomer): Promise<ICustomer> {
+  async create(data: ICustomer): Promise<Customer> {
     data.password = await hash(data.password);
-    const model: Customer = await Customer.create(data);
-
-    return model.toJSON() as ICustomer;
+    return Customer.create(data);
   }
 
-  async update(data: ICustomer): Promise<ICustomer> {
+  async update(data: ICustomer): Promise<Customer> {
     const customer: Customer = await Customer.findByPk(data.id);
     if (!customer) throw new CustomError('customer not found', 404);
 
@@ -75,7 +69,7 @@ export class CustomerService implements ICustomerService {
     }
 
     await customer.save();
-    return customer.toJSON() as ICustomer;
+    return customer;
   }
 
   private buildQuery(filter: ICustomerFilter) {

@@ -1,4 +1,4 @@
-import IActivitySchedule from '../../models/IActivitySchedule';
+import IActivitySchedule from '../../models/entities/IActivitySchedule';
 
 export default interface IActivityScheduleService {
   list(

@@ -1,14 +1,9 @@
 import { Op, Transaction } from 'sequelize';
 
-import ICustomPackage, {
-  ICustomPackageWithActivity
-} from '../models/ICustomPackage';
-import ICustomPackageService, {
-  IFilter
-} from './interfaces/ICustomPackageService';
-
-import CustomPackage from '../database/models/CustomPackage';
 import CustomError from '../custom-error/CustomError';
+import CustomPackage from '../database/models/CustomPackage';
+import ICustomPackage, { ICustomPackageWithActivity } from '../models/entities/ICustomPackage';
+import ICustomPackageService, { IFilter } from './interfaces/ICustomPackageService';
 
 export class CustomPackageService implements ICustomPackageService {
   private db = CustomPackage;
@@ -120,7 +115,7 @@ export class CustomPackageService implements ICustomPackageService {
   }
 
   async destroy(customerId: number, id: number): Promise<void> {
-    const rows = this.db.destroy({
+    const rows = await this.db.destroy({
       where: {
         customerId,
         id

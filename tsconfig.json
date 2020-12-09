@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2017",
     "module": "commonjs",
     "allowJs": true,
     "strict": false,
@@ -8,7 +8,8 @@
     "esModuleInterop": true,
     "outDir": "./dist",
     "rootDirs": ["./"],
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "removeComments": true
   },
   "include": ["src"]
 }

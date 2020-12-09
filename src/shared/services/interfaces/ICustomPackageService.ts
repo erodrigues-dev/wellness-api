@@ -1,6 +1,4 @@
-import ICustomPackage, {
-  ICustomPackageWithActivity
-} from '../../models/ICustomPackage';
+import ICustomPackage, { ICustomPackageWithActivity } from '../../models/entities/ICustomPackage';
 
 export interface IFilter {
   customerId: number;

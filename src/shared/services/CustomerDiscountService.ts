@@ -1,12 +1,11 @@
 import CustomError from '../custom-error/CustomError';
+import Activity from '../database/models/Activity';
 import CustomerDiscount from '../database/models/CustomerDiscount';
 import Package from '../database/models/Package';
-import Activity from '../database/models/Activity';
-import CustomerDiscountViewModel from '../viewmodels/CustomerDiscountViewModel';
+import { DiscountTypeEnum } from '../models/enums/DiscountTypeEnum';
+import CustomerDiscountViewModel from '../models/viewmodels/CustomerDiscountViewModel';
 import ICustomerDiscountService, {
-  IStore,
-  IUpdate,
-  IFilter
+    IFilter, IStore, IUpdate
 } from './interfaces/ICustomerDiscountService';
 
 export class CustomerDiscountService implements ICustomerDiscountService {
@@ -39,6 +38,12 @@ export class CustomerDiscountService implements ICustomerDiscountService {
     return CustomerDiscountViewModel.from(item);
   }
 
+  find(customerId: number, relationType: string, relationId: number) {
+    return CustomerDiscount.findOne({
+      where: { customerId, relationType, relationId }
+    });
+  }
+
   async count(filter: IFilter): Promise<number> {
     const [results] = await this.db.sequelize.query(
       this.buildSelectQuery(filter, true),
@@ -50,13 +55,15 @@ export class CustomerDiscountService implements ICustomerDiscountService {
       }
     );
 
-    const [{ count }] = results;
+    const [{ count }] = results as any;
 
     return Number(count);
   }
 
   async store(data: IStore): Promise<number> {
+    await this.checkDuplicated(data);
     await this.checkRelationId(data.relationType, data.relationId);
+    await this.checkDiscountValue(data);
     const { id }: CustomerDiscount = await this.db.create(data);
     return id;
   }
@@ -64,9 +71,10 @@ export class CustomerDiscountService implements ICustomerDiscountService {
   async update(data: IUpdate): Promise<void> {
     console.log(data);
     const model: CustomerDiscount = await this.db.findByPk(data.id);
-
     if (!model) throw new CustomError('Discount not found', 404);
+    await this.checkDuplicated(data);
     await this.checkRelationId(data.relationType, data.relationId);
+    await this.checkDiscountValue(data);
 
     model.type = data.type;
     model.value = data.value;
@@ -84,6 +92,39 @@ export class CustomerDiscountService implements ICustomerDiscountService {
     });
 
     if (deleteds === 0) throw new CustomError('Discount not found', 404);
+  }
+
+  private async checkDuplicated(data: IStore | IUpdate) {
+    const existent = await this.find(
+      data.customerId,
+      data.relationType,
+      data.relationId
+    );
+
+    if (existent && existent.id !== data['id'])
+      throw new CustomError('Discount duplicated', 400);
+  }
+
+  private async checkDiscountValue(data: IStore | IUpdate) {
+    if (data.type === DiscountTypeEnum.Percent) {
+      if (data.value < 1 || data.value > 100)
+        throw new CustomError('Invalid percent value', 400);
+      return;
+    }
+
+    if (data.relationType === 'activity') {
+      const { price } = await Activity.findByPk(data.relationId);
+      if (data.value > price)
+        throw new CustomError(
+          'Invalid value, must be less than Activity price'
+        );
+    }
+
+    if (data.relationType === 'package') {
+      const { price } = await Package.findByPk(data.relationId);
+      if (data.value > price)
+        throw new CustomError('Invalid value, must be less than Package price');
+    }
   }
 
   private async checkRelationId(type: 'activity' | 'package', id: number) {
@@ -107,6 +148,10 @@ export class CustomerDiscountService implements ICustomerDiscountService {
           WHEN cd.relation_type = 'activity' THEN a."name"
           WHEN cd.relation_type = 'package' THEN p."name"
         END "relation_name",
+        CASE
+          WHEN cd.relation_type = 'activity' THEN a."price"
+          WHEN cd.relation_type = 'package' THEN p."price"
+        END "relation_price",
         cd.relation_type,
         cd."type",
         cd.value,

@@ -1,13 +1,11 @@
 import { Op } from 'sequelize';
 
-import Employee from '../database/models/Employee';
-
-import IEmployee from '../models/IEmployee';
-import IEmployeeService, { IFilter } from './interfaces/IEmployeeService';
-
-import { hash } from '../utils/hash-password';
-import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import CustomError from '../custom-error/CustomError';
+import Employee from '../database/models/Employee';
+import IEmployee from '../models/entities/IEmployee';
+import { deleteFileFromUrl } from '../utils/google-cloud-storage';
+import { hash } from '../utils/hash-password';
+import IEmployeeService, { IFilter } from './interfaces/IEmployeeService';
 
 export class EmployeeService implements IEmployeeService {
   list(filter: IFilter, page = 1, limit = 10): Promise<IEmployee[]> {

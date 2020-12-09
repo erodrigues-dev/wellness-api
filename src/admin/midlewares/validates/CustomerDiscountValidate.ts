@@ -1,5 +1,5 @@
-import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
+import { Router } from 'express';
 
 const router = Router();
 
@@ -11,6 +11,17 @@ router.get(
       relationName: Joi.string().allow('').optional(),
       page: Joi.number(),
       limit: Joi.number()
+    })
+  })
+);
+
+router.get(
+  '/discounts/find/:customerId/:relationType/:relationId',
+  celebrate({
+    [Segments.PARAMS]: Joi.object().keys({
+      customerId: Joi.number().required(),
+      relationType: Joi.string().valid('package', 'activity').required(),
+      relationId: Joi.number().required()
     })
   })
 );
@@ -30,10 +41,13 @@ router.post(
     [Segments.BODY]: Joi.object().keys({
       customerId: Joi.number().required(),
       type: Joi.string().valid('percent', 'amount').required(),
-      value: Joi.number().positive().required().when('type', {
-        is: 'percent',
-        then: Joi.number().integer()
-      }),
+      value: Joi.number()
+        .positive()
+        .required()
+        .when('type', {
+          is: 'percent',
+          then: Joi.number().integer().max(100)
+        }),
       relationType: Joi.string().valid('package', 'activity').required(),
       relationId: Joi.number().required()
     })

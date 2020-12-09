@@ -2,13 +2,15 @@ import { Router } from 'express';
 
 import activity from './Activity';
 import activitySchedule from './ActivitySchedule';
+import category from './Category';
+import checkout from './CheckoutPermission';
 import customer from './Customer';
+import customerDiscount from './CustomerDiscountPermission';
+import customPackage from './CustomPackage';
 import employee from './Employee';
+import order from './OrderPermission';
 import package_ from './Package';
 import profile from './Profile';
-import customPackage from './CustomPackage';
-import category from './Category';
-import customerDiscount from './CustomerDiscountPermission';
 
 const router = Router();
 
@@ -21,5 +23,7 @@ router.use(profile);
 router.use(customPackage);
 router.use(category);
 router.use(customerDiscount);
+router.use(order);
+router.use(checkout);
 
 export default router;

@@ -1,13 +1,14 @@
-import expressJwt from 'express-jwt';
-import express from 'express';
-import morgan from 'morgan';
-import cors from 'cors';
 import 'dotenv/config';
 import 'express-async-errors';
 
+import cors from 'cors';
+import express from 'express';
+import morgan from 'morgan';
+
+import useAdminModule from './admin/admin-module';
 import { databaseConfig } from './shared/database/connection';
 import useErrorHandlers from './shared/error-handlers';
-import useAdminModule from './admin/admin-module';
+import useWebhooksModule from './webhooks/webhook-module';
 
 databaseConfig();
 
@@ -22,16 +23,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('short'));
 
-app.use(
-  expressJwt({ secret: process.env.JWT_SECRET }).unless({
-    path: {
-      url: '/admin/sessions',
-      methods: ['POST']
-    }
-  })
-);
-
 useAdminModule(app);
+useWebhooksModule(app);
 //useSiteModule(app)
 //useAppEmployeeModule(app)
 //useAppCustomerModule(app)

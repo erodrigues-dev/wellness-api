@@ -1,5 +1,6 @@
-import { Model, DataTypes, Association, Sequelize } from 'sequelize';
+import { Association, DataTypes, Model, Sequelize } from 'sequelize';
 
+import { DiscountTypeEnum } from '../../models/enums/DiscountTypeEnum';
 import Customer from './Customer';
 import Employee from './Employee';
 
@@ -9,7 +10,7 @@ export default class CustomerDiscount extends Model {
   relationType: string;
   relationId: number;
 
-  type: string;
+  type: DiscountTypeEnum;
   value: number;
 
   customerId: number;

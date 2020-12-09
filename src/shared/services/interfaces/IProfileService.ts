@@ -1,4 +1,4 @@
-import IProfile from '../../models/IProfile';
+import IProfile from '../../models/entities/IProfile';
 
 export interface IFilter {
   name?: string;

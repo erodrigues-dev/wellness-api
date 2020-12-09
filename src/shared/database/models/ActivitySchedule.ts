@@ -1,8 +1,8 @@
-import { FrequencyEnum } from './../../models/enums/FrequencyEnum';
-import { EndsInEnum } from './../../models/enums/EndsInEnum';
-import { Sequelize, Model, DataTypes, Association } from 'sequelize';
+import { Association, DataTypes, Model, Sequelize } from 'sequelize';
 
-import IActivitySchedule from '../../models/IActivitySchedule';
+import IActivitySchedule from '../../models/entities/IActivitySchedule';
+import { EndsInEnum } from '../../models/enums/EndsInEnum';
+import { FrequencyEnum } from '../../models/enums/FrequencyEnum';
 import Activity from './Activity';
 
 export default class ActivitySchedule

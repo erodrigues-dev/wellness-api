@@ -1,14 +1,11 @@
-import { Response, NextFunction } from 'express';
-import IProfileService from '../../shared/services/interfaces/IProfileService';
-import IProfileController, {
-  IGetRequest,
-  IIndexRequest,
-  IStoreRequest,
-  IUpdateRequest
-} from './interfaces/IProfileController';
+import { NextFunction, Response } from 'express';
 
+import IFunctionality from '../../shared/models/entities/IFunctionality';
+import IProfileService from '../../shared/services/interfaces/IProfileService';
 import profileServive from '../../shared/services/ProfileService';
-import IFunctionality from '../../shared/models/IFunctionality';
+import IProfileController, {
+    IGetRequest, IIndexRequest, IStoreRequest, IUpdateRequest
+} from './interfaces/IProfileController';
 
 export class ProfileController implements IProfileController {
   constructor(private service: IProfileService) {}

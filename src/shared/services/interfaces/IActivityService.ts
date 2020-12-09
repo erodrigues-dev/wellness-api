@@ -1,4 +1,4 @@
-import IActivity from '../../models/IActivity';
+import IActivity from '../../models/entities/IActivity';
 
 export interface IActivityFilter {
   name?: string;

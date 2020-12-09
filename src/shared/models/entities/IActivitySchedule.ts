@@ -1,5 +1,6 @@
-import { FrequencyEnum } from './enums/FrequencyEnum';
-import { EndsInEnum } from './enums/EndsInEnum';
+import { EndsInEnum } from '../enums/EndsInEnum';
+import { FrequencyEnum } from '../enums/FrequencyEnum';
+
 export default interface IActivitySchedule {
   id?: number;
   activityId: number;

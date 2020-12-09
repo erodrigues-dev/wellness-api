@@ -1,14 +1,9 @@
 import {
-  Model,
-  DataTypes,
-  Association,
-  Sequelize,
-  BelongsToManyAddAssociationMixin,
-  BelongsToManySetAssociationsMixin
+    Association, BelongsToManyAddAssociationMixin, BelongsToManySetAssociationsMixin, DataTypes,
+    Model, Sequelize
 } from 'sequelize';
 
-import ICustomPackage from '../../models/ICustomPackage';
-
+import ICustomPackage from '../../models/entities/ICustomPackage';
 import Activity from './Activity';
 import Customer from './Customer';
 
