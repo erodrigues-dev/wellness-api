@@ -1,12 +1,16 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import customerService from '../../shared/services/CustomerService';
 import ICustomerService from '../../shared/services/interfaces/ICustomerService';
 import CreateCustomer from '../../shared/useCases/customer/CreateCustomer';
 import { CustomerDTO } from '../../shared/useCases/customer/CustomerDTO';
+import { ListActivitiesUseCase } from '../../shared/useCases/customer/ListActivitiesUseCase';
 import UpdateCustomer from '../../shared/useCases/customer/UpdateCustomer';
 import ICustomerController, {
-    IGetRequest, IIndexRequest, IStoreRequest, IUpdateRequest
+  IGetRequest,
+  IIndexRequest,
+  IStoreRequest,
+  IUpdateRequest
 } from './interfaces/ICustomerController';
 
 export class CustomerController implements ICustomerController {
@@ -64,8 +68,19 @@ export class CustomerController implements ICustomerController {
       next(error);
     }
   }
+
+  async getActivities(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = Number(req.params.id);
+      const useCase = new ListActivitiesUseCase(id);
+      const activities = await useCase.list();
+      return res.json(activities);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
-const controller: ICustomerController = new CustomerController(customerService);
+const controller = new CustomerController(customerService);
 
 export default controller;
