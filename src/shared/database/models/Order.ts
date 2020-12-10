@@ -17,6 +17,7 @@ export default class Order extends Model {
   readonly updatedAt: Date;
 
   items?: OrderItem[];
+  payments?: OrderPayment[];
 
   static associations: {
     customer: Association<Order, Customer>;
