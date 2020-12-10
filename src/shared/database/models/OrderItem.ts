@@ -40,7 +40,7 @@ export default class OrderItem extends Model {
   recurrency?: RecurrencyPayEnum;
   valueType?: PackageTypeEnum;
   value?: number;
-  expiresIn: Date;
+  expiresIn?: Date;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
