@@ -1,4 +1,10 @@
-# TODO
+# TODO CARD#76 appointments
+
+## Permission
+
+- [ ] listar atividades
+- [ ] agendar atividade
+- [ ] cancelar atividade ???
 
 ## listar atividades
 
@@ -14,3 +20,5 @@
 - [ ] verificar quantidade de pessoas
 - [ ] verificar pagamento
 - [ ] verificar plano/quantidade
+
+## cancelar atividade ???
