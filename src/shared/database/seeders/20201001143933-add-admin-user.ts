@@ -58,6 +58,18 @@ export default {
         actions: 7,
         profile_id: 1,
         created_at: new Date().toISOString()
+      },
+      {
+        name: 'orders',
+        actions: 7,
+        profile_id: 1,
+        created_at: new Date().toISOString()
+      },
+      {
+        name: 'checkout',
+        actions: 7,
+        profile_id: 1,
+        created_at: new Date().toISOString()
       }
     ]);
     await queryInterface.bulkInsert('employees', [
