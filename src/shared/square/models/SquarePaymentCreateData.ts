@@ -1,5 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
+import { SquareMoney } from './SquareMoney';
+
 export class SquarePaymentCreateData {
   source_id: string;
   idempotency_key: string;
@@ -19,18 +21,12 @@ export class SquarePaymentCreateData {
   }
 
   setAmount(amount: number) {
-    this.amount_money = {
-      amount: amount * 100,
-      currency: 'USD'
-    };
+    this.amount_money = new SquareMoney(amount);
   }
 
   setTip(tip: number) {
     if (tip) {
-      this.tip_money = {
-        amount: tip * 100,
-        currency: 'USD'
-      };
+      this.tip_money = new SquareMoney(tip);
     }
   }
 }
