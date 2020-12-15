@@ -12,6 +12,10 @@
 * [x] verificar status do pagamento
 * [ ] verificar a quantidade/plano comprado
 
+## listar dias
+
+- [x] listar dias por periodo;
+
 ## agendar atividade
 
 - [ ] criar tabela de agendamento

@@ -1,13 +1,10 @@
-import { Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
-import IActivityScheduleService from '../../shared/services/interfaces/IActivityScheduleService';
 import activityScheduleService from '../../shared/services/ActivityScheduleService';
-
+import IActivityScheduleService from '../../shared/services/interfaces/IActivityScheduleService';
+import { ListDaysUseCase } from '../../shared/useCases/schedule/ListDaysUseCase';
 import IActivityScheduleController, {
-  IDeleteRequest,
-  IIndexRequest,
-  IStoreRequest,
-  IUpdateRequest
+    IDeleteRequest, IIndexRequest, IStoreRequest, IUpdateRequest
 } from './interfaces/IActivityScheduleController';
 
 export class ActivityScheduleController implements IActivityScheduleController {
@@ -23,6 +20,22 @@ export class ActivityScheduleController implements IActivityScheduleController {
         activityId
       );
       return res.json(rows);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async days(req: Request, res: Response, next: NextFunction) {
+    try {
+      const useCase = new ListDaysUseCase(
+        Number(req.params.id),
+        new Date(req.query.start as any),
+        new Date(req.query.end as any)
+      );
+
+      const days = await useCase.list();
+
+      return res.json(days);
     } catch (error) {
       next(error);
     }

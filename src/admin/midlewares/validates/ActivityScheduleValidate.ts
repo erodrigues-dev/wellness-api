@@ -19,8 +19,21 @@ router.get(
       id: Joi.number().integer()
     }),
     [Segments.QUERY]: Joi.object().keys({
-      start: Joi.date().required(),
-      end: Joi.date().required()
+      start: Joi.date().iso().required(),
+      end: Joi.date().iso().required()
+    })
+  })
+);
+
+router.get(
+  '/activities/:id/schedules/days',
+  celebrate({
+    [Segments.PARAMS]: Joi.object({
+      id: Joi.number().integer()
+    }),
+    [Segments.QUERY]: Joi.object().keys({
+      start: Joi.date().iso().required(),
+      end: Joi.date().iso().required()
     })
   })
 );
