@@ -38,6 +38,18 @@ router.get(
   })
 );
 
+router.get(
+  '/activities/:id/schedules/times',
+  celebrate({
+    [Segments.PARAMS]: Joi.object({
+      id: Joi.number().integer()
+    }),
+    [Segments.QUERY]: Joi.object().keys({
+      date: Joi.date().iso().required()
+    })
+  })
+);
+
 router.post(
   routeName,
   celebrate({
