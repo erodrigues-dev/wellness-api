@@ -39,13 +39,11 @@ router.get(
 );
 
 router.get(
-  '/activities/:id/schedules/times',
+  '/activities/:id/schedules/days/:day/times',
   celebrate({
     [Segments.PARAMS]: Joi.object({
-      id: Joi.number().integer()
-    }),
-    [Segments.QUERY]: Joi.object().keys({
-      date: Joi.date().iso().required()
+      id: Joi.number().integer(),
+      day: Joi.date().iso()
     })
   })
 );

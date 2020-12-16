@@ -1,3 +1,4 @@
+import { parseISO } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
 
 import activityScheduleService from '../../shared/services/ActivityScheduleService';
@@ -46,7 +47,7 @@ export class ActivityScheduleController implements IActivityScheduleController {
     try {
       const useCase = new ListTimesUseCase(
         Number(req.params.id),
-        new Date(req.query.date as any)
+        parseISO(req.params.day)
       );
 
       const times = await useCase.list();
