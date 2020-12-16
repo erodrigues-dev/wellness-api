@@ -1,3 +1,4 @@
+import { format, formatISO, parseISO, parseJSON } from 'date-fns';
 import RRule, { WeekdayStr } from 'rrule';
 import { Op } from 'sequelize';
 
@@ -17,7 +18,7 @@ export class ListDaysUseCase {
 
     const fixeds = schedules
       .filter(x => !x.recurrent)
-      .map(x => new Date(x.date));
+      .map(x => parseISO(x.date as any));
 
     const recurrents = schedules
       .filter(x => [EndsInEnum.NEVER, EndsInEnum.AFTER].includes(x.endsIn))
@@ -27,7 +28,7 @@ export class ListDaysUseCase {
     const dates = fixeds
       .concat(recurrents)
       .sort(this.sort)
-      .map(date => date.toISOString())
+      .map(date => format(date, 'yyyy-MM-dd'))
       .filter(this.removeDuplicates);
 
     return dates;
