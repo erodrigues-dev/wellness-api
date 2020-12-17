@@ -61,7 +61,7 @@ export class ListDaysUseCase {
 
   private getDates(item: ActivitySchedule) {
     const rrule = new RRule({
-      dtstart: new Date(item.date),
+      dtstart: parseISO(item.date as any),
       interval: item.repeatEvery,
       freq: convertToRRuleFrequency(item.frequency),
       count: item.ocurrences,

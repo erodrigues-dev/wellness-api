@@ -32,8 +32,8 @@ router.get(
       id: Joi.number().integer()
     }),
     [Segments.QUERY]: Joi.object().keys({
-      start: Joi.date().iso().required(),
-      end: Joi.date().iso().required()
+      start: Joi.string().isoDate().required(),
+      end: Joi.string().isoDate().required()
     })
   })
 );
@@ -43,7 +43,7 @@ router.get(
   celebrate({
     [Segments.PARAMS]: Joi.object({
       id: Joi.number().integer(),
-      day: Joi.date().iso()
+      day: Joi.string().isoDate()
     })
   })
 );

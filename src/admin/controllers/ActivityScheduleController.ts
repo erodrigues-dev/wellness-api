@@ -31,8 +31,8 @@ export class ActivityScheduleController implements IActivityScheduleController {
     try {
       const useCase = new ListDaysUseCase(
         Number(req.params.id),
-        new Date(req.query.start as any),
-        new Date(req.query.end as any)
+        parseISO(req.query.start as string),
+        parseISO(req.query.end as string)
       );
 
       const days = await useCase.list();
