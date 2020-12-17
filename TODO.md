@@ -4,7 +4,7 @@
 
 - [ ] listar atividades
 - [ ] agendar atividade
-- [ ] cancelar atividade ???
+- [ ] cancelar atividade
 
 ## listar atividades
 
@@ -18,11 +18,12 @@
 
 ## agendar atividade
 
-- [ ] criar tabela de agendamento
+- [x] criar tabela de agendamento
+- [x] agendar
+- [x] listar agendamentos
 - [ ] order_item adicionar campo quantidade de agendamentos
 - [ ] verificar disponibilidade de horario
 - [ ] verificar quantidade de pessoas
 - [ ] verificar pagamento
 - [ ] verificar plano/quantidade
-
-## cancelar atividade ???
+- [ ] cancelar agendamento

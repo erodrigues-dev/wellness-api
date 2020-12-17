@@ -4,7 +4,7 @@ import { Op } from 'sequelize';
 
 import ActivitySchedule from '../../database/models/ActivitySchedule';
 import { convertToRRuleFrequency } from '../../models/enums/FrequencyEnum';
-import { ScheduleTimeViewModel } from './ScheduleTimeViewModel';
+import { ScheduleTimeViewModel } from '../../models/viewmodels/ScheduleTimeViewModel';
 
 export class ListTimesUseCase {
   constructor(private activityId: number, private date: Date) {}

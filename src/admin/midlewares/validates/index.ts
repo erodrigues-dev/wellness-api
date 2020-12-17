@@ -12,6 +12,7 @@ import employeeValidate from './EmployeeValidate';
 import orderValidate from './OrderValidate';
 import packageValidate from './PackageValidate';
 import profileValidate from './ProfileValidate';
+import scheduleValidate from './ScheduleValidate';
 import sessionValidate from './SessionValidate';
 
 const router = Router();
@@ -28,6 +29,7 @@ router.use(categoryValidate);
 router.use(customerDiscountValidate);
 router.use(orderValidate);
 router.use(checkoutValidate);
+router.use(scheduleValidate);
 
 // required in last position
 router.use(errors());

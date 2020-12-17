@@ -14,6 +14,7 @@ import OrderItem from './models/OrderItem';
 import OrderPayment from './models/OrderPayment';
 import Package from './models/Package';
 import Profile from './models/Profile';
+import Schedule from './models/Schedule';
 
 const connection = new Sequelize(DB_CONFIG);
 
@@ -31,6 +32,7 @@ export function databaseConfig() {
   Order.setup(connection);
   OrderItem.setup(connection);
   OrderPayment.setup(connection);
+  Schedule.setup(connection);
 
   Activity.setupAssociations();
   ActivitySchedule.setupAssociations();
@@ -45,6 +47,7 @@ export function databaseConfig() {
   Order.setupAssociations();
   OrderItem.setupAssociations();
   OrderPayment.setupAssociations();
+  Schedule.setupAssociations();
 }
 
 export default connection;

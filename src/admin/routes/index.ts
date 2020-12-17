@@ -11,8 +11,8 @@ import employeeRouter from './EmployeeRouter';
 import orderRouter from './OrderRouter';
 import packageRouter from './PackageRouter';
 import profileRouter from './ProfileRouter';
+import scheduleRouter from './ScheduleRouter';
 import sessionRouter from './SessionRouter';
-import squareRouter from './SquareRouter';
 
 const router = Router();
 
@@ -28,8 +28,6 @@ router.use(categoryRouter);
 router.use(customerDiscountRouter);
 router.use(orderRouter);
 router.use(checkoutRouter);
-
-// TEST ONLY
-router.use(squareRouter);
+router.use(scheduleRouter);
 
 export default router;

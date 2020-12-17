@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('short'));
 
-app.use('/api', (_, res) => {
+app.get('/', (_, res) => {
   return res.json({
     type: 'health-check',
     message: 'api is running'
