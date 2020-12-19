@@ -7,13 +7,13 @@ router.get(
   '/schedules',
   celebrate({
     [Segments.QUERY]: Joi.object({
-      customerId: Joi.number().optional(),
-      activityId: Joi.number().optional(),
-      dateStart: Joi.string().isoDate().optional().options({ convert: false }),
-      dateEnd: Joi.string().isoDate().optional().options({ convert: false }),
-      status: Joi.string().optional(),
-      page: Joi.number().default(1).optional(),
-      limit: Joi.number().default(10).optional()
+      customerId: Joi.number().allow(''),
+      activityId: Joi.number().allow(''),
+      dateStart: Joi.string().isoDate().allow('').options({ convert: false }),
+      dateEnd: Joi.string().isoDate().allow('').options({ convert: false }),
+      status: Joi.string().allow(''),
+      page: Joi.number().default(1).allow(''),
+      limit: Joi.number().default(10).allow('')
     })
   })
 );
