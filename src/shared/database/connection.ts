@@ -6,7 +6,6 @@ import ActivitySchedule from './models/ActivitySchedule';
 import Category from './models/Category';
 import Customer from './models/Customer';
 import CustomerDiscount from './models/CustomerDiscount';
-import CustomPackage from './models/CustomPackage';
 import Employee from './models/Employee';
 import Functionality from './models/Functionality';
 import Order from './models/Order';
@@ -26,7 +25,6 @@ export function databaseConfig() {
   Functionality.setup(connection);
   Package.setup(connection);
   Profile.setup(connection);
-  CustomPackage.setup(connection);
   Category.setup(connection);
   CustomerDiscount.setup(connection);
   Order.setup(connection);
@@ -41,7 +39,6 @@ export function databaseConfig() {
   Functionality.setupAssociations();
   Package.setupAssociations();
   Profile.setupAssociations();
-  CustomPackage.setupAssociations();
   Category.setupAssociations();
   CustomerDiscount.setupAssociations();
   Order.setupAssociations();
