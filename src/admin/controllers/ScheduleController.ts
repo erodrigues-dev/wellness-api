@@ -8,15 +8,7 @@ import { ScheduleCreateUseCase } from '../../shared/useCases/schedule/ScheduleCr
 export class ScheduleController {
   async index(req: Request, res: Response, next: NextFunction) {
     try {
-      const { customerId, page, limit } = req.query;
-
-      console.log(customerId, page, limit);
-
-      const filter = new FilterDto(
-        Number(customerId) || null,
-        Number(page),
-        Number(limit)
-      );
+      const filter = FilterDto.parse(req.query);
       const result = await service.list(filter);
 
       return res

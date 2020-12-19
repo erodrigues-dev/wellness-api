@@ -10,7 +10,7 @@ export class ScheduleViewModel {
     id: number;
     name: string;
   };
-  date: Date;
+  date: string;
   start: string;
   end: string;
   status: ScheduleStatusEnum;
