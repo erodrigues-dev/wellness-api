@@ -28,7 +28,8 @@ export default class Employee extends Model<IEmployee> implements IEmployee {
         email: DataTypes.STRING,
         password: DataTypes.STRING,
         specialty: DataTypes.STRING,
-        imageUrl: DataTypes.STRING
+        imageUrl: DataTypes.STRING,
+        profileId: DataTypes.INTEGER
       },
       {
         sequelize: connection,

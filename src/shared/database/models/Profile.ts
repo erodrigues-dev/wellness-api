@@ -10,8 +10,8 @@ export default class Profile extends Model<IProfile> implements IProfile {
   name: string;
   description: string;
 
-  functionalities: Functionality[];
-  employees: IEmployee[];
+  functionalities?: Functionality[];
+  employees?: IEmployee[];
 
   readonly createdAt: Date;
   readonly updatedAt: Date;

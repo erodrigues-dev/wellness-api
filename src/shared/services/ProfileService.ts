@@ -58,7 +58,7 @@ export class ProfileService implements IProfileService {
     await model.save({ transaction });
 
     await Functionality.destroy({
-      where: { profile_id: id },
+      where: { profileId: id },
       transaction
     });
 
