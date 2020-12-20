@@ -3,8 +3,7 @@ import { Transaction } from 'sequelize';
 import CustomError from '../../custom-error/CustomError';
 import connection from '../../database/connection';
 import Customer from '../../database/models/Customer';
-import OrderPayment from '../../database/models/OrderPayment';
-import IOrderPayment from '../../models/entities/IOrderPayment';
+import { OrderItemTypeEnum } from '../../models/enums/OrderItemTypeEnum';
 import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
 import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
 import { SquarePayment } from '../../square/models/SquarePayment';
@@ -38,7 +37,7 @@ export default class PayWithCard {
       await this.getCustomerSquareIdOrCreate();
       await this.getCardOrCreate();
       await this.processPayment();
-      await this.createPaymentOrder();
+      await this.updatePaymentData();
       await this.commit();
     } catch (error) {
       console.log(error);
@@ -96,8 +95,7 @@ export default class PayWithCard {
   }
 
   private async getCardOrCreate() {
-    const { recurrency } = this.createOrder.getCreatedOrderItem();
-    const isRecurrently = recurrency !== RecurrencyPayEnum.oneTime;
+    const isRecurrently = this.isRecurrently();
 
     this.payment.cardId = this.data.cardId;
 
@@ -121,24 +119,36 @@ export default class PayWithCard {
     }
   }
 
-  private async processPayment() {
-    const { recurrency } = this.createOrder.getCreatedOrderItem();
+  private isRecurrently() {
+    let isRecurrently = false;
 
-    if (recurrency === RecurrencyPayEnum.oneTime)
-      await this.createPaymentInSquare();
-    else await this.createSubscriptionInSquare();
+    if (this.data.itemType === OrderItemTypeEnum.Package) {
+      const { recurrencyPay } = this.createOrder.getCreatedOrderPackage();
+      isRecurrently = recurrencyPay !== RecurrencyPayEnum.oneTime;
+    }
+    return isRecurrently;
+  }
+
+  private async processPayment() {
+    const isRecurrently = this.isRecurrently();
+
+    if (isRecurrently) await this.createSubscriptionInSquare();
+    else await this.createPaymentInSquare();
   }
 
   private async createPaymentInSquare() {
     console.log('creating square payment');
-    const { total, tip } = this.createOrder.getCreatedOrder();
-    const { name } = this.createOrder.getCreatedOrderItem();
+    const { amount, tip } = this.createOrder.getCreatedOrder();
+    const { name } =
+      this.data.itemType === OrderItemTypeEnum.Activity
+        ? this.createOrder.getCreatedOrderActivity()
+        : this.createOrder.getCreatedOrderPackage();
 
     const data = new SquarePaymentCreateData();
     data.note = name;
     data.customer_id = this.payment.customerId;
     data.source_id = this.payment.cardId;
-    data.setAmount(total);
+    data.setAmount(amount);
     data.setTip(tip);
 
     this.payment.squarePayment = await squarePaymentService.create(data);
@@ -146,7 +156,7 @@ export default class PayWithCard {
 
   private async createSubscriptionInSquare() {
     console.log('creating square subscription');
-    const { total } = this.createOrder.getCreatedOrder();
+    const { amount } = this.createOrder.getCreatedOrder();
     const subscriptionPlanId = this.createOrder.getSubscriptionPlanId();
 
     const data = new SquareSubscriptionCreateData();
@@ -154,21 +164,16 @@ export default class PayWithCard {
     data.card_id = this.payment.cardId;
     data.setDueDate(this.data.dueDate || new Date());
     data.setSubscriptionPlan(subscriptionPlanId);
-    data.setAmount(total);
+    data.setAmount(amount);
 
     this.payment.squareSubscription = await squareSubscriptionService.create(
       data
     );
   }
 
-  private async createPaymentOrder() {
-    const {
-      id: orderId,
-      tip,
-      discount,
-      total: amount
-    } = this.createOrder.getCreatedOrder();
-    const { recurrency } = this.createOrder.getCreatedOrderItem();
+  private async updatePaymentData() {
+    const order = this.createOrder.getCreatedOrder();
+    const isRecurrently = this.isRecurrently();
     const { id: transactionId, status } =
       this.payment.squarePayment || this.payment.squareSubscription;
 
@@ -176,19 +181,12 @@ export default class PayWithCard {
       ? new Date(this.payment.squareSubscription.paid_until_date)
       : null;
 
-    const data: IOrderPayment = {
-      type: PaymentTypeEnum.Card,
-      orderId,
-      tip,
-      discount,
-      amount,
-      recurrency,
-      transactionId,
-      status,
-      dueDate: this.data.dueDate,
-      paidUntilDate
-    };
+    order.paymentType = PaymentTypeEnum.Card;
+    order.transactionId = transactionId;
+    order.transactionType = isRecurrently ? 'subscription' : 'payment';
+    order.paidUntilDate = paidUntilDate;
+    order.status = status;
 
-    return OrderPayment.create(data, { transaction: this.transaction });
+    await order.save({ transaction: this.transaction });
   }
 }

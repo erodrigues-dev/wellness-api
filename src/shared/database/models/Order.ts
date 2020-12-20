@@ -1,38 +1,52 @@
 import { Association, DataTypes, Model, Sequelize } from 'sequelize';
 
+import { OrderItemTypeEnum } from '../../models/enums/OrderItemTypeEnum';
+import { PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
+import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
 import Customer from './Customer';
 import Employee from './Employee';
-import OrderItem from './OrderItem';
-import OrderPayment from './OrderPayment';
+import OrderActivity from './OrderActivity';
+import OrderPackage from './OrderPackage';
 
 export default class Order extends Model {
   id?: number;
   customerId: number;
-  subtotal: number;
-  tip: number;
+  type: OrderItemTypeEnum;
+
+  amount: number;
   discount: number;
-  total: number;
-  userId: number;
+  tip: number;
+
+  paymentType: PaymentTypeEnum;
+  status: PaymentStatusEnum;
+  transactionId: string;
+  transactionType: string;
+  webhookDate?: Date;
+  paidUntilDate?: Date;
+
+  userId?: number;
+
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
-  items?: OrderItem[];
-  payments?: OrderPayment[];
-
-  static associations: {
-    customer: Association<Order, Customer>;
-    user: Association<Order, Employee>;
-    items: Association<Order, OrderItem>;
-    payments: Association<Order, OrderPayment>;
-  };
+  customer?: Customer;
+  orderPackages?: OrderPackage[];
+  orderActivities?: OrderActivity[];
+  user?: Employee;
 
   static setup(connection: Sequelize) {
     Order.init(
       {
-        subtotal: DataTypes.DECIMAL,
-        tip: DataTypes.DECIMAL,
+        type: DataTypes.STRING,
+        paymentType: DataTypes.STRING,
+        transactionId: DataTypes.STRING,
+        transactionType: DataTypes.STRING,
+        status: DataTypes.STRING,
+        amount: DataTypes.DECIMAL,
         discount: DataTypes.DECIMAL,
-        total: DataTypes.DECIMAL
+        tip: DataTypes.DECIMAL,
+        webhookDate: DataTypes.DATE,
+        paidUntilDate: DataTypes.DATE
       },
       { sequelize: connection, tableName: 'orders' }
     );
@@ -49,14 +63,14 @@ export default class Order extends Model {
       as: 'user'
     });
 
-    Order.hasMany(OrderItem, {
+    Order.hasMany(OrderPackage, {
       foreignKey: 'orderId',
-      as: 'items'
+      as: 'orderPackages'
     });
 
-    Order.hasMany(OrderPayment, {
+    Order.hasMany(OrderActivity, {
       foreignKey: 'orderId',
-      as: 'payments'
+      as: 'orderActivities'
     });
   }
 }

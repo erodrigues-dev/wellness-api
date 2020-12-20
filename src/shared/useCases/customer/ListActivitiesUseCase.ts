@@ -1,13 +1,13 @@
 import { fn, Op } from 'sequelize';
 
 import Order from '../../database/models/Order';
-import OrderPayment from '../../database/models/OrderPayment';
 import { OrderItemTypeEnum } from '../../models/enums/OrderItemTypeEnum';
 import { PAID_STATUS } from '../../models/enums/PaymentStatusEnum';
 
 export class ActivityViewModel {
   id: number;
   name: string;
+  orderActivityId: number;
 }
 
 export class ListActivitiesUseCase {
@@ -17,28 +17,28 @@ export class ListActivitiesUseCase {
     const orders = await Order.findAll({
       attributes: ['id', 'customerId'],
       where: {
-        customerId: this.customerId
+        customerId: this.customerId,
+        paidUntilDate: {
+          [Op.or]: [{ [Op.is]: null }, { [Op.gt]: fn('now') }]
+        },
+        status: { [Op.in]: PAID_STATUS }
       },
       include: [
         {
-          association: 'items',
-          attributes: ['metadataId', 'name'],
-          where: {
-            type: OrderItemTypeEnum.Activity,
-            expiresIn: {
-              [Op.or]: [{ [Op.is]: null }, { [Op.gt]: fn('now') }]
+          association: 'orderActivities',
+          attributes: ['id', 'activityId', 'name'],
+          include: [
+            {
+              association: 'orderPackage',
+              attributes: ['expiration'],
+              required: false,
+              where: {
+                expiration: {
+                  [Op.or]: [{ [Op.is]: null }, { [Op.gt]: fn('now') }]
+                }
+              }
             }
-          }
-        },
-        {
-          association: 'payments',
-          attributes: ['type', 'recurrency', 'status', 'paidUntilDate'],
-          where: {
-            paidUntilDate: {
-              [Op.or]: [{ [Op.is]: null }, { [Op.gt]: fn('now') }]
-            },
-            status: { [Op.in]: PAID_STATUS }
-          }
+          ]
         }
       ]
     });
@@ -46,15 +46,13 @@ export class ListActivitiesUseCase {
     const activities: ActivityViewModel[] = [];
 
     orders.forEach(order => {
-      const paid = order.payments?.length > 0;
-      if (paid) {
-        order.items.forEach(item => {
-          activities.push({
-            id: item.metadataId,
-            name: item.name
-          });
+      order.orderActivities.forEach(item => {
+        activities.push({
+          id: item.activityId,
+          name: item.name,
+          orderActivityId: item.id
         });
-      }
+      });
     });
 
     return this.removeDuplicates(activities);

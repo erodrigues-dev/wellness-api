@@ -23,7 +23,8 @@ router.post(
   celebrate({
     [Segments.BODY]: Joi.object({
       customerId: Joi.number().required(),
-      timeId: Joi.number().required(),
+      activityScheduleId: Joi.number().required(),
+      orderActivityId: Joi.number().required(),
       date: Joi.string().isoDate().required().options({ convert: false })
     })
   })

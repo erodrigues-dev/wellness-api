@@ -3,27 +3,35 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
 import ActivitySchedule from './ActivitySchedule';
 import Customer from './Customer';
+import OrderActivity from './OrderActivity';
 
 export default class Schedule extends Model {
   id: number;
   customerId: number;
+  orderActivityId: number;
   activityScheduleId: number;
-  status: ScheduleStatusEnum;
+  title: string;
   date: string;
+  start: string;
+  end: string;
+  status: ScheduleStatusEnum;
+  attenderId?: number;
 
   readonly createdAt: Date;
-  readonly updatedAt: Date;
+  readonly updatedAt?: Date;
 
   customer?: Customer;
+  orderActivity?: OrderActivity;
   activitySchedule?: ActivitySchedule;
 
   static setup(connection: Sequelize) {
     Schedule.init(
       {
-        customerId: DataTypes.INTEGER,
-        activityScheduleId: DataTypes.INTEGER,
-        status: DataTypes.STRING,
-        date: DataTypes.DATEONLY
+        title: DataTypes.STRING,
+        date: DataTypes.DATEONLY,
+        start: DataTypes.STRING,
+        end: DataTypes.STRING,
+        status: DataTypes.STRING
       },
       {
         sequelize: connection,
@@ -41,6 +49,11 @@ export default class Schedule extends Model {
     Schedule.belongsTo(ActivitySchedule, {
       foreignKey: 'activityScheduleId',
       as: 'activitySchedule'
+    });
+
+    Schedule.belongsTo(OrderActivity, {
+      foreignKey: 'orderActivityId',
+      as: 'orderActivity'
     });
   }
 }

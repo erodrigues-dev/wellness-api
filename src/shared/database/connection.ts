@@ -9,8 +9,8 @@ import CustomerDiscount from './models/CustomerDiscount';
 import Employee from './models/Employee';
 import Functionality from './models/Functionality';
 import Order from './models/Order';
-import OrderItem from './models/OrderItem';
-import OrderPayment from './models/OrderPayment';
+import OrderActivity from './models/OrderActivity';
+import OrderPackage from './models/OrderPackage';
 import Package from './models/Package';
 import Profile from './models/Profile';
 import Schedule from './models/Schedule';
@@ -28,9 +28,9 @@ export function databaseConfig() {
   Category.setup(connection);
   CustomerDiscount.setup(connection);
   Order.setup(connection);
-  OrderItem.setup(connection);
-  OrderPayment.setup(connection);
   Schedule.setup(connection);
+  OrderPackage.setup(connection);
+  OrderActivity.setup(connection);
 
   Activity.setupAssociations();
   ActivitySchedule.setupAssociations();
@@ -42,8 +42,8 @@ export function databaseConfig() {
   Category.setupAssociations();
   CustomerDiscount.setupAssociations();
   Order.setupAssociations();
-  OrderItem.setupAssociations();
-  OrderPayment.setupAssociations();
+  OrderPackage.setupAssociations();
+  OrderActivity.setupAssociations();
   Schedule.setupAssociations();
 }
 

@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 
-import OrderPayment from '../../database/models/OrderPayment';
+import Order from '../../database/models/Order';
 import { SquareSubscription } from '../../square/models/SquareSubscription';
 import { SquareWebhook } from '../../square/models/SquareWebhook';
 
@@ -9,16 +9,16 @@ export class UpdateSubscriptionStatusUseCase {
 
   async update() {
     if (this.hookData.type === 'subscription.updated') {
-      const [udpates] = await OrderPayment.update(
+      const [udpates] = await Order.update(
         {
           status: this.hookData.data.object.subscription.status,
-          statusDate: this.hookData.created_at,
+          webhookDate: this.hookData.created_at,
           paidUntilDate: this.hookData.data.object.subscription.paid_until_date
         },
         {
           where: {
             transactionId: this.hookData.data.id,
-            statusDate: { [Op.lt]: this.hookData.created_at }
+            webhookDate: { [Op.lt]: this.hookData.created_at }
           }
         }
       );

@@ -51,7 +51,8 @@ export class ListTimesUseCase {
             until: { [Op.or]: [{ [Op.gte]: this.date }, { [Op.is]: null }] }
           }
         ]
-      }
+      },
+      order: ['start']
     });
 
     return list.map(item => item.toJSON() as ActivitySchedule);

@@ -21,11 +21,17 @@ export class ScheduleController {
 
   async store(req: Request, res: Response, next: NextFunction) {
     try {
-      const { customerId, timeId, date } = req.body;
+      const {
+        customerId,
+        orderActivityId,
+        activityScheduleId,
+        date
+      } = req.body;
 
       const useCase = new ScheduleCreateUseCase(
         customerId,
-        timeId,
+        orderActivityId,
+        activityScheduleId,
         parseISO(date)
       );
 
