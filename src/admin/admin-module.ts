@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import expressJwt from 'express-jwt';
+import jwt from 'express-jwt';
 
 import midlewares from './midlewares';
 import routes from './routes';
@@ -7,7 +7,10 @@ import routes from './routes';
 export default function useAdminModule(app: Express) {
   app.use(
     '/admin',
-    expressJwt({ secret: process.env.JWT_SECRET }).unless({
+    jwt({
+      secret: process.env.JWT_SECRET,
+      algorithms: ['sha1', 'RS256', 'HS256']
+    }).unless({
       path: [
         {
           url: '/admin/sessions',
