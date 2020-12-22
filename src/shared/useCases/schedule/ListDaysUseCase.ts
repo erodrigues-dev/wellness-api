@@ -1,10 +1,21 @@
 import { format, formatISO, parseISO, parseJSON } from 'date-fns';
 import RRule, { WeekdayStr } from 'rrule';
 import { Op } from 'sequelize';
+import { all } from 'sequelize/types/lib/operators';
 
 import ActivitySchedule from '../../database/models/ActivitySchedule';
+import Schedule from '../../database/models/Schedule';
 import { EndsInEnum } from '../../models/enums/EndsInEnum';
 import { convertToRRuleFrequency } from '../../models/enums/FrequencyEnum';
+import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
+
+class DayDto {
+  constructor(
+    public activityScheduleId: number,
+    public maxPeople: number,
+    public date: Date
+  ) {}
+}
 
 export class ListDaysUseCase {
   constructor(
@@ -14,28 +25,21 @@ export class ListDaysUseCase {
   ) {}
 
   async list(): Promise<string[]> {
-    const schedules = await this.listInDb();
+    const times = await this.listTimes();
+    const days = this.buildDays(times);
+    const ids = days.map(x => x.activityScheduleId);
+    const scheduleds = await this.searchScheduleds(ids);
+    const daysAvailables = this.getDaysAvailables(days, scheduleds);
 
-    const fixeds = schedules
-      .filter(x => !x.recurrent)
-      .map(x => parseISO(x.date as any));
-
-    const recurrents = schedules
-      .filter(x => [EndsInEnum.NEVER, EndsInEnum.AFTER].includes(x.endsIn))
-      .map(x => this.getDates(x))
-      .reduce(this.flatArray, []);
-
-    const dates = fixeds
-      .concat(recurrents)
+    return daysAvailables
+      .map(x => x.date)
       .sort(this.sort)
-      .map(date => format(date, 'yyyy-MM-dd'))
+      .map(this.convertToISOString)
       .filter(this.removeDuplicates);
-
-    return dates;
   }
 
-  private async listInDb() {
-    const list = await ActivitySchedule.findAll({
+  private async listTimes() {
+    const times = await ActivitySchedule.findAll({
       where: {
         activityId: this.activityId,
         date: {
@@ -53,33 +57,101 @@ export class ListDaysUseCase {
             until: { [Op.lte]: this.endDate }
           }
         ]
-      }
+      },
+      include: [
+        {
+          association: 'activity',
+          attributes: ['maxPeople']
+        }
+      ]
     });
 
-    return list.map(item => item.toJSON() as ActivitySchedule);
+    return times.map(time => time.toJSON() as ActivitySchedule);
   }
 
-  private getDates(item: ActivitySchedule) {
+  private buildDays(times: ActivitySchedule[]) {
+    const notRecurrentsDays = times
+      .filter(activitySchedule => !activitySchedule.recurrent)
+      .map(
+        activitySchedule =>
+          new DayDto(
+            activitySchedule.id,
+            activitySchedule.activity.maxPeople ?? 1,
+            parseISO(activitySchedule.date as any)
+          )
+      );
+
+    const recurrentsDays = times
+      .filter(x => [EndsInEnum.NEVER, EndsInEnum.AFTER].includes(x.endsIn))
+      .map(x => this.getRecurrentItems(x))
+      .reduce(this.flatArray, []);
+
+    const allDays = notRecurrentsDays.concat(recurrentsDays);
+
+    return allDays;
+  }
+
+  private async searchScheduleds(timeIds: number[]) {
+    const list = await Schedule.findAll({
+      where: {
+        [Op.and]: [
+          { date: { [Op.gte]: this.startDate } },
+          { date: { [Op.lte]: this.endDate } },
+          { activityScheduleId: { [Op.in]: timeIds } },
+          { status: { [Op.ne]: ScheduleStatusEnum.Canceled } }
+        ]
+      },
+      attributes: ['activityScheduleId', 'date']
+    });
+
+    return list.map(item => item.toJSON() as Schedule);
+  }
+
+  private getRecurrentItems(time: ActivitySchedule) {
     const rrule = new RRule({
-      dtstart: parseISO(item.date as any),
-      interval: item.repeatEvery,
-      freq: convertToRRuleFrequency(item.frequency),
-      count: item.ocurrences,
-      byweekday: item.weekdays?.split(',') as WeekdayStr[]
+      dtstart: parseISO(time.date as any),
+      interval: time.repeatEvery,
+      freq: convertToRRuleFrequency(time.frequency),
+      count: time.ocurrences,
+      byweekday: time.weekdays?.split(',') as WeekdayStr[]
     });
 
-    return rrule.between(this.startDate, this.endDate, true);
+    const dates = rrule.between(this.startDate, this.endDate, true);
+
+    return dates.map(
+      date => new DayDto(time.id, time.activity.maxPeople ?? 1, date)
+    );
   }
 
-  private removeDuplicates(current: any, index: number, array: any[]) {
-    return array.indexOf(current) === index;
+  private getDaysAvailables(days: DayDto[], scheduleds: Schedule[]) {
+    const returnDays: DayDto[] = [];
+
+    days.forEach(day => {
+      const totalScheduleds = scheduleds.filter(
+        x =>
+          x.activityScheduleId === day.activityScheduleId &&
+          x.date === format(day.date, 'yyyy-MM-dd')
+      ).length;
+
+      if (day.maxPeople > totalScheduleds) returnDays.push(day);
+    });
+
+    return returnDays;
   }
 
-  private flatArray(previus: Date[], current: Date[]) {
+  private flatArray(previus: any[], current: any[]) {
     return [...current, ...previus];
   }
 
   private sort(a: Date, b: Date) {
     return a > b ? 1 : a < b ? -1 : 0;
+  }
+
+  private removeDuplicates(current: any, index: number, array: any[]) {
+    return array.findIndex(date => date === current) === index;
+  }
+
+  private convertToISOString(current: Date) {
+    return format(current, 'yyyy-MM-dd');
   }
 }
