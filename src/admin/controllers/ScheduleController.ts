@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import service, { FilterDto } from '../../shared/services/ScheduleService';
+import { ScheduleCancelUseCase } from '../../shared/useCases/schedule/ScheduleCancelUseCase';
 import { ScheduleCreateUseCase } from '../../shared/useCases/schedule/ScheduleCreateUseCase';
 
 export class ScheduleController {
@@ -37,6 +38,16 @@ export class ScheduleController {
 
       await useCase.create();
 
+      return res.sendStatus(StatusCodes.NO_CONTENT);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async cancel(req: Request, res: Response, next: NextFunction) {
+    try {
+      const useCase = new ScheduleCancelUseCase(Number(req.params.id));
+      await useCase.cancel();
       return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (error) {
       next(error);
