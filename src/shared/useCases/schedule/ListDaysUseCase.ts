@@ -24,7 +24,7 @@ export class ListDaysUseCase {
   ) {}
 
   async list(): Promise<string[]> {
-    const times = await this.listTimes();
+    const times = await this.listEvents();
     const days = this.buildDays(times);
     const ids = days.map(x => x.activityScheduleId);
     const scheduleds = await this.searchScheduleds(ids);
@@ -33,11 +33,11 @@ export class ListDaysUseCase {
     return daysAvailables
       .map(x => x.date)
       .sort(this.sort)
-      .map(this.convertToISOString)
+      .map(this.convertToISOStringDateOnly)
       .filter(this.removeDuplicates);
   }
 
-  private async listTimes() {
+  private async listEvents() {
     const times = await ActivitySchedule.findAll({
       where: {
         activityId: this.activityId,
@@ -150,7 +150,7 @@ export class ListDaysUseCase {
     return array.findIndex(date => date === current) === index;
   }
 
-  private convertToISOString(current: Date) {
+  private convertToISOStringDateOnly(current: Date) {
     return format(current, 'yyyy-MM-dd');
   }
 }
