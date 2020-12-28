@@ -1,7 +1,6 @@
-import { format, formatISO, parseISO, parseJSON } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import RRule, { WeekdayStr } from 'rrule';
 import { Op } from 'sequelize';
-import { all } from 'sequelize/types/lib/operators';
 
 import ActivitySchedule from '../../database/models/ActivitySchedule';
 import Schedule from '../../database/models/Schedule';
