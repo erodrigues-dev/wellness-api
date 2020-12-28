@@ -3,8 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import service, { FilterDto } from '../../shared/services/ScheduleService';
-import { ScheduleCancelUseCase } from '../../shared/useCases/schedule/ScheduleCancelUseCase';
-import { ScheduleCreateUseCase } from '../../shared/useCases/schedule/ScheduleCreateUseCase';
+import { ScheduleCancelUseCase, ScheduleCreateUseCase } from '../../shared/useCases/schedule';
 
 export class ScheduleController {
   async index(req: Request, res: Response, next: NextFunction) {
