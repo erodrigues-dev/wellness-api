@@ -10,6 +10,7 @@ import employee from './Employee';
 import order from './OrderPermission';
 import package_ from './Package';
 import profile from './Profile';
+import schedule from './SchedulePermission';
 
 const router = Router();
 
@@ -23,5 +24,6 @@ router.use(category);
 router.use(customerDiscount);
 router.use(order);
 router.use(checkout);
+router.use(schedule);
 
 export default router;
