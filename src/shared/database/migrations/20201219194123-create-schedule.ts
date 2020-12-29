@@ -17,7 +17,11 @@ module.exports = {
         references: { model: 'customers' }
       },
       activity_schedule_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: { model: 'activities_schedules' },
+        onDelete: 'SET NULL',
+        onUpdate: 'SET NULL'
       },
       order_activity_id: {
         type: DataTypes.INTEGER,
