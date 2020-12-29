@@ -36,7 +36,7 @@ export class FilterDto {
     if (this.dateEnd) ands.push({ date: { [Op.lte]: this.dateEnd } });
 
     if (this.activityId)
-      ands.push({ '$activitySchedule.activity_id$': this.activityId });
+      ands.push({ '$orderActivity.activity_id$': this.activityId });
 
     if (this.status) ands.push({ status: this.status });
 
@@ -66,12 +66,12 @@ export class ListDto {
               name: row.customer.name
             },
             activity: {
-              id: row.activitySchedule.activityId,
-              name: row.activitySchedule.title
+              id: row.orderActivity.activityId,
+              name: row.orderActivity.name
             },
             date: row.date,
-            start: row.activitySchedule.start,
-            end: row.activitySchedule.end,
+            start: row.start,
+            end: row.end,
             status: row.status
           } as ScheduleViewModel)
       );
@@ -90,7 +90,7 @@ export class ScheduleService {
           attributes: ['id', 'name']
         },
         {
-          association: 'activitySchedule'
+          association: 'orderActivity'
         }
       ]
     });
