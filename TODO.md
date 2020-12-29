@@ -21,7 +21,8 @@
 ## listar horarios
 
 - [x] listar horarios
-- [ ] verificar disponibilidade
+- [x] verificar disponibilidade
+  - [ ] testar
 - [ ] listar apenas horarios >= date.time.now
 
 ## agendar atividade
@@ -29,12 +30,11 @@
 - [x] criar tabela de agendamento
 - [x] agendar
 - [x] listar agendamentos
-- [ ] order_activity adicionar campo quantidade de agendamentos
+- [ ] (pensar melhor nisso) order_activity adicionar campo quantidade de agendamentos
 - [ ] verificar disponibilidade de horario
 - [ ] verificar quantidade de pessoas
 - [ ] verificar pagamento
 - [ ] verificar plano/quantidade
-- [ ] cancelar agendamento
 - [ ] validar date.time >= date.time.now
 
 ## cancelar agendamento
