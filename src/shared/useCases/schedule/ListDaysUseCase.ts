@@ -24,8 +24,8 @@ export class ListDaysUseCase {
   ) {}
 
   async list(): Promise<string[]> {
-    const times = await this.listEvents();
-    const days = this.buildDays(times);
+    const events = await this.listEvents();
+    const days = this.buildDays(events);
     const ids = days.map(x => x.activityScheduleId);
     const scheduleds = await this.searchScheduleds(ids);
     const daysAvailables = this.getDaysAvailables(days, scheduleds);
@@ -90,13 +90,13 @@ export class ListDaysUseCase {
     return allDays;
   }
 
-  private async searchScheduleds(timeIds: number[]) {
+  private async searchScheduleds(eventIds: number[]) {
     const list = await Schedule.findAll({
       where: {
         [Op.and]: [
           { date: { [Op.gte]: this.startDate } },
           { date: { [Op.lte]: this.endDate } },
-          { activityScheduleId: { [Op.in]: timeIds } },
+          { activityScheduleId: { [Op.in]: eventIds } },
           { status: { [Op.ne]: ScheduleStatusEnum.Canceled } }
         ]
       },
