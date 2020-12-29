@@ -3,26 +3,30 @@ import RRule, { WeekdayStr } from 'rrule';
 import { Op } from 'sequelize';
 
 import ActivitySchedule from '../../database/models/ActivitySchedule';
+import Schedule from '../../database/models/Schedule';
 import { convertToRRuleFrequency } from '../../models/enums/FrequencyEnum';
+import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
 import { ScheduleTimeViewModel } from '../../models/viewmodels/ScheduleTimeViewModel';
 
 export class ListTimesUseCase {
   constructor(private activityId: number, private date: Date) {}
 
   async list() {
-    const schedules = await this.listInDb();
+    const events = await this.listEvents();
+    const dayEvents = events.filter(
+      x => !x.recurrent || this.checkIfRecurrentEventHasOcurrenceInDate(x)
+    );
+    const eventIds = dayEvents.map(x => x.id);
+    const scheduleds = await this.getScheduleds(eventIds);
 
-    const fixeds = schedules.filter(x => !x.recurrent);
-    const recurrents = schedules
-      .filter(item => item.recurrent)
-      .filter(item => this.checkRecurrent(item));
-
-    //TODO verificar disponibilidade
-
-    return fixeds.concat(recurrents).map(this.mapToViewModel);
+    return dayEvents
+      .filter(event => this.isAvailableTime(event, scheduleds))
+      .map(this.mapToViewModel);
   }
 
-  private checkRecurrent(item: ActivitySchedule) {
+  private checkIfRecurrentEventHasOcurrenceInDate(item: ActivitySchedule) {
+    if (!item.recurrent) return false;
+
     const rrule = new RRule({
       dtstart: parseISO(item.date as any),
       until: item.until ? parseISO(item.until as any) : null,
@@ -37,7 +41,7 @@ export class ListTimesUseCase {
     return events.length === 1;
   }
 
-  private async listInDb() {
+  private async listEvents() {
     const list = await ActivitySchedule.findAll({
       where: {
         activityId: this.activityId,
@@ -52,6 +56,12 @@ export class ListTimesUseCase {
           }
         ]
       },
+      include: [
+        {
+          association: 'activity',
+          attributes: ['maxPeople']
+        }
+      ],
       order: ['start']
     });
 
@@ -65,5 +75,24 @@ export class ListTimesUseCase {
       start: item.start,
       end: item.end
     };
+  }
+
+  private isAvailableTime(event: ActivitySchedule, scheduleds: Schedule[]) {
+    const maxSchedules = event.activity.maxPeople ?? 1;
+    const totalSchedules = scheduleds.filter(
+      x => x.activityScheduleId === event.id
+    ).length;
+
+    return maxSchedules > totalSchedules;
+  }
+
+  private getScheduleds(eventIds: number[]) {
+    return Schedule.findAll({
+      where: {
+        date: this.date,
+        status: { [Op.ne]: ScheduleStatusEnum.Canceled },
+        activityScheduleId: { [Op.in]: eventIds }
+      }
+    });
   }
 }
