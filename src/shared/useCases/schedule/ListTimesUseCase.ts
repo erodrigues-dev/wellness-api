@@ -1,4 +1,4 @@
-import { parseISO, startOfDay } from 'date-fns';
+import { format, isFuture, isToday, parseISO, startOfDay } from 'date-fns';
 import RRule, { WeekdayStr } from 'rrule';
 import { Op } from 'sequelize';
 
@@ -16,9 +16,12 @@ export class ListTimesUseCase {
     if (this.date < today) return [];
 
     const events = await this.listEvents();
-    const dayEvents = events.filter(
-      x => !x.recurrent || this.checkIfRecurrentEventHasOcurrenceInDate(x)
-    );
+    const dayEvents = events
+      .filter(
+        item =>
+          !item.recurrent || this.checkIfRecurrentEventHasOcurrenceInDate(item)
+      )
+      .filter(item => this.checkIfIsFutureTime(item));
     const eventIds = dayEvents.map(x => x.id);
     const scheduleds = await this.getScheduleds(eventIds);
 
@@ -42,6 +45,13 @@ export class ListTimesUseCase {
     const events = rrule.between(this.date, this.date, true);
 
     return events.length === 1;
+  }
+
+  private checkIfIsFutureTime(item: ActivitySchedule) {
+    const eventDatetime = parseISO(
+      `${format(this.date, 'yyyy-MM-dd')}T${item.start}`
+    );
+    return isFuture(eventDatetime);
   }
 
   private async listEvents() {
