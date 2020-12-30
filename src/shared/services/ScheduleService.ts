@@ -92,7 +92,8 @@ export class ScheduleService {
         {
           association: 'orderActivity'
         }
-      ]
+      ],
+      order: [['date', 'desc']]
     });
 
     const dto = new ListDto();
