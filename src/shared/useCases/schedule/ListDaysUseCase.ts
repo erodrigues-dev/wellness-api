@@ -28,8 +28,7 @@ export class ListDaysUseCase {
   }
 
   async list(): Promise<string[]> {
-    var todayNotInInterval = !this.currentDateWithinInterval();
-    if (todayNotInInterval) return [];
+    if (!this.intervalIsValid()) return [];
 
     const events = await this.listEvents();
     const days = this.buildDays(events);
@@ -162,7 +161,9 @@ export class ListDaysUseCase {
     return format(current, 'yyyy-MM-dd');
   }
 
-  private currentDateWithinInterval() {
+  private intervalIsValid() {
+    if (isFuture(this.startDate)) return true;
+
     return isWithinInterval(this.today, {
       start: this.startDate,
       end: this.endDate
