@@ -1,4 +1,4 @@
-import { parseISO } from 'date-fns';
+import { parseISO, startOfDay } from 'date-fns';
 import RRule, { WeekdayStr } from 'rrule';
 import { Op } from 'sequelize';
 
@@ -11,7 +11,10 @@ import { ScheduleTimeViewModel } from '../../models/viewmodels/ScheduleTimeViewM
 export class ListTimesUseCase {
   constructor(private activityId: number, private date: Date) {}
 
-  async list() {
+  async list(): Promise<ScheduleTimeViewModel[]> {
+    const today = startOfDay(new Date());
+    if (this.date < today) return [];
+
     const events = await this.listEvents();
     const dayEvents = events.filter(
       x => !x.recurrent || this.checkIfRecurrentEventHasOcurrenceInDate(x)
