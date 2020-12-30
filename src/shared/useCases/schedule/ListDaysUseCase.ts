@@ -1,4 +1,4 @@
-import { format, parseISO } from 'date-fns';
+import { format, isEqual, isFuture, isWithinInterval, parseISO, startOfDay } from 'date-fns';
 import RRule, { WeekdayStr } from 'rrule';
 import { Op } from 'sequelize';
 
@@ -17,13 +17,20 @@ class DayDto {
 }
 
 export class ListDaysUseCase {
+  today: Date;
+
   constructor(
     private activityId: number,
     private startDate: Date,
     private endDate: Date
-  ) {}
+  ) {
+    this.today = startOfDay(new Date());
+  }
 
   async list(): Promise<string[]> {
+    var todayNotInInterval = !this.currentDateWithinInterval();
+    if (todayNotInInterval) return [];
+
     const events = await this.listEvents();
     const days = this.buildDays(events);
     const ids = days.map(x => x.activityScheduleId);
@@ -31,7 +38,8 @@ export class ListDaysUseCase {
     const daysAvailables = this.getDaysAvailables(days, scheduleds);
 
     return daysAvailables
-      .map(x => x.date)
+      .filter(day => this.filterEqualOrFutureDate(day))
+      .map(day => day.date)
       .sort(this.sort)
       .map(this.convertToISOStringDateOnly)
       .filter(this.removeDuplicates);
@@ -85,9 +93,9 @@ export class ListDaysUseCase {
       .map(x => this.getRecurrentItems(x))
       .reduce(this.flatArray, []);
 
-    const allDays = notRecurrentsDays.concat(recurrentsDays);
-
-    return allDays;
+    return notRecurrentsDays
+      .concat(recurrentsDays)
+      .filter(day => this.filterEqualOrFutureDate(day));
   }
 
   private async searchScheduleds(eventIds: number[]) {
@@ -152,5 +160,16 @@ export class ListDaysUseCase {
 
   private convertToISOStringDateOnly(current: Date) {
     return format(current, 'yyyy-MM-dd');
+  }
+
+  private currentDateWithinInterval() {
+    return isWithinInterval(this.today, {
+      start: this.startDate,
+      end: this.endDate
+    });
+  }
+
+  private filterEqualOrFutureDate(item: DayDto) {
+    return isEqual(item.date, this.today) || isFuture(item.date);
   }
 }
