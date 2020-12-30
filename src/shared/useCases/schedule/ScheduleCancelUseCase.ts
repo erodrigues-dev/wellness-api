@@ -1,4 +1,4 @@
-import { parseISO } from 'date-fns';
+import { isPast, parseISO } from 'date-fns';
 
 import CustomError from '../../custom-error/CustomError';
 import Schedule from '../../database/models/Schedule';
@@ -27,7 +27,8 @@ export class ScheduleCancelUseCase {
       );
     }
 
-    if (parseISO(schedule.date) < new Date())
+    const startDate = parseISO(`${schedule.date}T${schedule.start}`);
+    if (isPast(startDate))
       throw new CustomError('You cannot cancel a past appointment', 400);
   }
 }
