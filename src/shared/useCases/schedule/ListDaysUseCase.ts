@@ -32,7 +32,9 @@ export class ListDaysUseCase {
 
     const events = await this.listEvents();
     const days = this.buildDays(events);
-    const ids = days.map(x => x.activityScheduleId);
+    const ids = days
+      .map(x => x.activityScheduleId)
+      .filter(this.removeDuplicates);
     const scheduleds = await this.searchScheduleds(ids);
     const daysAvailables = this.getDaysAvailables(days, scheduleds);
 
@@ -154,7 +156,7 @@ export class ListDaysUseCase {
   }
 
   private removeDuplicates(current: any, index: number, array: any[]) {
-    return array.findIndex(date => date === current) === index;
+    return array.findIndex(item => item === current) === index;
   }
 
   private convertToISOStringDateOnly(current: Date) {
