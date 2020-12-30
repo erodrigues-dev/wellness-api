@@ -4,7 +4,7 @@
 
 - [x] listar atividades
 - [x] agendar atividade
-- [ ] cancelar atividade
+- [x] cancelar atividade
 
 ## listar atividades
 
@@ -16,14 +16,13 @@
 
 - [x] listar dias por periodo;
 - [x] listar apenas dias disponiveis
-- [ ] listar apenas data >= date.now
+- [x] listar apenas data >= date.now
 
 ## listar horarios
 
 - [x] listar horarios
 - [x] verificar disponibilidade
-  - [ ] testar
-- [ ] listar apenas horarios >= date.time.now
+- [x] listar apenas horarios >= date.time.now
 
 ## agendar atividade
 
