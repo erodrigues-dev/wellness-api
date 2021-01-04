@@ -18,7 +18,7 @@ module.exports = {
         onDelete: 'cascade',
         onUpdate: 'cascade'
       },
-      pacakge_id: {
+      package_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: { model: 'packages' }

@@ -9,8 +9,6 @@ import Package from '../../database/models/Package';
 import { DiscountTypeEnum } from '../../models/enums/DiscountTypeEnum';
 import { OrderItemTypeEnum } from '../../models/enums/OrderItemTypeEnum';
 import { PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
-import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
-import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
 import CreateOrderDTO from './CreateOrderDTO';
 
 export default class CreateOrder {
@@ -168,24 +166,31 @@ export default class CreateOrder {
         type: this.package.type,
         total: this.package.total,
         squareId: this.package.squareId,
-        expiration: this.package.expiration,
-
-        orderActivities: this.package.activities.map(activity => ({
-          orderId: this.order.id,
-          activityId: activity.id,
-          name: activity.name,
-          price: activity.price,
-          description: activity.description,
-          duration: activity.duration,
-          employeeId: activity.employeeId,
-          categoryId: activity.categoryId,
-          maxPeople: activity.maxPeople
-        }))
+        expiration: this.package.expiration
       },
       { transaction: this.transaction }
     );
 
-    //TODO verificar se vai criar as atividades
-    // senao vai ter q criar uma a uma
+    const orderActivities = await Promise.all(
+      this.package.activities.map(activity =>
+        OrderActivity.create(
+          {
+            orderId: this.order.id,
+            activityId: activity.id,
+            orderPackageId: this.orderPackage.id,
+            name: activity.name,
+            price: activity.price,
+            description: activity.description,
+            duration: activity.duration,
+            employeeId: activity.employeeId,
+            categoryId: activity.categoryId,
+            maxPeople: activity.maxPeople
+          },
+          { transaction: this.transaction }
+        )
+      )
+    );
+
+    this.orderPackage.orderActivities = orderActivities;
   }
 }

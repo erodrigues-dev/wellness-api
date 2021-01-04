@@ -35,10 +35,11 @@ export default class OrderPackage extends Model {
         name: DataTypes.STRING,
         price: DataTypes.DECIMAL,
         description: DataTypes.STRING,
-        recurrency_pay: DataTypes.STRING,
+        recurrencyPay: DataTypes.STRING,
         type: DataTypes.STRING,
         total: DataTypes.DECIMAL,
-        squareId: DataTypes.STRING
+        squareId: DataTypes.STRING,
+        expiration: DataTypes.DATE
       },
       { sequelize: connection, tableName: 'order_packages' }
     );
