@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import service, { FilterDto } from '../../shared/services/ScheduleService';
 import {
-  ScheduleCancelUseCase,
+  ScheduleChangeStatuslUseCase,
   ScheduleCreateUseCase
 } from '../../shared/useCases/schedule';
 
@@ -48,7 +48,7 @@ export class ScheduleController {
 
   async changeStatus(req: Request, res: Response, next: NextFunction) {
     try {
-      const useCase = new ScheduleCancelUseCase(
+      const useCase = new ScheduleChangeStatuslUseCase(
         Number(req.params.id),
         req.params.status
       );

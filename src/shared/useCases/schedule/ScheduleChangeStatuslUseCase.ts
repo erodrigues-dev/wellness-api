@@ -4,11 +4,16 @@ import CustomError from '../../custom-error/CustomError';
 import Schedule from '../../database/models/Schedule';
 import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
 
-export class ScheduleCancelUseCase {
+export class ScheduleChangeStatuslUseCase {
   constructor(private scheduleId: number, private status: string) {}
 
   async changeStatus() {
     const schedule = await Schedule.findByPk(this.scheduleId);
+
+    console.log('====================================');
+    console.log(this.status);
+    // console.log(ScheduleStatusEnum[this.status]);
+    console.log('====================================');
 
     if (this.status === 'canceled') {
       this.checkCancelIsPermited(schedule);
@@ -45,12 +50,16 @@ export class ScheduleCancelUseCase {
   private checkArrivedIsPermited(schedule: Schedule) {
     if (!schedule) throw new CustomError('Schedule not found', 404);
 
-    if (
-      schedule.status === ScheduleStatusEnum.Canceled ||
-      schedule.status === ScheduleStatusEnum.Completed
-    ) {
+    if (schedule.status === ScheduleStatusEnum.Canceled) {
       throw new CustomError(
-        'The Appointment Status must be Scheduled to be changed to Arrived.',
+        'You cannot set Arrived for a canceled appointment.',
+        400
+      );
+    }
+
+    if (schedule.status === ScheduleStatusEnum.Completed) {
+      throw new CustomError(
+        'You cannot set Arrived for a completed appointment.',
         400
       );
     }
@@ -59,14 +68,22 @@ export class ScheduleCancelUseCase {
   private checkCompletedIsPermited(schedule: Schedule) {
     if (!schedule) throw new CustomError('Schedule not found', 404);
 
-    if (
-      schedule.status === ScheduleStatusEnum.Canceled ||
-      schedule.status === ScheduleStatusEnum.Scheduled
-    ) {
+    if (schedule.status === ScheduleStatusEnum.Canceled) {
       throw new CustomError(
-        'The Appointment Status must be Arrived to be changed to Completed.',
+        'You cannot set Completed for a canceled appointment.',
         400
       );
+    }
+
+    if (schedule.status === ScheduleStatusEnum.Scheduled) {
+      throw new CustomError(
+        'You cannot set completed to a scheduled appointment. Appointment must set as Arrived first',
+        400
+      );
+    }
+
+    if (schedule.status === ScheduleStatusEnum.Completed) {
+      throw new CustomError('The Appointment is already complete.', 400);
     }
   }
 }
