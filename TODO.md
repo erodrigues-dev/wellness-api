@@ -29,8 +29,9 @@
 - [x] criar tabela de agendamento
 - [x] agendar
 - [x] listar agendamentos
+- [ ] atualizar quantidade de agendamentos na ordem do cliente
 - [ ] (pensar melhor nisso) order_activity adicionar campo quantidade de agendamentos
-- [ ] verificar disponibilidade de horario
+- [x] verificar disponibilidade de horario
 - [ ] verificar quantidade de pessoas
 - [ ] verificar pagamento
 - [ ] verificar plano/quantidade
