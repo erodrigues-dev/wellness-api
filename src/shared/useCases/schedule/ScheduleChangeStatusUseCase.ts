@@ -4,11 +4,13 @@ import CustomError from '../../custom-error/CustomError';
 import Schedule from '../../database/models/Schedule';
 import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
 
-export class ScheduleChangeStatuslUseCase {
+export class ScheduleChangeStatusUseCase {
   constructor(private scheduleId: number, private status: string) {}
 
   async changeStatus() {
     const schedule = await Schedule.findByPk(this.scheduleId);
+
+    if (!schedule) throw new CustomError('Schedule not found', 404);
 
     if (this.status === 'canceled') {
       this.checkCancelIsPermited(schedule);
@@ -48,8 +50,6 @@ export class ScheduleChangeStatuslUseCase {
   }
 
   private checkArrivedIsPermited(schedule: Schedule) {
-    if (!schedule) throw new CustomError('Schedule not found', 404);
-
     if (schedule.status === ScheduleStatusEnum.Canceled) {
       throw new CustomError(
         'You cannot set Arrived for a canceled appointment.',
