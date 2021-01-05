@@ -185,7 +185,8 @@ export default class CreateOrder {
             duration: activity.duration,
             employeeId: activity.employeeId,
             categoryId: activity.categoryId,
-            maxPeople: activity.maxPeople
+            maxPeople: activity.maxPeople,
+            packageQuantity: activity.PackageActivity?.quantity || 1
           },
           { transaction: this.transaction }
         )

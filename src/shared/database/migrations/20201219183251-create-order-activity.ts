@@ -58,6 +58,10 @@ module.exports = {
         type: DataTypes.INTEGER,
         allowNull: true
       },
+      package_quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,

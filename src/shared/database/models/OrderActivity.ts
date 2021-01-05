@@ -19,6 +19,8 @@ export default class OrderActivity extends Model {
   categoryId: number;
   maxPeople: number;
 
+  packageQuantity?: number;
+
   readonly createdAt: Date;
   readonly updatedAt?: Date;
 
@@ -35,7 +37,8 @@ export default class OrderActivity extends Model {
         price: DataTypes.DECIMAL,
         description: DataTypes.STRING,
         duration: DataTypes.INTEGER,
-        maxPeople: DataTypes.INTEGER
+        maxPeople: DataTypes.INTEGER,
+        packageQuantity: DataTypes.INTEGER
       },
       { sequelize: connection, tableName: 'order_activities' }
     );
