@@ -5,7 +5,11 @@ import Schedule from '../../database/models/Schedule';
 import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
 
 export class ScheduleChangeStatusUseCase {
-  constructor(private scheduleId: number, private status: string) {}
+  constructor(
+    private scheduleId: number,
+    private status: string,
+    private userId: number
+  ) {}
 
   async changeStatus() {
     const schedule = await Schedule.findByPk(this.scheduleId);
@@ -23,6 +27,7 @@ export class ScheduleChangeStatusUseCase {
     } else if (this.status === 'completed') {
       this.checkCompletedIsPermited(schedule);
 
+      schedule.attenderId = this.userId;
       schedule.status = ScheduleStatusEnum.Completed;
     } else {
       throw new CustomError(

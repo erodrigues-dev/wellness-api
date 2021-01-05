@@ -50,7 +50,8 @@ export class ScheduleController {
     try {
       const useCase = new ScheduleChangeStatusUseCase(
         Number(req.params.id),
-        req.params.status
+        req.params.status,
+        Number(req.user.id)
       );
       await useCase.changeStatus();
       return res.sendStatus(StatusCodes.NO_CONTENT);
