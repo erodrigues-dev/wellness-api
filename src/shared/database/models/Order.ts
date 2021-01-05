@@ -16,6 +16,7 @@ export default class Order extends Model {
   amount: number;
   discount: number;
   tip: number;
+  quantity: number;
 
   paymentType: PaymentTypeEnum;
   status: PaymentStatusEnum;
@@ -45,6 +46,7 @@ export default class Order extends Model {
         amount: DataTypes.DECIMAL,
         discount: DataTypes.DECIMAL,
         tip: DataTypes.DECIMAL,
+        quantity: DataTypes.INTEGER,
         webhookDate: DataTypes.DATE,
         paidUntilDate: DataTypes.DATE
       },

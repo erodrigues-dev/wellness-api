@@ -119,6 +119,7 @@ export default class CreateOrder {
       amount: this.price * this.data.quantity,
       discount: this.discount,
       tip: this.data.tip,
+      quantity: this.data.quantity,
 
       paymentType: this.data.paymentType,
       status: PaymentStatusEnum.Pending
