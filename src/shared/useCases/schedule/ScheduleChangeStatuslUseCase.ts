@@ -10,11 +10,6 @@ export class ScheduleChangeStatuslUseCase {
   async changeStatus() {
     const schedule = await Schedule.findByPk(this.scheduleId);
 
-    console.log('====================================');
-    console.log(this.status);
-    // console.log(ScheduleStatusEnum[this.status]);
-    console.log('====================================');
-
     if (this.status === 'canceled') {
       this.checkCancelIsPermited(schedule);
 
@@ -27,6 +22,11 @@ export class ScheduleChangeStatuslUseCase {
       this.checkCompletedIsPermited(schedule);
 
       schedule.status = ScheduleStatusEnum.Completed;
+    } else {
+      throw new CustomError(
+        'You cannot set this parameter as an appointment status.',
+        400
+      );
     }
 
     await schedule.save();
