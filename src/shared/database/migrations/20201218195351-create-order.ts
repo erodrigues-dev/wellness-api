@@ -51,6 +51,10 @@ module.exports = {
         allowNull: false,
         defaultValue: 0
       },
+      quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
       webhook_date: {
         type: DataTypes.DATE,
         allowNull: true
