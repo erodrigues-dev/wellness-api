@@ -29,13 +29,17 @@
 - [x] criar tabela de agendamento
 - [x] agendar
 - [x] listar agendamentos
-- [ ] atualizar quantidade de agendamentos na ordem do cliente
-- [ ] (pensar melhor nisso) order_activity adicionar campo quantidade de agendamentos
 - [x] verificar disponibilidade de horario
-- [ ] verificar quantidade de pessoas
+- [x] verificar quantidade de pessoas
 - [ ] verificar pagamento
-- [ ] verificar plano/quantidade
-- [ ] validar date.time >= date.time.now
+- [ ] validar date.time >= date.time.now ???
+- [ ] validar package recurrency
+- [x] validar package tipo unlimeted
+- [ ] validar package tipo minutes
+- [x] validar package tipo amount
+- [x] validar package tipo appointments
+- [x] validar recurrency
+- [ ] validate activity plano/quantidade
 
 ## cancelar agendamento
 
@@ -43,3 +47,14 @@
 - [ ] enviar email
 - [ ] disponibilizar horario
 - [ ] estornar uso da atividade na conta do cliente
+
+## workflow status
+
+- [ ] workflow: scheduled -> arrived -> completed
+- [ ] change status
+- [ ] send email: scheduled, canceled
+- [ ]
+
+## create order_activity
+
+- [x] field quantity
