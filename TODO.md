@@ -33,13 +33,14 @@
 - [x] verificar quantidade de pessoas
 - [ ] verificar pagamento
 - [ ] validar date.time >= date.time.now ???
-- [ ] validar package recurrency
+- [x] validar package recurrency
 - [x] validar package tipo unlimeted
-- [ ] validar package tipo minutes
+- [x] validar package tipo minutes
 - [x] validar package tipo amount
 - [x] validar package tipo appointments
 - [x] validar recurrency
 - [ ] validate activity plano/quantidade
+- [ ] send email
 
 ## cancelar agendamento
 
@@ -50,10 +51,9 @@
 
 ## workflow status
 
-- [ ] workflow: scheduled -> arrived -> completed
-- [ ] change status
+- [x] workflow: scheduled -> arrived -> completed
+- [x] change status
 - [ ] send email: scheduled, canceled
-- [ ]
 
 ## create order_activity
 

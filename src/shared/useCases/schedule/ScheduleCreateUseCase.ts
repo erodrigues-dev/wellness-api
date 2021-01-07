@@ -4,7 +4,9 @@ import { Op } from 'sequelize';
 import CustomError from '../../custom-error/CustomError';
 import Activity from '../../database/models/Activity';
 import ActivitySchedule from '../../database/models/ActivitySchedule';
+import Order from '../../database/models/Order';
 import OrderActivity from '../../database/models/OrderActivity';
+import OrderPackage from '../../database/models/OrderPackage';
 import Schedule from '../../database/models/Schedule';
 import { PackageTypeEnum } from '../../models/enums/PackageTypeEnum';
 import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
@@ -74,47 +76,85 @@ export class ScheduleCreateUseCase {
   }
 
   async checkOrderPackage(orderActivity: OrderActivity): Promise<void> {
-    const { order, orderPackage } = orderActivity;
+    this.checkPackageExpirationDate(orderActivity);
+    await this.checkPackageAppointments(orderActivity);
+    await this.checkPackageAmount(orderActivity);
+    await this.checkPackageMinutes(orderActivity);
+  }
 
-    if (orderPackage.expiration && orderPackage.expiration < this.date)
-      throw new CustomError('Package expired');
+  private async checkPackageMinutes(orderActivity: OrderActivity) {
+    const { orderPackage, order } = orderActivity;
 
-    if (orderPackage.type === PackageTypeEnum.unlimited) return;
+    if (orderPackage.type !== PackageTypeEnum.minutes) return;
 
     const [startDate, endDate] = this.getDateRange(
       this.date,
       orderPackage.recurrencyPay
     );
+    const total = order.quantity * Number(orderPackage.total);
+    const sum = await this.sumScheduledDuration(
+      startDate,
+      endDate,
+      orderPackage.id
+    );
+
+    if (sum + orderActivity.duration > total)
+      throw new CustomError('Total minutes was exceeded');
+  }
+
+  private async checkPackageAmount(orderActivity: OrderActivity) {
+    const { orderPackage, order } = orderActivity;
+
+    if (orderPackage.type !== PackageTypeEnum.amount) return;
+
+    const [startDate, endDate] = this.getDateRange(
+      this.date,
+      orderPackage.recurrencyPay
+    );
+    const total = order.quantity * Number(orderPackage.total);
+    const sum = await this.sumScheduledPrice(
+      startDate,
+      endDate,
+      orderPackage.id
+    );
+
+    if (sum + Number(orderActivity.price) > total)
+      throw new CustomError('Total amount was exceeded');
+  }
+
+  private async checkPackageAppointments(orderActivity: OrderActivity) {
+    const { orderPackage, order } = orderActivity;
+
+    if (orderPackage.type !== PackageTypeEnum.appointments) return;
+
+    const [startDate, endDate] = this.getDateRange(
+      this.date,
+      orderPackage.recurrencyPay
+    );
+
     const countSchedules = await this.countSchedule(
       startDate,
       endDate,
       orderActivity.id
     );
 
-    if (orderPackage.type === PackageTypeEnum.appointments) {
-      const total = order.quantity * orderActivity.packageQuantity;
-      if (countSchedules + 1 > total)
-        throw new CustomError('Limit of appointments was exceeded');
-    }
+    const total = order.quantity * orderActivity.packageQuantity;
 
-    if (orderPackage.type === PackageTypeEnum.amount) {
-      const total = order.quantity * Number(orderPackage.total);
-      const priceTotal = await this.sumScheduledPriceByOrderPackageId(
-        startDate,
-        endDate,
-        orderPackage.id
-      );
-
-      if (priceTotal + Number(orderActivity.price) > total)
-        throw new CustomError('Total amount was exceeded');
-    }
-
-    //verificar recorrencia e tipo de pacote
-    // unlimited, appointments....
-    // expiration date
+    if (countSchedules + 1 > total)
+      throw new CustomError('Limit of appointments was exceeded');
   }
 
-  async countSchedule(start: Date, end: Date, orderActivityId?: number) {
+  private checkPackageExpirationDate(orderActivity: OrderActivity) {
+    const { orderPackage } = orderActivity;
+    if (orderPackage.expiration && orderPackage.expiration < this.date)
+      throw new CustomError('Package expired');
+  }
+
+  private async countSchedule(
+    start: Date,
+    end: Date,
+    orderActivityId?: number
+  ) {
     const ands: any[] = [
       { date: { [Op.gte]: format(start, 'yyyy-MM-dd') } },
       { date: { [Op.lte]: format(end, 'yyyy-MM-dd') } },
@@ -128,13 +168,33 @@ export class ScheduleCreateUseCase {
     });
   }
 
-  async sumScheduledPriceByOrderPackageId(
+  private sumScheduledPrice(start: Date, end: Date, orderPackageId: number) {
+    return this.sumScheduledOrderActivityAttribute(
+      'price',
+      start,
+      end,
+      orderPackageId
+    );
+  }
+
+  private sumScheduledDuration(start: Date, end: Date, orderPackageId: number) {
+    return this.sumScheduledOrderActivityAttribute(
+      'duration',
+      start,
+      end,
+      orderPackageId
+    );
+  }
+
+  private async sumScheduledOrderActivityAttribute(
+    attribute: string,
     start: Date,
     end: Date,
     orderPackageId: number
   ) {
     const prices = await Schedule.findAll({
       attributes: [],
+      include: [{ association: 'orderActivity', attributes: [attribute] }],
       where: {
         [Op.and]: [
           { date: { [Op.gte]: format(start, 'yyyy-MM-dd') } },
@@ -142,16 +202,15 @@ export class ScheduleCreateUseCase {
           { status: { [Op.ne]: ScheduleStatusEnum.Canceled } },
           { '$orderActivity.order_package_id$': orderPackageId }
         ]
-      },
-      include: [{ association: 'orderActivity', attributes: ['price'] }]
+      }
     });
 
     return prices
-      .map(x => Number(x.orderActivity.price))
+      .map(x => Number(x.orderActivity[attribute]))
       .reduce((acc, current) => acc + current, 0);
   }
 
-  async loadOrderActivityWithIncludes(
+  private async loadOrderActivityWithIncludes(
     orderActivityId: number
   ): Promise<OrderActivity> {
     return OrderActivity.findByPk(orderActivityId, {
@@ -159,7 +218,10 @@ export class ScheduleCreateUseCase {
     });
   }
 
-  getDateRange(date: Date, recurrency: RecurrencyPayEnum): [Date, Date] {
+  private getDateRange(
+    date: Date,
+    recurrency: RecurrencyPayEnum
+  ): [Date, Date] {
     if (recurrency === RecurrencyPayEnum.weekly) {
       return [startOfWeek(date), endOfWeek(date)];
     }
