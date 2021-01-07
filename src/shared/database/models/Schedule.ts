@@ -1,6 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
-import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
 import ActivitySchedule from './ActivitySchedule';
 import Customer from './Customer';
 import OrderActivity from './OrderActivity';
@@ -14,7 +13,7 @@ export default class Schedule extends Model {
   date: string;
   start: string;
   end: string;
-  status: ScheduleStatusEnum;
+  status: string;
   attenderId?: number;
 
   readonly createdAt: Date;

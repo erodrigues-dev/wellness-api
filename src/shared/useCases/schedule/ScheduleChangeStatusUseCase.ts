@@ -1,4 +1,4 @@
-import { isPast, parseISO } from 'date-fns';
+import { isPast, parseISO, isToday } from 'date-fns';
 
 import CustomError from '../../custom-error/CustomError';
 import Schedule from '../../database/models/Schedule';
@@ -14,81 +14,67 @@ export class ScheduleChangeStatusUseCase {
   async changeStatus() {
     const schedule = await Schedule.findByPk(this.scheduleId);
 
-    if (!schedule) throw new CustomError('Schedule not found', 404);
+    this.checkIsPermited(schedule, this.status);
 
-    if (this.status === 'canceled') {
-      this.checkCancelIsPermited(schedule);
-
-      schedule.status = ScheduleStatusEnum.Canceled;
-    } else if (this.status === 'arrived') {
-      this.checkArrivedIsPermited(schedule);
-
-      schedule.status = ScheduleStatusEnum.Arrived;
-    } else if (this.status === 'completed') {
-      this.checkCompletedIsPermited(schedule);
-
+    if (this.status === ScheduleStatusEnum.Completed)
       schedule.attenderId = this.userId;
-      schedule.status = ScheduleStatusEnum.Completed;
-    } else {
-      throw new CustomError(
-        'You cannot set this parameter as an appointment status.',
-        400
-      );
-    }
+    schedule.status = this.status;
 
     await schedule.save();
   }
 
-  private checkCancelIsPermited(schedule: Schedule) {
+  private checkIsPermited(schedule: Schedule, route: string) {
+    const { status } = schedule;
+
     if (!schedule) throw new CustomError('Schedule not found', 404);
 
-    if (schedule.status === ScheduleStatusEnum.Completed) {
+    if (
+      route !== ScheduleStatusEnum.Canceled &&
+      route !== ScheduleStatusEnum.Arrived &&
+      route !== ScheduleStatusEnum.Completed
+    ) {
       throw new CustomError(
-        'You cannot cancel an appointment with a completed status',
+        `You cannot set ${route} as an appointment status.`,
         400
       );
     }
 
-    const startDate = parseISO(`${schedule.date}T${schedule.start}`);
-    if (isPast(startDate))
+    if (
+      route === ScheduleStatusEnum.Canceled ||
+      route === ScheduleStatusEnum.Arrived
+    )
+      this.checkStatusArrivedCanceled(schedule, route);
+    else if (
+      route === ScheduleStatusEnum.Completed &&
+      status !== ScheduleStatusEnum.Arrived
+    )
+      throw new CustomError(this.errorPermitedMessage(status, route), 400);
+  }
+
+  private errorPermitedMessage(status: string, route: string) {
+    return `You cannot set ${route} for an appointment with a ${status} status`;
+  }
+
+  private checkStatusArrivedCanceled(schedule: Schedule, route: string) {
+    if (schedule.status !== ScheduleStatusEnum.Scheduled)
+      throw new CustomError(
+        this.errorPermitedMessage(schedule.status, route),
+        400
+      );
+
+    if (
+      route === ScheduleStatusEnum.Canceled &&
+      isPast(parseISO(`${schedule.date}T${schedule.start}`))
+    )
       throw new CustomError('You cannot cancel a past appointment', 400);
-  }
 
-  private checkArrivedIsPermited(schedule: Schedule) {
-    if (schedule.status === ScheduleStatusEnum.Canceled) {
+    if (
+      route === ScheduleStatusEnum.Arrived &&
+      !isToday(parseISO(schedule.date))
+    )
       throw new CustomError(
-        'You cannot set Arrived for a canceled appointment.',
+        'Arrived can just be set in appointments scheduled on the same day',
         400
       );
-    }
-
-    if (schedule.status === ScheduleStatusEnum.Completed) {
-      throw new CustomError(
-        'You cannot set Arrived for a completed appointment.',
-        400
-      );
-    }
-  }
-
-  private checkCompletedIsPermited(schedule: Schedule) {
-    if (!schedule) throw new CustomError('Schedule not found', 404);
-
-    if (schedule.status === ScheduleStatusEnum.Canceled) {
-      throw new CustomError(
-        'You cannot set Completed for a canceled appointment.',
-        400
-      );
-    }
-
-    if (schedule.status === ScheduleStatusEnum.Scheduled) {
-      throw new CustomError(
-        'You cannot set completed to a scheduled appointment. Appointment must set as Arrived first',
-        400
-      );
-    }
-
-    if (schedule.status === ScheduleStatusEnum.Completed) {
-      throw new CustomError('The Appointment is already complete.', 400);
-    }
   }
 }
