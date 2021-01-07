@@ -1,5 +1,6 @@
 import { celebrate, CelebrateError, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
+import { ScheduleStatusEnum } from '../../../shared/models/enums/ScheduleStatusEnum';
 
 const router = Router();
 
@@ -31,10 +32,15 @@ router.post(
 );
 
 router.put(
-  '/schedules/:id/cancel',
+  '/schedules/:id/change-status/:status',
   celebrate({
     [Segments.PARAMS]: Joi.object({
-      id: Joi.number().required()
+      id: Joi.number().required(),
+      status: Joi.string()
+        .valid(...Object.values(ScheduleStatusEnum))
+        .messages({
+          'any.only': 'status must be canceled, arrived or completed'
+        })
     })
   })
 );

@@ -7,7 +7,7 @@ import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
 export class ScheduleChangeStatusUseCase {
   constructor(
     private scheduleId: number,
-    private status: string,
+    private status: ScheduleStatusEnum,
     private userId: number
   ) {}
 
@@ -28,26 +28,14 @@ export class ScheduleChangeStatusUseCase {
 
     if (!schedule) throw new CustomError('Schedule not found', 404);
 
-    if (
-      route !== ScheduleStatusEnum.Canceled &&
-      route !== ScheduleStatusEnum.Arrived &&
-      route !== ScheduleStatusEnum.Completed
-    ) {
-      throw new CustomError(
-        `You cannot set ${route} as an appointment status.`,
-        400
-      );
-    }
-
-    if (
+    if (route === ScheduleStatusEnum.Scheduled)
+      throw new CustomError('You cannot set scheduled for an appointment', 400);
+    else if (
       route === ScheduleStatusEnum.Canceled ||
       route === ScheduleStatusEnum.Arrived
     )
       this.checkStatusArrivedAndCanceled(schedule, route);
-    else if (
-      route === ScheduleStatusEnum.Completed &&
-      status !== ScheduleStatusEnum.Arrived
-    )
+    else if (route === ScheduleStatusEnum.Completed)
       this.checkCompletedIsPermited(status, route);
   }
 
@@ -76,13 +64,13 @@ export class ScheduleChangeStatusUseCase {
       throw new CustomError(this.errorPermitedMessage(status, route), 400);
   }
 
-  private checkScheduleStatusScheduled(status: string, route: string) {
+  private checkScheduleStatusIsScheduled(status: string, route: string) {
     if (status !== ScheduleStatusEnum.Scheduled)
       throw new CustomError(this.errorPermitedMessage(status, route), 400);
   }
 
   private checkStatusArrivedAndCanceled(schedule: Schedule, route: string) {
-    this.checkScheduleStatusScheduled(schedule.status, route);
+    this.checkScheduleStatusIsScheduled(schedule.status, route);
     this.checkCanceledIsPermited(schedule, route);
     this.checkArrivedIsPermited(schedule.date, route);
   }

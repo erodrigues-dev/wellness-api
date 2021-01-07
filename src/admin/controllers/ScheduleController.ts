@@ -1,6 +1,7 @@
 import { parseISO } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { ScheduleStatusEnum } from '../../shared/models/enums/ScheduleStatusEnum';
 
 import service, { FilterDto } from '../../shared/services/ScheduleService';
 import {
@@ -50,7 +51,7 @@ export class ScheduleController {
     try {
       const useCase = new ScheduleChangeStatusUseCase(
         Number(req.params.id),
-        req.params.status,
+        req.params.status as ScheduleStatusEnum,
         Number(req.user.id)
       );
       await useCase.changeStatus();
