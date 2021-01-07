@@ -43,38 +43,47 @@ export class ScheduleChangeStatusUseCase {
       route === ScheduleStatusEnum.Canceled ||
       route === ScheduleStatusEnum.Arrived
     )
-      this.checkStatusArrivedCanceled(schedule, route);
+      this.checkStatusArrivedAndCanceled(schedule, route);
     else if (
       route === ScheduleStatusEnum.Completed &&
       status !== ScheduleStatusEnum.Arrived
     )
-      throw new CustomError(this.errorPermitedMessage(status, route), 400);
+      this.checkCompletedIsPermited(status, route);
   }
 
   private errorPermitedMessage(status: string, route: string) {
     return `You cannot set ${route} for an appointment with a ${status} status`;
   }
 
-  private checkStatusArrivedCanceled(schedule: Schedule, route: string) {
-    if (schedule.status !== ScheduleStatusEnum.Scheduled)
-      throw new CustomError(
-        this.errorPermitedMessage(schedule.status, route),
-        400
-      );
-
+  private checkCanceledIsPermited(schedule: Schedule, route: string) {
     if (
       route === ScheduleStatusEnum.Canceled &&
       isPast(parseISO(`${schedule.date}T${schedule.start}`))
     )
       throw new CustomError('You cannot cancel a past appointment', 400);
+  }
 
-    if (
-      route === ScheduleStatusEnum.Arrived &&
-      !isToday(parseISO(schedule.date))
-    )
+  private checkArrivedIsPermited(date: string, route: string) {
+    if (route === ScheduleStatusEnum.Arrived && !isToday(parseISO(date)))
       throw new CustomError(
         'Arrived can just be set in appointments scheduled on the same day',
         400
       );
+  }
+
+  private checkCompletedIsPermited(status: string, route: string) {
+    if (status !== ScheduleStatusEnum.Arrived)
+      throw new CustomError(this.errorPermitedMessage(status, route), 400);
+  }
+
+  private checkScheduleStatusScheduled(status: string, route: string) {
+    if (status !== ScheduleStatusEnum.Scheduled)
+      throw new CustomError(this.errorPermitedMessage(status, route), 400);
+  }
+
+  private checkStatusArrivedAndCanceled(schedule: Schedule, route: string) {
+    this.checkScheduleStatusScheduled(schedule.status, route);
+    this.checkCanceledIsPermited(schedule, route);
+    this.checkArrivedIsPermited(schedule.date, route);
   }
 }
