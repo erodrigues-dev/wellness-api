@@ -1,4 +1,4 @@
-import { endOfMonth, endOfWeek, format, startOfMonth, startOfWeek } from 'date-fns';
+import { endOfMonth, endOfWeek, format, isPast, startOfMonth, startOfWeek } from 'date-fns';
 import { Op } from 'sequelize';
 
 import CustomError from '../../custom-error/CustomError';
@@ -9,6 +9,7 @@ import OrderActivity from '../../database/models/OrderActivity';
 import OrderPackage from '../../database/models/OrderPackage';
 import Schedule from '../../database/models/Schedule';
 import { PackageTypeEnum } from '../../models/enums/PackageTypeEnum';
+import { PAID_STATUS, PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
 import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
 import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
 
@@ -26,7 +27,6 @@ export class ScheduleCreateUseCase {
 
   async create() {
     const event = await this.getEvent(this.eventId);
-
     await this.checkAvailableTime(event);
     await this.checkOrderAvailable(this.orderActivityId);
 
@@ -51,6 +51,9 @@ export class ScheduleCreateUseCase {
   }
 
   async checkAvailableTime(event: ActivitySchedule): Promise<void> {
+    if (isPast(new Date(`${this.formatedDate}T${event.start}`)))
+      throw new CustomError('Cannot be scheduled on this time');
+
     const activity = await Activity.findByPk(event.activityId);
     const maxSchedules = activity.maxPeople || 1;
 
@@ -72,7 +75,15 @@ export class ScheduleCreateUseCase {
       orderActivityId
     );
 
+    await this.checkOrderPayment(orderActivity.order);
+
     if (orderActivity.orderPackage) await this.checkOrderPackage(orderActivity);
+    else await this.checkActivity(orderActivity);
+  }
+
+  async checkOrderPayment(order: Order): Promise<void> {
+    if (!PAID_STATUS.includes(order.status))
+      throw new CustomError('Check your order payment status');
   }
 
   async checkOrderPackage(orderActivity: OrderActivity): Promise<void> {
@@ -80,6 +91,13 @@ export class ScheduleCreateUseCase {
     await this.checkPackageAppointments(orderActivity);
     await this.checkPackageAmount(orderActivity);
     await this.checkPackageMinutes(orderActivity);
+  }
+
+  async checkActivity(orderActivity: OrderActivity): Promise<void> {
+    const { order } = orderActivity;
+    const count = await this.countScheduleByOrderActivity(orderActivity.id);
+    if (count + 1 > order.quantity)
+      throw new CustomError('Limit of appointments was exceeded');
   }
 
   private async checkPackageMinutes(orderActivity: OrderActivity) {
@@ -165,6 +183,17 @@ export class ScheduleCreateUseCase {
     return Schedule.count({
       col: 'id',
       where: { [Op.and]: ands }
+    });
+  }
+
+  private async countScheduleByOrderActivity(
+    orderActivityId: number
+  ): Promise<number> {
+    return Schedule.count({
+      where: {
+        orderActivityId: orderActivityId,
+        status: { [Op.ne]: ScheduleStatusEnum.Canceled }
+      }
     });
   }
 

@@ -31,15 +31,15 @@
 - [x] listar agendamentos
 - [x] verificar disponibilidade de horario
 - [x] verificar quantidade de pessoas
-- [ ] verificar pagamento
-- [ ] validar date.time >= date.time.now ???
+- [x] verificar pagamento
+- [x] validar date.time >= date.time.now ???
 - [x] validar package recurrency
 - [x] validar package tipo unlimeted
 - [x] validar package tipo minutes
 - [x] validar package tipo amount
 - [x] validar package tipo appointments
 - [x] validar recurrency
-- [ ] validate activity plano/quantidade
+- [x] validate activity plano/quantidade
 - [ ] send email
 
 ## cancelar agendamento
