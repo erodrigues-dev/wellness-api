@@ -16,6 +16,20 @@ export class OrderController {
     }
   }
 
+  async get(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+
+      const data = await this.service.get(Number(id));
+
+      if (!data) return res.status(404).json({ message: 'Order not found' });
+
+      return res.json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   private parseIndexParams(req: Request) {
     return {
       page: Number(req.query.page),

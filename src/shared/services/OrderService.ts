@@ -1,6 +1,7 @@
 import Order from '../database/models/Order';
 import { PaginateList } from '../models/base/PaginateList';
 import { OrderListViewModel } from '../models/viewmodels/OrderListViewModel';
+import { OrderDetailViewModel } from '../models/viewmodels/OrderDetailViewModel';
 
 export class OrderService {
   async list(
@@ -39,6 +40,14 @@ export class OrderService {
       rows: rows.map(order => OrderListViewModel.fromOrder(order)),
       count
     };
+  }
+
+  async get(id: number): Promise<Order> {
+    const order: Order = await Order.findByPk(id);
+
+    if (!order) return null;
+
+    return order;
   }
 }
 
