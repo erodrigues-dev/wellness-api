@@ -1,5 +1,3 @@
-import { Transaction } from 'sequelize/types';
-
 export class SquareWebhook<T> {
   type: string;
   event_id: string;
