@@ -1,29 +1,60 @@
-# TODO
+# TODO CARD#76 appointments
 
-## Square
+## Permission
 
-- [x] create/update customer
-- [x] create/update catalog recurrency items
-- [ ] hooks
-  - [ ] payment
-  - [ ] subscription
-  - [ ] invoice ?
-  - [ ] order ?
+- [x] listar atividades
+- [x] agendar atividade
+- [x] cancelar atividade
 
-- [ ] create payment and annotate hooks fireds
-- [x] create subscription and annotate hooks fireds
+## listar atividades
 
-# webhooks
+- [x] listar atividades compradas pelo cliente
+- [x] verificar status do pagamento
+- [ ] verificar a quantidade/plano comprado
 
-## create subscription
+## listar dias
 
-| date                     | event                | status          |
-|--------------------------|----------------------|-----------------|
-| 2020-12-03T00:42:04Z     | invoice.created      | draft           |
-| 2020-12-03T00:42:04.321Z | payment.created      | status approved |
-| 2020-12-03T00:42:03.695Z | subscription.created | status active   |
-| 2020-12-03T00:42:06Z     | invoice.payment_made | status PAID     |
-|2020-12-03T00:42:05Z|invoice.published|PAYMENT_PENDING|
-|2020-12-03T00:42:06.436Z|payment.updated|COMPLETED|
-|2020-12-03T00:42:12.21Z|payment.updated|COMPLETED|
+- [x] listar dias por periodo;
+- [x] listar apenas dias disponiveis
+- [x] listar apenas data >= date.now
 
+## listar horarios
+
+- [x] listar horarios
+- [x] verificar disponibilidade
+- [x] listar apenas horarios >= date.time.now
+
+## agendar atividade
+
+- [x] criar tabela de agendamento
+- [x] agendar
+- [x] listar agendamentos
+- [x] verificar disponibilidade de horario
+- [x] verificar quantidade de pessoas
+- [x] verificar pagamento
+- [x] validar date.time >= date.time.now ???
+- [x] validar package recurrency
+- [x] validar package tipo unlimeted
+- [x] validar package tipo minutes
+- [x] validar package tipo amount
+- [x] validar package tipo appointments
+- [x] validar recurrency
+- [x] validate activity plano/quantidade
+- [ ] send email
+
+## cancelar agendamento
+
+- [x] cancelar
+- [ ] enviar email
+- [ ] disponibilizar horario
+- [ ] estornar uso da atividade na conta do cliente
+
+## workflow status
+
+- [x] workflow: scheduled -> arrived -> completed
+- [x] change status
+- [ ] send email: scheduled, canceled
+
+## create order_activity
+
+- [x] field quantity

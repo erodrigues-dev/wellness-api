@@ -21,7 +21,11 @@ export default class Functionality
 
   static setup(connection: Sequelize) {
     Functionality.init(
-      { name: DataTypes.STRING, actions: DataTypes.INTEGER },
+      {
+        name: DataTypes.STRING,
+        actions: DataTypes.INTEGER,
+        profileId: DataTypes.INTEGER
+      },
       { sequelize: connection, tableName: 'functionalities' }
     );
   }

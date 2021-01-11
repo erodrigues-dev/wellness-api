@@ -1,13 +1,12 @@
-import { Response, NextFunction } from 'express';
+import { parseISO } from 'date-fns';
+import { NextFunction, Request, Response } from 'express';
 
-import IActivityScheduleService from '../../shared/services/interfaces/IActivityScheduleService';
 import activityScheduleService from '../../shared/services/ActivityScheduleService';
-
+import IActivityScheduleService from '../../shared/services/interfaces/IActivityScheduleService';
+import { ListDaysUseCase } from '../../shared/useCases/schedule/ListDaysUseCase';
+import { ListTimesUseCase } from '../../shared/useCases/schedule/ListTimesUseCase';
 import IActivityScheduleController, {
-  IDeleteRequest,
-  IIndexRequest,
-  IStoreRequest,
-  IUpdateRequest
+    IDeleteRequest, IIndexRequest, IStoreRequest, IUpdateRequest
 } from './interfaces/IActivityScheduleController';
 
 export class ActivityScheduleController implements IActivityScheduleController {
@@ -23,6 +22,37 @@ export class ActivityScheduleController implements IActivityScheduleController {
         activityId
       );
       return res.json(rows);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async days(req: Request, res: Response, next: NextFunction) {
+    try {
+      const useCase = new ListDaysUseCase(
+        Number(req.params.id),
+        parseISO(req.query.start as string),
+        parseISO(req.query.end as string)
+      );
+
+      const days = await useCase.list();
+
+      return res.json(days);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async times(req: Request, res: Response, next: NextFunction) {
+    try {
+      const useCase = new ListTimesUseCase(
+        Number(req.params.id),
+        parseISO(req.params.day)
+      );
+
+      const times = await useCase.list();
+
+      return res.json(times);
     } catch (error) {
       next(error);
     }

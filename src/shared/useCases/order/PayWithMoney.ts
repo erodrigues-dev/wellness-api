@@ -2,8 +2,6 @@ import { Transaction } from 'sequelize';
 
 import connection from '../../database/connection';
 import Order from '../../database/models/Order';
-import OrderPayment from '../../database/models/OrderPayment';
-import IOrderPayment from '../../models/entities/IOrderPayment';
 import { PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
 import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
 import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
@@ -25,7 +23,7 @@ export default class PayWithMoney {
         .useTransaction(this.transaction)
         .withData(data)
         .create();
-      await this.createOrderPayment(order);
+      await this.updatePaymentData(order);
       await this.commit();
     } catch (error) {
       await this.rollback();
@@ -49,17 +47,10 @@ export default class PayWithMoney {
     this.transaction = await connection.transaction();
   }
 
-  private async createOrderPayment(order: Order) {
-    const payment: IOrderPayment = {
-      orderId: order.id,
-      type: PaymentTypeEnum.Money,
-      tip: 0,
-      discount: order.discount,
-      amount: order.total,
-      status: PaymentStatusEnum.Completed,
-      recurrency: RecurrencyPayEnum.oneTime
-    };
+  private async updatePaymentData(order: Order) {
+    order.status = PaymentStatusEnum.Completed;
+    order.paymentType = PaymentTypeEnum.Money;
 
-    await OrderPayment.create(payment, { transaction: this.transaction });
+    await order.save({ transaction: this.transaction });
   }
 }

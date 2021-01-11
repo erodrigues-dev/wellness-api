@@ -21,7 +21,7 @@ export default class CreateCustomer {
   }
 
   private async createCustomer(): Promise<void> {
-    this.customer = await customerService.create(this.data);
+    this.customer = await customerService.create(this.data as any);
   }
 
   private async createCustomerInSquare(): Promise<void> {

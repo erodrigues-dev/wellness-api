@@ -6,3 +6,5 @@ dist/
 
 **/*/migrations/*.js
 **/*/seeders/*.js
+
+*.log

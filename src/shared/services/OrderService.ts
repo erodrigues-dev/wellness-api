@@ -13,11 +13,12 @@ export class OrderService {
     const { count, rows } = await Order.findAndCountAll({
       include: [
         {
-          association: 'items',
-          attributes: ['type', 'name', 'recurrency'],
-          where: {
-            parentId: null
-          }
+          association: 'orderActivities',
+          attributes: ['name']
+        },
+        {
+          association: 'orderPackages',
+          attributes: ['name']
         },
         {
           association: 'user',
@@ -26,10 +27,6 @@ export class OrderService {
         {
           association: 'customer',
           attributes: ['id', 'name']
-        },
-        {
-          association: 'payments',
-          attributes: ['type', 'status']
         }
       ],
       limit,

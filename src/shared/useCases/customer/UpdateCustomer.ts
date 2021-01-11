@@ -19,7 +19,7 @@ export default class UpdateCustomer {
   }
 
   private async updateCustomer(): Promise<void> {
-    this.customer = await customerService.update(this.data);
+    this.customer = await customerService.update(this.data as any);
   }
 
   private async updateCustomerInSquare(): Promise<void> {

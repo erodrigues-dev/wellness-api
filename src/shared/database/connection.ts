@@ -6,14 +6,14 @@ import ActivitySchedule from './models/ActivitySchedule';
 import Category from './models/Category';
 import Customer from './models/Customer';
 import CustomerDiscount from './models/CustomerDiscount';
-import CustomPackage from './models/CustomPackage';
 import Employee from './models/Employee';
 import Functionality from './models/Functionality';
 import Order from './models/Order';
-import OrderItem from './models/OrderItem';
-import OrderPayment from './models/OrderPayment';
+import OrderActivity from './models/OrderActivity';
+import OrderPackage from './models/OrderPackage';
 import Package from './models/Package';
 import Profile from './models/Profile';
+import Schedule from './models/Schedule';
 
 const connection = new Sequelize(DB_CONFIG);
 
@@ -25,12 +25,12 @@ export function databaseConfig() {
   Functionality.setup(connection);
   Package.setup(connection);
   Profile.setup(connection);
-  CustomPackage.setup(connection);
   Category.setup(connection);
   CustomerDiscount.setup(connection);
   Order.setup(connection);
-  OrderItem.setup(connection);
-  OrderPayment.setup(connection);
+  Schedule.setup(connection);
+  OrderPackage.setup(connection);
+  OrderActivity.setup(connection);
 
   Activity.setupAssociations();
   ActivitySchedule.setupAssociations();
@@ -39,12 +39,12 @@ export function databaseConfig() {
   Functionality.setupAssociations();
   Package.setupAssociations();
   Profile.setupAssociations();
-  CustomPackage.setupAssociations();
   Category.setupAssociations();
   CustomerDiscount.setupAssociations();
   Order.setupAssociations();
-  OrderItem.setupAssociations();
-  OrderPayment.setupAssociations();
+  OrderPackage.setupAssociations();
+  OrderActivity.setupAssociations();
+  Schedule.setupAssociations();
 }
 
 export default connection;

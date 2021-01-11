@@ -6,3 +6,8 @@ export enum PaymentStatusEnum {
   Completed = 'COMPLETED',
   Failed = 'FAILED'
 }
+
+export const PAID_STATUS = [
+  PaymentStatusEnum.Active,
+  PaymentStatusEnum.Completed
+];

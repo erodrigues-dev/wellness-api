@@ -6,7 +6,7 @@ export default interface IProfile {
   name: string;
   description: string;
 
-  functionalities: IFunctionality[];
+  functionalities?: IFunctionality[];
   employees?: IEmployee[];
 
   createdAt?: Date;

@@ -7,11 +7,11 @@ import categoryValidate from './CategoryValidate';
 import checkoutValidate from './CheckoutValidate';
 import customerDiscountValidate from './CustomerDiscountValidate';
 import customerValidate from './CustomerValidate';
-import customPackageValidate from './CustomPackageValidate';
 import employeeValidate from './EmployeeValidate';
 import orderValidate from './OrderValidate';
 import packageValidate from './PackageValidate';
 import profileValidate from './ProfileValidate';
+import scheduleValidate from './ScheduleValidate';
 import sessionValidate from './SessionValidate';
 
 const router = Router();
@@ -23,11 +23,11 @@ router.use(customerValidate);
 router.use(employeeValidate);
 router.use(packageValidate);
 router.use(profileValidate);
-router.use(customPackageValidate);
 router.use(categoryValidate);
 router.use(customerDiscountValidate);
 router.use(orderValidate);
 router.use(checkoutValidate);
+router.use(scheduleValidate);
 
 // required in last position
 router.use(errors());

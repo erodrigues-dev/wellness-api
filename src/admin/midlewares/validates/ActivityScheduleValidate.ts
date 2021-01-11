@@ -19,8 +19,31 @@ router.get(
       id: Joi.number().integer()
     }),
     [Segments.QUERY]: Joi.object().keys({
-      start: Joi.date().required(),
-      end: Joi.date().required()
+      start: Joi.string().isoDate().required().options({ convert: false }),
+      end: Joi.string().isoDate().required().options({ convert: false })
+    })
+  })
+);
+
+router.get(
+  '/activities/:id/schedules/days',
+  celebrate({
+    [Segments.PARAMS]: Joi.object({
+      id: Joi.number().integer()
+    }),
+    [Segments.QUERY]: Joi.object().keys({
+      start: Joi.string().isoDate().required().options({ convert: false }),
+      end: Joi.string().isoDate().required().options({ convert: false })
+    })
+  })
+);
+
+router.get(
+  '/activities/:id/schedules/days/:day/times',
+  celebrate({
+    [Segments.PARAMS]: Joi.object({
+      id: Joi.number().integer(),
+      day: Joi.string().isoDate().options({ convert: false })
     })
   })
 );
@@ -36,7 +59,7 @@ router.post(
         .required()
         .pattern(colorPattern)
         .message(colorErrorMessage),
-      date: Joi.date().required(),
+      date: Joi.string().isoDate().required().options({ convert: false }),
       start: Joi.string()
         .required()
         .pattern(timePattern)
@@ -66,7 +89,7 @@ router.post(
           is: true,
           then: Joi.required()
         }),
-      until: Joi.date().when('endsIn', {
+      until: Joi.string().isoDate().options({ convert: false }).when('endsIn', {
         is: EndsInEnum.IN,
         then: Joi.required()
       }),
@@ -90,7 +113,7 @@ router.put(
         .required()
         .pattern(colorPattern)
         .message(colorErrorMessage),
-      date: Joi.date().required(),
+      date: Joi.string().isoDate().required().options({ convert: false }),
       start: Joi.string()
         .required()
         .pattern(timePattern)
@@ -120,14 +143,21 @@ router.put(
           is: true,
           then: Joi.required()
         }),
-      until: Joi.date().when('endsIn', {
-        is: EndsInEnum.IN,
-        then: Joi.required()
-      }),
-      ocurrences: Joi.number().integer().when('endsIn', {
-        is: EndsInEnum.AFTER,
-        then: Joi.required()
-      })
+      until: Joi.string()
+        .isoDate()
+        .when('endsIn', {
+          is: EndsInEnum.IN,
+          then: Joi.required(),
+          otherwise: Joi.allow(null, '')
+        })
+        .options({ convert: false }),
+      ocurrences: Joi.number()
+        .integer()
+        .when('endsIn', {
+          is: EndsInEnum.AFTER,
+          then: Joi.required(),
+          otherwise: Joi.allow(null, '')
+        })
     })
   })
 );

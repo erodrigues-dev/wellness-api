@@ -6,11 +6,11 @@ import category from './Category';
 import checkout from './CheckoutPermission';
 import customer from './Customer';
 import customerDiscount from './CustomerDiscountPermission';
-import customPackage from './CustomPackage';
 import employee from './Employee';
 import order from './OrderPermission';
 import package_ from './Package';
 import profile from './Profile';
+import schedule from './SchedulePermission';
 
 const router = Router();
 
@@ -20,10 +20,10 @@ router.use(customer);
 router.use(employee);
 router.use(package_);
 router.use(profile);
-router.use(customPackage);
 router.use(category);
 router.use(customerDiscount);
 router.use(order);
 router.use(checkout);
+router.use(schedule);
 
 export default router;

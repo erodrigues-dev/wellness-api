@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
+import { PaymentTypeEnum } from '../../shared/models/enums/PaymentTypeEnum';
 import CreateOrderDTO from '../../shared/useCases/order/CreateOrderDTO';
 import CreateOrderWithCardDTO from '../../shared/useCases/order/CreateOrderWithCardDTO';
 import { ListCards } from '../../shared/useCases/order/ListCards';
@@ -21,7 +22,10 @@ export class CheckoutController {
   async payWithMoney(req: Request, res: Response, next: NextFunction) {
     try {
       const data = new CreateOrderDTO()
-        .parseFromBody(req.body)
+        .parseFromBody({
+          ...req.body,
+          paymentType: PaymentTypeEnum.Money
+        })
         .withUserId(req.user.id);
 
       await new PayWithMoney().pay(data);
@@ -35,7 +39,7 @@ export class CheckoutController {
   async payWithCard(req: Request, res: Response, next: NextFunction) {
     try {
       const data = new CreateOrderWithCardDTO()
-        .parseFromBody(req.body)
+        .parseFromBody({ ...req.body, paymentType: PaymentTypeEnum.Card })
         .withUserId(req.user.id);
 
       await new PayWithCard(data).pay();

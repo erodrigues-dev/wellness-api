@@ -1,6 +1,4 @@
 import Order from '../../database/models/Order';
-import OrderItem from '../../database/models/OrderItem';
-import OrderPayment from '../../database/models/OrderPayment';
 import { UserDto } from '../dto/UserDto';
 import { OrderItemTypeEnum } from '../enums/OrderItemTypeEnum';
 import { PaymentStatusEnum } from '../enums/PaymentStatusEnum';
@@ -22,23 +20,32 @@ export class OrderListViewModel {
 
   static fromOrder(order: Order) {
     const viewModel = new OrderListViewModel();
-    const [item] = (order as any).items as OrderItem[];
-    const user = (order as any).user as UserDto;
-    const customer = (order as any).customer as UserDto;
-    const [payment] = (order as any).payments as OrderPayment[];
+    const customer = order.customer as UserDto;
+
+    const discount = Number(order.discount) || 0;
+    const tip = Number(order.tip) || 0;
+    const amount = Number(order.amount);
+
+    const [packageObj] = order.orderPackages || [];
+    const [activity] = order.orderActivities || [];
+
+    const name =
+      order.type === OrderItemTypeEnum.Package
+        ? packageObj.name
+        : activity.name;
 
     viewModel.id = order.id;
-    viewModel.name = item.name;
-    viewModel.type = item.type;
-    viewModel.subtotal = Number(order.subtotal);
-    viewModel.discount = Number(order.discount);
-    viewModel.tip = Number(order.tip);
-    viewModel.total = Number(order.total);
-    viewModel.user = user;
-    viewModel.status = payment.status;
-    viewModel.paymentType = payment.type;
+    viewModel.name = name;
+    viewModel.type = order.type;
+    viewModel.subtotal = amount;
+    viewModel.discount = discount;
+    viewModel.tip = tip;
+    viewModel.total = amount + tip - discount;
+    viewModel.status = order.status;
+    viewModel.paymentType = order.paymentType;
     viewModel.customer = customer;
     viewModel.createdAt = order.createdAt;
+    viewModel.user = order.user as UserDto;
 
     return viewModel;
   }

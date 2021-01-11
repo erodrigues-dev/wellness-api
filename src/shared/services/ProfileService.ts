@@ -38,11 +38,20 @@ export class ProfileService implements IProfileService {
   }
 
   async create(data: IProfile): Promise<IProfile> {
-    const model: Profile = await Profile.create(data, {
-      include: [Profile.associations.functionalities]
-    });
+    const tx = await Profile.sequelize.transaction();
+    try {
+      const model: Profile = await Profile.create(data, {
+        include: [Profile.associations.functionalities],
+        transaction: tx
+      });
 
-    return model.toJSON() as IProfile;
+      await tx.commit();
+
+      return model.toJSON() as IProfile;
+    } catch (error) {
+      await tx.rollback();
+      throw error;
+    }
   }
 
   async update(data: IProfile): Promise<IProfile> {
@@ -55,32 +64,37 @@ export class ProfileService implements IProfileService {
 
     const transaction: Transaction = await Profile.sequelize.transaction();
 
-    await model.save({ transaction });
+    try {
+      await model.save({ transaction });
 
-    await Functionality.destroy({
-      where: { profile_id: id },
-      transaction
-    });
+      await Functionality.destroy({
+        where: { profileId: id },
+        transaction
+      });
 
-    await Promise.all(
-      data.functionalities.map(item =>
-        Functionality.create(
-          {
-            ...item,
-            profileId: id
-          },
-          { transaction }
+      await Promise.all(
+        data.functionalities.map(item =>
+          Functionality.create(
+            {
+              ...item,
+              profileId: id
+            },
+            { transaction }
+          )
         )
-      )
-    );
+      );
 
-    await transaction.commit();
+      await transaction.commit();
 
-    await model.reload({
-      include: [Profile.associations.functionalities]
-    });
+      await model.reload({
+        include: [Profile.associations.functionalities]
+      });
 
-    return model.toJSON() as IProfile;
+      return model.toJSON() as IProfile;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   }
 
   private buildQuery(filter: IFilter) {

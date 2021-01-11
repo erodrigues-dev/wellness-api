@@ -3,14 +3,12 @@ import { Transaction } from 'sequelize';
 import Activity from '../../database/models/Activity';
 import CustomerDiscount from '../../database/models/CustomerDiscount';
 import Order from '../../database/models/Order';
-import OrderItem from '../../database/models/OrderItem';
+import OrderActivity from '../../database/models/OrderActivity';
+import OrderPackage from '../../database/models/OrderPackage';
 import Package from '../../database/models/Package';
-import IOrder from '../../models/entities/IOrder';
-import IOrderItem from '../../models/entities/IOrderItem';
-import { IPackageWithIncludes } from '../../models/entities/IPackage';
 import { DiscountTypeEnum } from '../../models/enums/DiscountTypeEnum';
 import { OrderItemTypeEnum } from '../../models/enums/OrderItemTypeEnum';
-import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
+import { PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
 import CreateOrderDTO from './CreateOrderDTO';
 
 export default class CreateOrder {
@@ -24,7 +22,8 @@ export default class CreateOrder {
   private package: Package;
   private customerDiscount: CustomerDiscount;
   private order: Order;
-  private orderItem: OrderItem;
+  private orderActivity: OrderActivity;
+  private orderPackage: OrderPackage;
 
   useTransaction(transaction: Transaction) {
     this.transaction = transaction;
@@ -51,8 +50,12 @@ export default class CreateOrder {
     return this.order;
   }
 
-  getCreatedOrderItem() {
-    return this.orderItem;
+  getCreatedOrderActivity() {
+    return this.orderActivity;
+  }
+
+  getCreatedOrderPackage() {
+    return this.orderPackage;
   }
 
   getSubscriptionPlanId() {
@@ -108,13 +111,18 @@ export default class CreateOrder {
   }
 
   private async createOrder() {
-    const orderData: IOrder = {
+    const orderData = {
       customerId: this.data.customerId,
+      type: this.data.itemType,
       userId: this.data.userId,
-      subtotal: this.price * this.data.quantity,
-      tip: this.data.tip,
+
+      amount: this.price * this.data.quantity,
       discount: this.discount,
-      total: +(this.price * this.data.quantity - this.discount).toFixed(2)
+      tip: this.data.tip,
+      quantity: this.data.quantity,
+
+      paymentType: this.data.paymentType,
+      status: PaymentStatusEnum.Pending
     };
 
     this.order = await Order.create(orderData, {
@@ -123,60 +131,68 @@ export default class CreateOrder {
   }
 
   private async createItems() {
-    this.orderItem =
-      this.data.itemType === OrderItemTypeEnum.Activity
-        ? await this.createActivityOrdemItem()
-        : await this.createPackageOrdemItems();
+    if (this.data.itemType === OrderItemTypeEnum.Activity)
+      await this.createOrderActivity();
+    else await this.createOrderPackage();
   }
 
-  private async createActivityOrdemItem() {
-    const orderItemData: IOrderItem = {
+  private async createOrderActivity() {
+    const orderActivityData = {
       orderId: this.order.id,
-      type: OrderItemTypeEnum.Activity,
-      metadataId: this.data.itemId,
+      activityId: this.data.itemId,
       name: this.activity.name,
       price: this.activity.price,
-      quantity: this.data.quantity,
-      recurrency: RecurrencyPayEnum.oneTime
+      description: this.activity.description,
+      duration: this.activity.duration,
+      employeeId: this.activity.employeeId,
+      categoryId: this.activity.categoryId,
+      maxPeople: this.activity.maxPeople
     };
 
-    return OrderItem.create(orderItemData, { transaction: this.transaction });
+    this.orderActivity = await OrderActivity.create(orderActivityData, {
+      transaction: this.transaction
+    });
   }
 
-  private async createPackageOrdemItems() {
-    const orderItem = await OrderItem.create(
+  private async createOrderPackage() {
+    this.orderPackage = await OrderPackage.create(
       {
         orderId: this.order.id,
-        type: OrderItemTypeEnum.Package,
-        metadataId: this.data.itemId,
+        packageId: this.data.itemId,
         name: this.package.name,
         price: this.package.price,
-        quantity: this.data.quantity,
-        recurrency: this.package.recurrencyPay,
-        valueType: this.package.type,
-        value: this.package.total,
-        expiresIn: this.package.expiration
+        description: this.package.description,
+        categoryId: this.package.categoryId,
+        recurrencyPay: this.package.recurrencyPay,
+        type: this.package.type,
+        total: this.package.total,
+        squareId: this.package.squareId,
+        expiration: this.package.expiration
       },
       { transaction: this.transaction }
     );
 
-    await Promise.all(
-      this.package.activities.map(item =>
-        OrderItem.create(
+    const orderActivities = await Promise.all(
+      this.package.activities.map(activity =>
+        OrderActivity.create(
           {
             orderId: this.order.id,
-            type: OrderItemTypeEnum.Activity,
-            metadataId: item.id,
-            name: item.name,
-            price: item.price,
-            parentId: orderItem.id,
-            value: (item as any).PackageActivity.quantity
-          } as IOrderItem,
+            activityId: activity.id,
+            orderPackageId: this.orderPackage.id,
+            name: activity.name,
+            price: activity.price,
+            description: activity.description,
+            duration: activity.duration,
+            employeeId: activity.employeeId,
+            categoryId: activity.categoryId,
+            maxPeople: activity.maxPeople,
+            packageQuantity: activity.PackageActivity?.quantity || 1
+          },
           { transaction: this.transaction }
         )
       )
     );
 
-    return orderItem;
+    this.orderPackage.orderActivities = orderActivities;
   }
 }

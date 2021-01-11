@@ -47,7 +47,8 @@ export default class ActivitySchedule
         weekdays: DataTypes.STRING,
         endsIn: DataTypes.STRING,
         until: DataTypes.DATEONLY,
-        ocurrences: DataTypes.INTEGER
+        ocurrences: DataTypes.INTEGER,
+        activityId: DataTypes.INTEGER
       },
       { sequelize: connection, tableName: 'activities_schedules' }
     );

@@ -20,6 +20,10 @@ export default class Activity extends Model<IActivity> {
   employee?: Employee;
   category?: Category;
 
+  PackageActivity?: {
+    quantity: number;
+  };
+
   readonly createdAt: Date;
   readonly updatedAt: Date;
 

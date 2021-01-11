@@ -27,6 +27,8 @@ export class ActivityScheduleService implements IActivityScheduleService {
       .filter(item => this.filterWithRRule(start, end, item));
   }
 
+  async listDays(start: Date, end: Date) {}
+
   async create(data: IActivitySchedule): Promise<number> {
     const { id } = await this.db.create(data);
 
