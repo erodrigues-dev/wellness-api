@@ -18,4 +18,9 @@ export class SquareSubscriptionService {
     const { data } = await this.api.get(`/subscriptions/${id}`);
     return data.subscription as SquareSubscription;
   }
+
+  async cancel(id: string): Promise<SquareSubscription> {
+    const { data } = await this.api.post(`/subscriptions/${id}/cancel`);
+    return data.subscription as SquareSubscription;
+  }
 }
