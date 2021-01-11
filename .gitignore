@@ -4,7 +4,7 @@ package-lock.json
 google-cloud-key.json
 dist/
 
-**/*/migrations/*.js
+# **/*/migrations/*.js
 **/*/seeders/*.js
 
 *.log

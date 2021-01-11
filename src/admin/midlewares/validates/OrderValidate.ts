@@ -14,4 +14,22 @@ router.get(
   })
 );
 
+router.get(
+  '/orders/:id',
+  celebrate({
+    [Segments.PARAMS]: Joi.object({
+      id: Joi.number().required()
+    })
+  })
+);
+
+router.put(
+  '/orders/:id/cancel',
+  celebrate({
+    [Segments.PARAMS]: Joi.object({
+      id: Joi.number().required()
+    })
+  })
+);
+
 export default router;

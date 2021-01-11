@@ -14,4 +14,5 @@ export class SquareSubscription {
   card_id: string;
   invoice_ids: string[];
   paid_until_date: string;
+  canceled_date: string;
 }
