@@ -16,6 +16,8 @@ export class OrderDetailViewModel {
   user?: UserDto;
   createdAt: Date;
   recurrency?: RecurrencyPayEnum;
+  canceledDate?: Date;
+  paidUntilDate?: Date;
 
   static fromOrder(order: Order) {
     const viewModel = new OrderDetailViewModel();
@@ -40,6 +42,8 @@ export class OrderDetailViewModel {
     viewModel.customer = order.customer as UserDto;
     viewModel.createdAt = order.createdAt;
     viewModel.user = order.user as UserDto;
+    viewModel.canceledDate = order.canceledDate;
+    viewModel.paidUntilDate = order.paidUntilDate;
 
     viewModel.recurrency = packageObj?.recurrencyPay;
 
