@@ -24,6 +24,7 @@ export default class Order extends Model {
   transactionType: string;
   webhookDate?: Date;
   paidUntilDate?: Date;
+  canceledDate?: Date;
 
   userId?: number;
 
@@ -48,7 +49,8 @@ export default class Order extends Model {
         tip: DataTypes.DECIMAL,
         quantity: DataTypes.INTEGER,
         webhookDate: DataTypes.DATE,
-        paidUntilDate: DataTypes.DATE
+        paidUntilDate: DataTypes.DATE,
+        canceledDate: DataTypes.DATE
       },
       { sequelize: connection, tableName: 'orders' }
     );
