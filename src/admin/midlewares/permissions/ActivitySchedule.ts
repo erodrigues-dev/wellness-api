@@ -1,25 +1,26 @@
 import { Router } from 'express';
 
-import { ACTIONS, checkPermission } from '../../../shared/utils/permission';
+import { Permission } from '../../../shared/models/entities/Permission';
+import { checkPermission } from '../../../shared/utils/permission';
 
 const router = Router();
 
 router.get(
   '/activities/:id/schedules',
-  checkPermission('activities', ACTIONS.LIST)
+  checkPermission('activities', Permission.ActivityEvent)
 );
 router.post(
   '/activities/schedules',
-  checkPermission('activities', ACTIONS.CREATE)
+  checkPermission('activities', Permission.ActivityEvent)
 );
 router.put(
   '/activities/schedules',
-  checkPermission('activities', ACTIONS.UPDATE)
+  checkPermission('activities', Permission.ActivityEvent)
 );
 
 router.delete(
   '/activities/schedules/:id',
-  checkPermission('activities', ACTIONS.UPDATE)
+  checkPermission('activities', Permission.ActivityEvent)
 );
 
 export default router;

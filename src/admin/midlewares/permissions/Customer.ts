@@ -1,10 +1,18 @@
 import { Router } from 'express';
-import { ACTIONS, checkPermission } from '../../../shared/utils/permission';
+
+import { Permission } from '../../../shared/models/entities/Permission';
+import { checkPermission } from '../../../shared/utils/permission';
 
 const router = Router();
 
-router.get('/customers', checkPermission('customers', ACTIONS.LIST));
-router.get('/customers/:id', checkPermission('customers', ACTIONS.GET, true));
-router.put('/customers', checkPermission('customers', ACTIONS.UPDATE));
+router.get('/customers', checkPermission('customers', Permission.CustomerList));
+router.get(
+  '/customers/:id',
+  checkPermission('customers', Permission.CustomerList)
+);
+router.put(
+  '/customers',
+  checkPermission('customers', Permission.CustomerCreateUpdate)
+);
 
 export default router;

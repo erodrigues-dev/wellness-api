@@ -1,12 +1,25 @@
 import { Router } from 'express';
 
-import { ACTIONS, checkPermission } from '../../../shared/utils/permission';
+import { Permission } from '../../../shared/models/entities/Permission';
+import { checkPermission } from '../../../shared/utils/permission';
 
 const router = Router();
 
-router.get('/categories', checkPermission('categories', ACTIONS.LIST));
-router.get('/categories/:id', checkPermission('categories', ACTIONS.LIST));
-router.post('/categories', checkPermission('categories', ACTIONS.CREATE));
-router.put('/categories', checkPermission('categories', ACTIONS.UPDATE));
+router.get(
+  '/categories',
+  checkPermission('categories', Permission.CategoryList)
+);
+router.get(
+  '/categories/:id',
+  checkPermission('categories', Permission.CategoryList)
+);
+router.post(
+  '/categories',
+  checkPermission('categories', Permission.CategoryCreateUpdate)
+);
+router.put(
+  '/categories',
+  checkPermission('categories', Permission.CategoryCreateUpdate)
+);
 
 export default router;

@@ -1,16 +1,14 @@
 import { Association, DataTypes, Model, Sequelize } from 'sequelize';
 
 import IEmployee from '../../models/entities/IEmployee';
-import IProfile from '../../models/entities/IProfile';
 import Employee from './Employee';
-import Functionality from './Functionality';
 
-export default class Profile extends Model<IProfile> implements IProfile {
+export default class Profile extends Model {
   id?: number;
   name: string;
   description: string;
+  permissions: number;
 
-  functionalities?: Functionality[];
   employees?: IEmployee[];
 
   readonly createdAt: Date;
@@ -18,14 +16,14 @@ export default class Profile extends Model<IProfile> implements IProfile {
 
   static associations: {
     employees: Association<Profile, Employee>;
-    functionalities: Association<Profile, Functionality>;
   };
 
   static setup(connection: Sequelize) {
     Profile.init(
       {
         name: DataTypes.STRING,
-        description: DataTypes.INTEGER
+        description: DataTypes.INTEGER,
+        permissions: DataTypes.INTEGER
       },
       {
         sequelize: connection,
@@ -38,11 +36,6 @@ export default class Profile extends Model<IProfile> implements IProfile {
     Profile.hasMany(Employee, {
       foreignKey: 'profileId',
       as: 'employees'
-    });
-
-    Profile.hasMany(Functionality, {
-      foreignKey: 'profileId',
-      as: 'functionalities'
     });
   }
 }

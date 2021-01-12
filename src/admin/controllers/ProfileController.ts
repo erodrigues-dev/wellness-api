@@ -1,24 +1,22 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
-import IFunctionality from '../../shared/models/entities/IFunctionality';
-import IProfileService from '../../shared/services/interfaces/IProfileService';
-import profileServive from '../../shared/services/ProfileService';
-import IProfileController, {
-    IGetRequest, IIndexRequest, IStoreRequest, IUpdateRequest
-} from './interfaces/IProfileController';
+import { ProfileFilterDto } from '../../shared/models/dto/ProfileFilterDto';
+import service from '../../shared/services/ProfileService';
 
-export class ProfileController implements IProfileController {
-  constructor(private service: IProfileService) {}
-
+export class ProfileController {
   async index(
-    req: IIndexRequest,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<Response> {
     try {
       const { name, description, page, limit } = req.query;
-      const count = await this.service.count({ name, description });
-      const list = await this.service.list({ name, description }, page, limit);
+      const filter = new ProfileFilterDto();
+      filter.name = name as string;
+      filter.description = description as string;
+      const count = await service.count(filter);
+      const list = await service.list(filter, Number(page), Number(limit));
       return res.header('X-Total-Count', count.toString()).json(list);
     } catch (error) {
       next(error);
@@ -26,13 +24,13 @@ export class ProfileController implements IProfileController {
   }
 
   async get(
-    req: IGetRequest,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<Response> {
     try {
       const { id } = req.params;
-      const model = await this.service.get(id);
+      const model = await service.get(Number(id));
       return res.json(model);
     } catch (error) {
       next(error);
@@ -40,41 +38,41 @@ export class ProfileController implements IProfileController {
   }
 
   async store(
-    req: IStoreRequest,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<Response> {
     try {
-      const { name, description, functionalities } = req.body;
-      const model = await this.service.create({
+      const { name, description, permissions } = req.body;
+      await service.create({
         name,
         description,
-        functionalities: functionalities as IFunctionality[]
+        permissions
       });
-      return res.json(model);
+      return res.sendStatus(StatusCodes.CREATED);
     } catch (error) {
       next(error);
     }
   }
 
   async update(
-    req: IUpdateRequest,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<Response> {
     try {
-      const { id, name, description, functionalities } = req.body;
-      const model = await this.service.update({
+      const { id, name, description, permissions } = req.body;
+      await service.update({
         id,
         name,
         description,
-        functionalities: functionalities as IFunctionality[]
+        permissions
       });
-      return res.json(model);
+      return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (error) {
       next(error);
     }
   }
 }
 
-export default new ProfileController(profileServive) as IProfileController;
+export default new ProfileController();

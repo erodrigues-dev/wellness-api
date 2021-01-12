@@ -2,29 +2,28 @@ import { Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Employee from '../database/models/Employee';
-import Profile from '../database/models/Profile';
-import ILoginResponse from '../models/responses/ILoginResponse';
+import { EmployeeSelfUpdateDto } from '../models/dto/EmployeeSelfUpdateDto';
+import { LoginViewModel } from '../models/viewmodels/LoginViewModel';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import { compare, hash } from '../utils/hash-password';
-import IUserService, { IUpdateData } from './interfaces/IUserService';
 
-export class UserService implements IUserService {
-  async login(email: string, password: string) {
-    const user = await this.getUserWithProfileBy(email);
+export class UserService {
+  async login(email: string, password: string): Promise<LoginViewModel> {
+    const user = await this.getUserWithProfileByEmail(email);
     if (!user) return null;
 
     const match = await compare(password, user.password);
-    if (!match) return null;
 
-    return this.transformInLoginResponse(user);
+    if (!match) throw new CustomError('Login or Password is not valid.', 401);
+
+    return LoginViewModel.parse(user.toJSON());
   }
 
-  async update(data: IUpdateData) {
-    const model: Employee = await Employee.findByPk(data.id, {
+  async update(data: EmployeeSelfUpdateDto) {
+    const model = await Employee.findByPk(data.id, {
       include: [
         {
-          association: Employee.associations.profile,
-          include: [Profile.associations.functionalities]
+          association: Employee.associations.profile
         }
       ]
     });
@@ -49,16 +48,15 @@ export class UserService implements IUserService {
 
     await model.save();
 
-    return this.transformInLoginResponse(model);
+    return LoginViewModel.parse(model.toJSON());
   }
 
-  private getUserWithProfileBy(email: string): Promise<Employee> {
+  private getUserWithProfileByEmail(email: string): Promise<Employee> {
     return Employee.findOne({
       where: { email },
       include: [
         {
-          association: Employee.associations.profile,
-          include: [Profile.associations.functionalities]
+          association: Employee.associations.profile
         }
       ]
     });
@@ -73,33 +71,6 @@ export class UserService implements IUserService {
     });
 
     return matchs > 0;
-  }
-
-  transformInLoginResponse(model: Employee) {
-    const payload = <ILoginResponse>{
-      id: model.id,
-      name: model.name,
-      email: model.email,
-      imageUrl: model.imageUrl,
-      specialty: model.specialty,
-      profile: {}
-    };
-
-    if (model.profile) {
-      const { id, name, functionalities: list } = model.profile;
-      const functionalities = list.map(item => ({
-        name: item.name,
-        actions: item.actions
-      }));
-
-      payload.profile = {
-        id,
-        name,
-        functionalities
-      };
-    }
-
-    return payload;
   }
 }
 
