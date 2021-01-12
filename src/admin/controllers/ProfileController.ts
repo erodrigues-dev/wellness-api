@@ -13,8 +13,8 @@ export class ProfileController {
     try {
       const { name, description, page, limit } = req.query;
       const filter = new ProfileFilterDto();
-      filter.name = String(name);
-      filter.description = String(description);
+      filter.name = name as string;
+      filter.description = description as string;
       const count = await service.count(filter);
       const list = await service.list(filter, Number(page), Number(limit));
       return res.header('X-Total-Count', count.toString()).json(list);
