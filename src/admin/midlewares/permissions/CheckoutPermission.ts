@@ -1,20 +1,21 @@
 import { Router } from 'express';
 
-import { ACTIONS, checkPermission } from '../../../shared/utils/permission';
+import { Permission } from '../../../shared/models/entities/Permission';
+import { checkPermission } from '../../../shared/utils/permission';
 
 const router = Router();
 
 router.post(
   '/checkout/customers/:customerId/cards',
-  checkPermission('checkout', ACTIONS.LIST)
+  checkPermission('checkout', Permission.OrderList)
 );
 router.post(
   '/checkout/pay-with-money',
-  checkPermission('checkout', ACTIONS.CREATE)
+  checkPermission('checkout', Permission.OrderCheckout)
 );
 router.post(
   '/checkout/pay-with-card',
-  checkPermission('checkout', ACTIONS.CREATE)
+  checkPermission('checkout', Permission.OrderCheckout)
 );
 
 export default router;

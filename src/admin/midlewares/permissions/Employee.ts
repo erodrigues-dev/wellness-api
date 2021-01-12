@@ -1,12 +1,22 @@
 import { Router } from 'express';
 
-import { ACTIONS, checkPermission } from '../../../shared/utils/permission';
+import { Permission } from '../../../shared/models/entities/Permission';
+import { checkPermission } from '../../../shared/utils/permission';
 
 const router = Router();
 
-router.get('/employees', checkPermission('employees', ACTIONS.LIST));
-router.get('/employees/:id', checkPermission('employees', ACTIONS.GET, true));
-router.post('/employees', checkPermission('employees', ACTIONS.CREATE));
-router.put('/employees', checkPermission('employees', ACTIONS.UPDATE));
+router.get('/employees', checkPermission('employees', Permission.EmployeeList));
+router.get(
+  '/employees/:id',
+  checkPermission('employees', Permission.EmployeeList)
+);
+router.post(
+  '/employees',
+  checkPermission('employees', Permission.EmployeeCreateUpdate)
+);
+router.put(
+  '/employees',
+  checkPermission('employees', Permission.EmployeeCreateUpdate)
+);
 
 export default router;

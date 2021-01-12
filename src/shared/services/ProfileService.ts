@@ -1,17 +1,17 @@
 import { Op, Transaction } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
-import Functionality from '../database/models/Functionality';
 import Profile from '../database/models/Profile';
-import IProfile from '../models/entities/IProfile';
-import IProfileService, { IFilter } from './interfaces/IProfileService';
+import { ProfileDto } from '../models/dto/ProfileDto';
+import { ProfileFilterDto } from '../models/dto/ProfileFilterDto';
+import { ProfileListViewModel, ProfileViewModel } from '../models/viewmodels/ProfileViewModel';
 
-export class ProfileService implements IProfileService {
+export class ProfileService {
   async list(
-    filter: IFilter,
+    filter: ProfileFilterDto,
     page: number = 1,
     limit: number = 10
-  ): Promise<IProfile[]> {
+  ): Promise<ProfileListViewModel[]> {
     const where = this.buildQuery(filter);
 
     const rows: Profile[] = await Profile.findAll({
@@ -21,83 +21,36 @@ export class ProfileService implements IProfileService {
       order: ['name']
     });
 
-    return rows.map(row => row.toJSON() as IProfile);
+    return rows.map(row => ProfileListViewModel.parse(row.toJSON()));
   }
 
-  count(filter: IFilter): Promise<number> {
+  count(filter: ProfileFilterDto): Promise<number> {
     const where = this.buildQuery(filter);
     return Profile.count({ where });
   }
 
-  async get(id: number): Promise<IProfile> {
-    const model: Profile = await Profile.findByPk(id, {
-      include: [Profile.associations.functionalities]
-    });
+  async get(id: number): Promise<ProfileViewModel> {
+    const model = await Profile.findByPk(id);
     if (!model) throw new CustomError('Profile not found', 404);
-    return model.toJSON() as IProfile;
+
+    return ProfileViewModel.parse(model.toJSON());
   }
 
-  async create(data: IProfile): Promise<IProfile> {
-    const tx = await Profile.sequelize.transaction();
-    try {
-      const model: Profile = await Profile.create(data, {
-        include: [Profile.associations.functionalities],
-        transaction: tx
-      });
-
-      await tx.commit();
-
-      return model.toJSON() as IProfile;
-    } catch (error) {
-      await tx.rollback();
-      throw error;
-    }
+  async create(profile: ProfileDto): Promise<void> {
+    await Profile.create(profile);
   }
 
-  async update(data: IProfile): Promise<IProfile> {
-    const { id } = data;
+  async update(profile: ProfileDto): Promise<void> {
+    const { id } = profile;
     const model: Profile = await Profile.findByPk(id);
     if (!model) throw new CustomError('Profile not found', 404);
-
-    model.name = data.name;
-    model.description = data.description;
-
-    const transaction: Transaction = await Profile.sequelize.transaction();
-
-    try {
-      await model.save({ transaction });
-
-      await Functionality.destroy({
-        where: { profileId: id },
-        transaction
-      });
-
-      await Promise.all(
-        data.functionalities.map(item =>
-          Functionality.create(
-            {
-              ...item,
-              profileId: id
-            },
-            { transaction }
-          )
-        )
-      );
-
-      await transaction.commit();
-
-      await model.reload({
-        include: [Profile.associations.functionalities]
-      });
-
-      return model.toJSON() as IProfile;
-    } catch (error) {
-      await transaction.rollback();
-      throw error;
-    }
+    model.name = profile.name;
+    model.description = profile.description;
+    model.permissions = profile.permissions;
+    await model.save();
   }
 
-  private buildQuery(filter: IFilter) {
+  private buildQuery(filter: ProfileFilterDto) {
     const where = {};
 
     if (filter.name) where['name'] = { [Op.iLike]: `%${filter.name}%` };

@@ -1,56 +1,58 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-import IUserService from '../../shared/services/interfaces/IUserService';
-import userService from '../../shared/services/UserService';
-import ISessionController, { ILoginRequest, IUpdateRequest } from './interfaces/ISessionController';
+import { PermissionHelper } from '../../shared/models/entities/Permission';
+import service from '../../shared/services/UserService';
 
-export class SessionController implements ISessionController {
-  constructor(private service: IUserService) {}
-
-  async login(req: ILoginRequest, res: Response, next: NextFunction) {
+export class SessionController {
+  async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
-      const payload = await this.service.login(email, password);
-
-      if (!payload) return res.status(401).json();
-
-      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      const payload = await service.login(email, password);
+      const permissions = PermissionHelper.listAll(payload.permissions);
+      const token = jwt.sign({ ...payload }, process.env.JWT_SECRET, {
         expiresIn: '12h'
       });
-
-      return res.json({ token });
+      return res.json({ token, permissions });
     } catch (error) {
       next(error);
     }
   }
 
-  async update(req: IUpdateRequest, res: Response, next: NextFunction) {
+  async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.user;
       const { name, email, password, specialty } = req.body;
-      const payload = await this.service.update({
+      const file = req.file as any;
+      const payload = await service.update({
         id,
         name,
         email,
         password,
         specialty,
-        imageUrl: req.file?.url
+        imageUrl: file?.url as string
       });
 
-      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      const token = jwt.sign({ ...payload }, process.env.JWT_SECRET, {
         expiresIn: '12h'
       });
+      const permissions = PermissionHelper.listAll(payload.permissions);
 
-      return res.json({ token });
+      return res.json({ token, permissions });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async permissions(req: Request, res: Response, next: NextFunction) {
+    try {
+      const permissions = PermissionHelper.listAll(req.user.permissions);
+
+      return res.json(permissions);
     } catch (error) {
       next(error);
     }
   }
 }
 
-const sessionController: ISessionController = new SessionController(
-  userService
-);
-
-export default sessionController;
+export default new SessionController();

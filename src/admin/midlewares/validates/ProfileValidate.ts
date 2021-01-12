@@ -1,5 +1,5 @@
-import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
+import { Router } from 'express';
 
 const router = Router();
 
@@ -30,12 +30,7 @@ router.post(
     [Segments.BODY]: Joi.object({
       name: Joi.string().required(),
       description: Joi.string().required(),
-      functionalities: Joi.array()
-        .items({
-          name: Joi.string().required(),
-          actions: Joi.number().required()
-        })
-        .required()
+      permissions: Joi.number().positive().required()
     })
   })
 );
@@ -47,21 +42,7 @@ router.put(
       id: Joi.number().required(),
       name: Joi.string().required(),
       description: Joi.string().required(),
-      functionalities: Joi.array()
-        .items({
-          name: Joi.string().required(),
-          actions: Joi.number().required()
-        })
-        .required()
-    })
-  })
-);
-
-router.delete(
-  '/profiles/:id',
-  celebrate({
-    [Segments.PARAMS]: Joi.object({
-      id: Joi.number().required()
+      permissions: Joi.number().positive().required()
     })
   })
 );

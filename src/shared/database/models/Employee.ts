@@ -1,9 +1,8 @@
 import { Association, DataTypes, Model, Sequelize } from 'sequelize';
 
-import IEmployee from '../../models/entities/IEmployee';
 import Profile from './Profile';
 
-export default class Employee extends Model<IEmployee> implements IEmployee {
+export default class Employee extends Model {
   id?: number;
   name: string;
   email: string;
