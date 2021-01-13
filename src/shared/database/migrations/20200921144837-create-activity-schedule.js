@@ -2,12 +2,12 @@ export function up(queryInterface, Sequelize) {
   return queryInterface.createTable('activities_schedules', {
     id: {
       primaryKey: true,
-      type: DataTypes.INTEGER,
+      type: Sequelize.INTEGER,
       autoIncrement: true,
       allowNull: false
     },
     activity_id: {
-      type: DataTypes.INTEGER,
+      type: Sequelize.INTEGER,
       allowNull: false,
       references: { model: 'activities' },
       onUpdate: 'CASCADE',
