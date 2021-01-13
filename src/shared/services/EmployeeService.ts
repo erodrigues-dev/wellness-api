@@ -8,12 +8,12 @@ import { hash } from '../utils/hash-password';
 import IEmployeeService, { IFilter } from './interfaces/IEmployeeService';
 
 export class EmployeeService implements IEmployeeService {
-  list(filter: IFilter, page = 1, limit = 10): Promise<IEmployee[]> {
+  async list(filter: IFilter, page = 1, limit = 10): Promise<IEmployee[]> {
     const where = this.buildQuery(filter);
     const whereProfile = filter.profile
       ? { name: { [Op.iLike]: `%${filter.profile}%` } }
       : {};
-    return Employee.findAll({
+    const list = await Employee.findAll({
       where,
       limit: limit,
       offset: (page - 1) * limit,
@@ -27,6 +27,8 @@ export class EmployeeService implements IEmployeeService {
       ],
       order: ['name']
     });
+
+    return list.map(item => item.toJSON() as IEmployee);
   }
 
   count(filter: IFilter): Promise<number> {
