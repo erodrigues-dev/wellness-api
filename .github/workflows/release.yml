@@ -1,0 +1,21 @@
+name: Release CI
+on:
+  push:
+    branches: [release]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect via ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /www/wellness-api-release
+            git pull
+            docker-compose up --build -d
+            docker-compose ps
+            docker-compose logs
