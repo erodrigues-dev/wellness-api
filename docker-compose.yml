@@ -1,15 +1,6 @@
 version: '3.8'
 
 services:
-  db:
-    container_name: wellness_db
-    image: postgres
-    environment:
-      POSTGRES_PASSWORD: docker
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
   api:
     container_name: wellness_api
     build: .
@@ -18,8 +9,4 @@ services:
     volumes:
       - ./.env:/usr/app/.env
       - ./google-cloud-key.json:/usr/app/google-cloud-key.json
-    depends_on:
-      - db
     command: sh -c "npm run migration:up && npm start"
-volumes:
-  pg_data:
