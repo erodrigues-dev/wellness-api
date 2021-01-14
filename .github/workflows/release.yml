@@ -4,10 +4,10 @@ on:
     branches: [release]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Connect via ssh
+      - name: Executing commands in server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -15,7 +15,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /www/wellness-api-release
-            git pull
+            git pull --rebase
             docker-compose up --build -d
             docker-compose ps
             docker-compose logs
