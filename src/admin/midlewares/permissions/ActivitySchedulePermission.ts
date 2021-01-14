@@ -7,20 +7,14 @@ const router = Router();
 
 router.get(
   '/activities/:id/schedules',
-  checkPermission('activities', Permission.ActivityEvent)
+  checkPermission(Permission.ActivityEvent)
 );
-router.post(
-  '/activities/schedules',
-  checkPermission('activities', Permission.ActivityEvent)
-);
-router.put(
-  '/activities/schedules',
-  checkPermission('activities', Permission.ActivityEvent)
-);
+router.post('/activities/schedules', checkPermission(Permission.ActivityEvent));
+router.put('/activities/schedules', checkPermission(Permission.ActivityEvent));
 
 router.delete(
   '/activities/schedules/:id',
-  checkPermission('activities', Permission.ActivityEvent)
+  checkPermission(Permission.ActivityEvent)
 );
 
 export default router;

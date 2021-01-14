@@ -5,14 +5,8 @@ import { checkPermission } from '../../../shared/utils/permission';
 
 const router = Router();
 
-router.get('/schedules', checkPermission('schedules', Permission.ScheduleList));
-router.post(
-  '/schedules',
-  checkPermission('schedules', Permission.ScheduleBook)
-);
-router.put(
-  '/schedules/:id/cancel',
-  checkPermission('schedules', Permission.ScheduleCancel)
-);
+router.get('/schedules', checkPermission(Permission.ScheduleList));
+router.post('/schedules', checkPermission(Permission.ScheduleBook));
+router.put('/schedules/:id/cancel', checkPermission(Permission.ScheduleCancel));
 
 export default router;
