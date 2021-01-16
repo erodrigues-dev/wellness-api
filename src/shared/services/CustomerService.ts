@@ -5,22 +5,30 @@ import Customer from '../database/models/Customer';
 import ICustomer from '../models/entities/ICustomer';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import { hash } from '../utils/hash-password';
-import ICustomerService, { ICustomerFilter } from './interfaces/ICustomerService';
+import ICustomerService, {
+  ICustomerFilter
+} from './interfaces/ICustomerService';
 
 export class CustomerService implements ICustomerService {
   async list(
     filter: ICustomerFilter,
     page = 1,
-    limit = 10
+    limit = null
   ): Promise<ICustomer[]> {
     const where = this.buildQuery(filter);
-    return await Customer.findAll({
+
+    const params: any = {
       where,
-      limit: limit,
-      offset: (page - 1) * limit,
       attributes: { exclude: ['password'] },
       order: ['name']
-    });
+    };
+
+    if (limit !== null) {
+      params.limit = limit;
+      params.offset = (page - 1) * limit;
+    }
+
+    return await Customer.findAll(params);
   }
 
   count(filter: ICustomerFilter): Promise<number> {
