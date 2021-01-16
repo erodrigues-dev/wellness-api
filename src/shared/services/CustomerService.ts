@@ -12,7 +12,7 @@ import ICustomerService, {
 export class CustomerService implements ICustomerService {
   async list(
     filter: ICustomerFilter,
-    page = 1,
+    page = null,
     limit = null
   ): Promise<ICustomer[]> {
     const where = this.buildQuery(filter);
@@ -23,14 +23,10 @@ export class CustomerService implements ICustomerService {
       order: ['name']
     };
 
-    if (limit !== null) {
+    if (!!page && !!limit) {
       params.limit = limit;
       params.offset = (page - 1) * limit;
     }
-
-    console.log('====================================');
-    console.log(limit);
-    console.log('====================================');
 
     return await Customer.findAll(params);
   }

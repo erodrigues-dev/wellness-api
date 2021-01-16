@@ -12,7 +12,7 @@ import {
 export class ProfileService {
   async list(
     filter: ProfileFilterDto,
-    page = 1,
+    page = null,
     limit = null
   ): Promise<ProfileListViewModel[]> {
     const where = this.buildQuery(filter);
@@ -22,7 +22,7 @@ export class ProfileService {
       order: ['name']
     };
 
-    if (limit !== null) {
+    if (!!page && !!limit) {
       params.limit = limit;
       params.offset = (page - 1) * limit;
     }
