@@ -7,13 +7,14 @@ import { OrderListViewModel } from '../models/viewmodels/OrderListViewModel';
 
 export class OrderService {
   async list(
-    page = 1,
-    limit = 10,
+    page = null,
+    limit = null,
     customerId: number = null
   ): Promise<PaginateList<OrderListViewModel>> {
     const filter = {};
     if (customerId) filter['customerId'] = customerId;
-    const { count, rows } = await Order.findAndCountAll({
+
+    const params: any = {
       include: [
         {
           association: 'orderActivities',
@@ -32,11 +33,16 @@ export class OrderService {
           attributes: ['id', 'name']
         }
       ],
-      limit,
-      offset: (page - 1) * limit,
       where: filter,
       order: [['createdAt', 'DESC']]
-    });
+    };
+
+    if (!!page && !!limit) {
+      params.limit = limit;
+      params.offset = (page - 1) * limit;
+    }
+
+    const { count, rows } = await Order.findAndCountAll(params);
 
     return {
       rows: rows.map(order => OrderListViewModel.fromOrder(order)),
