@@ -1,5 +1,5 @@
 import { format, parseISO } from 'date-fns';
-import { Op } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 
 import Schedule from '../database/models/Schedule';
 import { ScheduleViewModel } from '../models/viewmodels/ScheduleViewModel';
@@ -10,11 +10,14 @@ export class FilterDto {
   dateStart: string;
   dateEnd: string;
   status: string;
-  page: number = 1;
-  limit: number = 10;
+  page: number = null;
+  limit: number = null;
 
   static parse(obj: any) {
     const dto = new FilterDto();
+    console.log('====================================');
+    console.log(obj);
+    console.log('====================================');
 
     dto.customerId = obj.customerId || null;
     dto.activityId = obj.activityId || null;
@@ -22,8 +25,10 @@ export class FilterDto {
     dto.dateEnd = obj.dateEnd || null;
     dto.status = obj.status || null;
 
-    dto.page = obj.page || 1;
-    dto.limit = obj.limit || 10;
+    if (!!obj.page && !!obj.limit) {
+      dto.page = obj.page || null;
+      dto.limit = obj.limit || null;
+    }
 
     return dto;
   }
@@ -80,10 +85,8 @@ export class ListDto {
 
 export class ScheduleService {
   async list(filter: FilterDto) {
-    const { rows, count } = await Schedule.findAndCountAll({
+    const findOptions: FindOptions = {
       where: filter.buildWhere(),
-      limit: filter.limit,
-      offset: filter.offset,
       include: [
         {
           association: 'customer',
@@ -94,7 +97,14 @@ export class ScheduleService {
         }
       ],
       order: [['date', 'desc']]
-    });
+    };
+
+    if (!!filter.page && !!filter.limit) {
+      findOptions.limit = filter.limit;
+      findOptions.offset = filter.offset;
+    }
+
+    const { rows, count } = await Schedule.findAndCountAll(findOptions);
 
     const dto = new ListDto();
     dto.total = count;
