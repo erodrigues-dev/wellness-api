@@ -10,8 +10,8 @@ import IPackageService, { IFilter } from './interfaces/IPackageService';
 export class PackageService implements IPackageService {
   async list(
     filter: IFilter,
-    page: number = 1,
-    limit: number = 10
+    page: number = null,
+    limit: number = null
   ): Promise<IPackage[]> {
     const [where, whereActivity] = this.buildQuery(filter);
 
