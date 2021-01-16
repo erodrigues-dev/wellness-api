@@ -15,10 +15,8 @@ export class PackageService implements IPackageService {
   ): Promise<IPackage[]> {
     const [where, whereActivity] = this.buildQuery(filter);
 
-    const rows: Package[] = await Package.findAll({
+    const params: any = {
       where,
-      limit: limit,
-      offset: (page - 1) * limit,
       include: [
         {
           association: Package.associations.activities,
@@ -30,7 +28,14 @@ export class PackageService implements IPackageService {
         }
       ],
       order: ['name']
-    });
+    };
+
+    if (!!page && !!limit) {
+      params.limit = limit;
+      params.offset = (page - 1) * limit;
+    }
+
+    const rows: Package[] = await Package.findAll(params);
 
     return rows.map(this.serialize);
   }
