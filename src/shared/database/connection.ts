@@ -6,6 +6,7 @@ import ActivitySchedule from './models/ActivitySchedule';
 import Category from './models/Category';
 import Customer from './models/Customer';
 import CustomerDiscount from './models/CustomerDiscount';
+import EmailConfirmationCode from './models/EmailConfirmationCode';
 import Employee from './models/Employee';
 import Order from './models/Order';
 import OrderActivity from './models/OrderActivity';
@@ -29,6 +30,7 @@ export function databaseConfig() {
   Schedule.setup(connection);
   OrderPackage.setup(connection);
   OrderActivity.setup(connection);
+  EmailConfirmationCode.setup(connection);
 
   Activity.setupAssociations();
   ActivitySchedule.setupAssociations();
@@ -42,6 +44,7 @@ export function databaseConfig() {
   OrderPackage.setupAssociations();
   OrderActivity.setupAssociations();
   Schedule.setupAssociations();
+  EmailConfirmationCode.setupAssociations();
 }
 
 export default connection;
