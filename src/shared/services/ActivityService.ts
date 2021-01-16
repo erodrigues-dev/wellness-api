@@ -4,19 +4,20 @@ import CustomError from '../custom-error/CustomError';
 import Activity from '../database/models/Activity';
 import IActivity from '../models/entities/IActivity';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
-import IActivityService, { IActivityFilter } from './interfaces/IActivityService';
+import IActivityService, {
+  IActivityFilter
+} from './interfaces/IActivityService';
 
 export class ActivityService implements IActivityService {
   async list(
     filter: IActivityFilter,
-    page = 1,
-    limit = 10
+    page = null,
+    limit = null
   ): Promise<IActivity[]> {
     const where = this.buildQuery(filter);
-    return await Activity.findAll({
+
+    const params: any = {
       where,
-      limit: limit,
-      offset: (page - 1) * limit,
       order: ['name'],
       include: [
         {
@@ -28,7 +29,14 @@ export class ActivityService implements IActivityService {
           attributes: ['id', 'name']
         }
       ]
-    });
+    };
+
+    if (!!page && !!limit) {
+      params.limit = limit;
+      params.offset = (page - 1) * limit;
+    }
+
+    return await Activity.findAll(params);
   }
 
   count(filter: IActivityFilter): Promise<number> {
