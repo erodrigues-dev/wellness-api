@@ -1,4 +1,4 @@
-import { Op, Transaction } from 'sequelize';
+import { FindOptions, Op, Transaction } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Package from '../database/models/Package';
@@ -15,7 +15,7 @@ export class PackageService implements IPackageService {
   ): Promise<IPackage[]> {
     const [where, whereActivity] = this.buildQuery(filter);
 
-    const params: any = {
+    const findOptions: FindOptions = {
       where,
       include: [
         {
@@ -31,11 +31,11 @@ export class PackageService implements IPackageService {
     };
 
     if (!!page && !!limit) {
-      params.limit = limit;
-      params.offset = (page - 1) * limit;
+      findOptions.limit = limit;
+      findOptions.offset = (page - 1) * limit;
     }
 
-    const rows: Package[] = await Package.findAll(params);
+    const rows: Package[] = await Package.findAll(findOptions);
 
     return rows.map(this.serialize);
   }

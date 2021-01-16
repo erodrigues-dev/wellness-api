@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Employee from '../database/models/Employee';
@@ -8,13 +8,17 @@ import { hash } from '../utils/hash-password';
 import IEmployeeService, { IFilter } from './interfaces/IEmployeeService';
 
 export class EmployeeService implements IEmployeeService {
-  async list(filter: IFilter, page = null, limit = null): Promise<IEmployee[]> {
+  async list(
+    filter: IFilter,
+    page: number = null,
+    limit: number = null
+  ): Promise<IEmployee[]> {
     const where = this.buildQuery(filter);
     const whereProfile = filter.profile
       ? { name: { [Op.iLike]: `%${filter.profile}%` } }
       : {};
 
-    const params: any = {
+    const findOptions: FindOptions = {
       where,
       attributes: { exclude: ['password', 'profileId'] },
       include: [
@@ -28,11 +32,11 @@ export class EmployeeService implements IEmployeeService {
     };
 
     if (!!page && !!limit) {
-      params.limit = limit;
-      params.offset = (page - 1) * limit;
+      findOptions.limit = limit;
+      findOptions.offset = (page - 1) * limit;
     }
 
-    const list = await Employee.findAll(params);
+    const list = await Employee.findAll(findOptions);
 
     return list.map(item => item.toJSON() as IEmployee);
   }

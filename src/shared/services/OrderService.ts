@@ -1,3 +1,4 @@
+import { FindOptions } from 'sequelize/types';
 import CustomError from '../custom-error/CustomError';
 import Customer from '../database/models/Customer';
 import Order from '../database/models/Order';
@@ -7,14 +8,14 @@ import { OrderListViewModel } from '../models/viewmodels/OrderListViewModel';
 
 export class OrderService {
   async list(
-    page = null,
-    limit = null,
+    page: number = null,
+    limit: number = null,
     customerId: number = null
   ): Promise<PaginateList<OrderListViewModel>> {
     const filter = {};
     if (customerId) filter['customerId'] = customerId;
 
-    const params: any = {
+    const findOptions: FindOptions = {
       include: [
         {
           association: 'orderActivities',
@@ -38,11 +39,11 @@ export class OrderService {
     };
 
     if (!!page && !!limit) {
-      params.limit = limit;
-      params.offset = (page - 1) * limit;
+      findOptions.limit = limit;
+      findOptions.offset = (page - 1) * limit;
     }
 
-    const { count, rows } = await Order.findAndCountAll(params);
+    const { count, rows } = await Order.findAndCountAll(findOptions);
 
     return {
       rows: rows.map(order => OrderListViewModel.fromOrder(order)),

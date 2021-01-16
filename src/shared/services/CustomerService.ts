@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Customer from '../database/models/Customer';
@@ -12,23 +12,23 @@ import ICustomerService, {
 export class CustomerService implements ICustomerService {
   async list(
     filter: ICustomerFilter,
-    page = null,
-    limit = null
+    page: number = null,
+    limit: number = null
   ): Promise<ICustomer[]> {
     const where = this.buildQuery(filter);
 
-    const params: any = {
+    const findOptions: FindOptions = {
       where,
       attributes: { exclude: ['password'] },
       order: ['name']
     };
 
     if (!!page && !!limit) {
-      params.limit = limit;
-      params.offset = (page - 1) * limit;
+      findOptions.limit = limit;
+      findOptions.offset = (page - 1) * limit;
     }
 
-    return await Customer.findAll(params);
+    return await Customer.findAll(findOptions);
   }
 
   count(filter: ICustomerFilter): Promise<number> {

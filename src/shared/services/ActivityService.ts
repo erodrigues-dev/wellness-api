@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Activity from '../database/models/Activity';
@@ -11,12 +11,12 @@ import IActivityService, {
 export class ActivityService implements IActivityService {
   async list(
     filter: IActivityFilter,
-    page = null,
-    limit = null
+    page: number = null,
+    limit: number = null
   ): Promise<IActivity[]> {
     const where = this.buildQuery(filter);
 
-    const params: any = {
+    const findOptions: FindOptions = {
       where,
       order: ['name'],
       include: [
@@ -32,11 +32,11 @@ export class ActivityService implements IActivityService {
     };
 
     if (!!page && !!limit) {
-      params.limit = limit;
-      params.offset = (page - 1) * limit;
+      findOptions.limit = limit;
+      findOptions.offset = (page - 1) * limit;
     }
 
-    return await Activity.findAll(params);
+    return await Activity.findAll(findOptions);
   }
 
   count(filter: IActivityFilter): Promise<number> {
