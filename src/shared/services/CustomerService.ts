@@ -1,20 +1,13 @@
 import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
-import Customer from '../database/models/Customer';
-import ICustomer from '../models/entities/ICustomer';
+import CustomerDb from '../database/models/Customer';
+import { Customer } from '../models/entities/Customer';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import { hash } from '../utils/hash-password';
-import ICustomerService, {
-  ICustomerFilter
-} from './interfaces/ICustomerService';
 
-export class CustomerService implements ICustomerService {
-  async list(
-    filter: ICustomerFilter,
-    page: number = null,
-    limit: number = null
-  ): Promise<ICustomer[]> {
+export class CustomerService {
+  async list(filter: any, page = 1, limit = 10): Promise<Customer[]> {
     const where = this.buildQuery(filter);
 
     const findOptions: FindOptions = {
@@ -28,16 +21,16 @@ export class CustomerService implements ICustomerService {
       findOptions.offset = (page - 1) * limit;
     }
 
-    return await Customer.findAll(findOptions);
+    return await CustomerDb.findAll(findOptions);
   }
 
-  count(filter: ICustomerFilter): Promise<number> {
+  count(filter: any): Promise<number> {
     const where = this.buildQuery(filter);
-    return Customer.count({ where });
+    return CustomerDb.count({ where });
   }
 
   async get(id: number): Promise<Customer> {
-    const query: Customer = await Customer.findByPk(id, {
+    const query = await CustomerDb.findByPk(id, {
       attributes: {
         exclude: ['password']
       }
@@ -48,17 +41,33 @@ export class CustomerService implements ICustomerService {
     return query;
   }
 
-  async create(data: ICustomer): Promise<Customer> {
+  async create(data: Customer): Promise<Customer> {
     data.password = await hash(data.password);
-    return Customer.create(data);
+
+    const emailExist = await this.checkEmail(data.email);
+    if (emailExist) throw new CustomError('Email is in use', 400);
+
+    const customerDb = await CustomerDb.create(data);
+    const customer = customerDb.toJSON() as Customer;
+    customer.password = null;
+    return customer;
   }
 
-  async update(data: ICustomer): Promise<Customer> {
-    const customer: Customer = await Customer.findByPk(data.id);
+  async updateSquareId(id: number, squareId: string): Promise<void> {
+    await CustomerDb.update(
+      { squareId },
+      {
+        where: { id }
+      }
+    );
+  }
+
+  async update(data: Customer): Promise<Customer> {
+    const customer = await CustomerDb.findByPk(data.id);
     if (!customer) throw new CustomError('customer not found', 404);
 
     if (customer.email !== data.email) {
-      const emailExist = await this.checkEmail(data.id, data.email);
+      const emailExist = await this.checkEmail(data.email, data.id);
       if (emailExist) throw new CustomError('Email in use', 400);
     }
 
@@ -80,7 +89,7 @@ export class CustomerService implements ICustomerService {
     return customer;
   }
 
-  private buildQuery(filter: ICustomerFilter) {
+  private buildQuery(filter: any) {
     const where = {
       name: { [Op.iLike]: `%${filter.name}%` },
       email: { [Op.iLike]: `%${filter.email}%` }
@@ -97,12 +106,13 @@ export class CustomerService implements ICustomerService {
     return where;
   }
 
-  private async checkEmail(id: number, email: string): Promise<boolean> {
-    const matchs = await Customer.count({
-      where: {
-        id: { [Op.ne]: id },
-        email: email
-      }
+  async checkEmail(email: string, id: number = null): Promise<boolean> {
+    const andsParameters: any[] = [{ email }];
+
+    if (id) andsParameters.push({ id: { [Op.ne]: id } });
+
+    const matchs = await CustomerDb.count({
+      where: { [Op.and]: andsParameters }
     });
 
     return matchs > 0;

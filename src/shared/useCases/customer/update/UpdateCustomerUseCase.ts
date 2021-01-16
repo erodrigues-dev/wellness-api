@@ -1,16 +1,15 @@
-import Customer from '../../database/models/Customer';
-import ICustomer from '../../models/entities/ICustomer';
-import customerService from '../../services/CustomerService';
-import { SquareCustomer } from '../../square/models/SquareCustomer';
-import { squareCustomerService } from '../../square/services/index';
-import { CustomerDTO } from './CustomerDTO';
+import { Customer } from '../../../models/entities/Customer';
+import customerService from '../../../services/CustomerService';
+import { SquareCustomer } from '../../../square/models/SquareCustomer';
+import { squareCustomerService } from '../../../square/services/index';
+import { UpdateCustomerModel } from './UpdateCustomerModel';
 
 export default class UpdateCustomer {
   private customer: Customer;
 
-  constructor(private data: CustomerDTO) {}
+  constructor(private data: UpdateCustomerModel) {}
 
-  async update(): Promise<ICustomer> {
+  async update(): Promise<Customer> {
     await this.updateCustomer();
     await this.updateCustomerInSquare();
     await this.sendEmailConfirmation();
@@ -19,7 +18,9 @@ export default class UpdateCustomer {
   }
 
   private async updateCustomer(): Promise<void> {
-    this.customer = await customerService.update(this.data as any);
+    this.customer = await customerService.update(
+      Object.assign(new Customer(), this.data)
+    );
   }
 
   private async updateCustomerInSquare(): Promise<void> {
@@ -36,9 +37,14 @@ export default class UpdateCustomer {
     else {
       const { id } = await squareCustomerService.create(squareCustomerData);
       this.customer.squareId = id;
-      await this.customer.save();
+      await customerService.updateSquareId(
+        this.customer.id,
+        this.customer.squareId
+      );
     }
   }
 
-  private async sendEmailConfirmation(): Promise<void> {}
+  private async sendEmailConfirmation(): Promise<void> {
+    //TODO enviar somente se o email for alterado
+  }
 }
