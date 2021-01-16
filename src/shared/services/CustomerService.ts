@@ -28,6 +28,10 @@ export class CustomerService implements ICustomerService {
       params.offset = (page - 1) * limit;
     }
 
+    console.log('====================================');
+    console.log(limit);
+    console.log('====================================');
+
     return await Customer.findAll(params);
   }
 

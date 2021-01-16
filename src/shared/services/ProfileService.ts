@@ -4,22 +4,30 @@ import CustomError from '../custom-error/CustomError';
 import Profile from '../database/models/Profile';
 import { ProfileDto } from '../models/dto/ProfileDto';
 import { ProfileFilterDto } from '../models/dto/ProfileFilterDto';
-import { ProfileListViewModel, ProfileViewModel } from '../models/viewmodels/ProfileViewModel';
+import {
+  ProfileListViewModel,
+  ProfileViewModel
+} from '../models/viewmodels/ProfileViewModel';
 
 export class ProfileService {
   async list(
     filter: ProfileFilterDto,
-    page: number = 1,
-    limit: number = 10
+    page = 1,
+    limit = null
   ): Promise<ProfileListViewModel[]> {
     const where = this.buildQuery(filter);
 
-    const rows: Profile[] = await Profile.findAll({
+    const params: any = {
       where,
-      limit,
-      offset: (page - 1) * limit,
       order: ['name']
-    });
+    };
+
+    if (limit !== null) {
+      params.limit = limit;
+      params.offset = (page - 1) * limit;
+    }
+
+    const rows: Profile[] = await Profile.findAll(params);
 
     return rows.map(row => ProfileListViewModel.parse(row.toJSON()));
   }

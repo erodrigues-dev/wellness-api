@@ -16,7 +16,7 @@ export class ProfileController {
       filter.name = name as string;
       filter.description = description as string;
       const count = await service.count(filter);
-      const list = await service.list(filter, Number(page), Number(limit));
+      const list = await service.list(filter, page, limit);
       return res.header('X-Total-Count', count.toString()).json(list);
     } catch (error) {
       next(error);
