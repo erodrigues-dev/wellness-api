@@ -9,8 +9,8 @@ router.get(
     [Segments.QUERY]: Joi.object().keys({
       customerId: Joi.number().allow('').optional(),
       relationName: Joi.string().allow('').optional(),
-      page: Joi.number(),
-      limit: Joi.number()
+      page: Joi.number().min(1).optional(),
+      limit: Joi.number().min(1).optional()
     })
   })
 );
