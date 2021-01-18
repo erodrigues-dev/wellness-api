@@ -36,3 +36,11 @@ export class CustomerCreateModel {
   privateNotes: string;
   phone: string;
 }
+
+export class CustomerUpdateModel {
+  id: number;
+  name: string;
+  imageUrl: string;
+  privateNotes: string;
+  phone: string;
+}

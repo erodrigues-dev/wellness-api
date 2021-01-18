@@ -2,7 +2,7 @@ import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import CustomerDb from '../database/models/Customer';
-import { Customer, CustomerCreateModel } from '../models/entities/Customer';
+import { Customer, CustomerCreateModel, CustomerUpdateModel } from '../models/entities/Customer';
 import { CustomerListViewModel } from '../models/viewmodels/CustomerListViewModel';
 import { CustomerViewModel } from '../models/viewmodels/CustomerViewModel';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
@@ -67,20 +67,13 @@ export class CustomerService {
     );
   }
 
-  async update(data: Customer): Promise<Customer> {
+  async update(data: CustomerUpdateModel): Promise<Customer> {
     const customer = await CustomerDb.findByPk(data.id);
     if (!customer) throw new CustomError('customer not found', 404);
 
-    if (customer.email !== data.email) {
-      const emailExist = await this.checkEmail(data.email, data.id);
-      if (emailExist) throw new CustomError('Email in use', 400);
-    }
-
     customer.name = data.name;
-    customer.email = data.email;
-
-    // hash new password
-    if (data.password) customer.password = await hash(data.password);
+    customer.phone = data.phone;
+    customer.privateNotes = data.privateNotes;
 
     if (data.imageUrl) {
       // delete old image
@@ -91,7 +84,7 @@ export class CustomerService {
     }
 
     await customer.save();
-    return customer;
+    return Customer.map(customer.toJSON());
   }
 
   private buildQuery(filter: any) {

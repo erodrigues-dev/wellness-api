@@ -1,14 +1,14 @@
 export class UpdateCustomerModel {
   id: number;
   name: string;
-  email: string;
   imageUrl: string;
+  phone: string;
   privateNotes: string;
 
   parse(data: any) {
     this.id = data.id;
     this.name = data.name;
-    this.email = data.email;
+    this.phone = data.phone;
     this.imageUrl = data.imageUrl;
     this.privateNotes = data.privateNotes;
 
