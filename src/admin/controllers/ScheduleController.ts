@@ -12,6 +12,8 @@ import {
 export class ScheduleController {
   async index(req: Request, res: Response, next: NextFunction) {
     try {
+      console.log(req.query);
+
       const filter = FilterDto.parse(req.query);
       const result = await service.list(filter);
 
