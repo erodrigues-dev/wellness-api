@@ -8,10 +8,10 @@ export function checkPermission(action: PermissionItem) {
     const hasPermission = (action.id & permissions) === action.id;
 
     if (!hasPermission) {
-      return res.status(401).json({
+      return res.status(403).json({
         message: 'permission denied',
         required: action.name,
-        level: action
+        level: action.id
       });
     }
 
