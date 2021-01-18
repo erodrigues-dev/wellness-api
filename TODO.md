@@ -63,4 +63,4 @@
 
 ## Update Customer
 
-- [ ] bloquear alteração de email
+- [x] bloquear alteração de email
