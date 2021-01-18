@@ -5,7 +5,9 @@ import Package from '../database/models/Package';
 import { DiscountTypeEnum } from '../models/enums/DiscountTypeEnum';
 import CustomerDiscountViewModel from '../models/viewmodels/CustomerDiscountViewModel';
 import ICustomerDiscountService, {
-    IFilter, IStore, IUpdate
+  IFilter,
+  IStore,
+  IUpdate
 } from './interfaces/ICustomerDiscountService';
 
 export class CustomerDiscountService implements ICustomerDiscountService {
@@ -17,7 +19,9 @@ export class CustomerDiscountService implements ICustomerDiscountService {
       {
         replacements: {
           customerId: filter.customerId,
-          relationName: `%${filter.relationName}%`
+          relationName: `%${filter.relationName}%`,
+          page: filter.page ?? null,
+          limit: filter.limit ?? null
         }
       }
     );
@@ -190,7 +194,7 @@ export class CustomerDiscountService implements ICustomerDiscountService {
 
     if (filter?.page && !count && !id) {
       sql = `${sql} limit ${filter.limit || 10} offset ${
-        (filter.page - 1) * (filter.limit || 10)
+        (Number(filter.page) - 1) * (Number(filter.limit) || 10)
       }`;
     }
 

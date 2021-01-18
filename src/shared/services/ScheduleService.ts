@@ -15,9 +15,6 @@ export class FilterDto {
 
   static parse(obj: any) {
     const dto = new FilterDto();
-    console.log('====================================');
-    console.log(obj);
-    console.log('====================================');
 
     dto.customerId = obj.customerId || null;
     dto.activityId = obj.activityId || null;

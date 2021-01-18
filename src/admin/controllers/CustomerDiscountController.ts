@@ -12,8 +12,8 @@ export class CustomerDiscountController {
       const filter = {
         customerId: Number(customerId),
         relationName: relationName as string,
-        page: Number(page),
-        limit: Number(limit)
+        page: page,
+        limit: limit
       };
       const total = await this.service.count(filter);
       const list = await this.service.list(filter);
