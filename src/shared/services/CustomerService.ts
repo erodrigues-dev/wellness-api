@@ -2,12 +2,18 @@ import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import CustomerDb from '../database/models/Customer';
-import { Customer } from '../models/entities/Customer';
+import { Customer, CustomerCreateModel } from '../models/entities/Customer';
+import { CustomerListViewModel } from '../models/viewmodels/CustomerListViewModel';
+import { CustomerViewModel } from '../models/viewmodels/CustomerViewModel';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import { hash } from '../utils/hash-password';
 
 export class CustomerService {
-  async list(filter: any, page = 1, limit = 10): Promise<Customer[]> {
+  async list(
+    filter: any,
+    page = 1,
+    limit = 10
+  ): Promise<CustomerListViewModel[]> {
     const where = this.buildQuery(filter);
 
     const findOptions: FindOptions = {
@@ -21,7 +27,8 @@ export class CustomerService {
       findOptions.offset = (page - 1) * limit;
     }
 
-    return await CustomerDb.findAll(findOptions);
+    const customers = await CustomerDb.findAll(findOptions);
+    return CustomerListViewModel.mapCollection(customers);
   }
 
   count(filter: any): Promise<number> {
@@ -29,28 +36,26 @@ export class CustomerService {
     return CustomerDb.count({ where });
   }
 
-  async get(id: number): Promise<Customer> {
-    const query = await CustomerDb.findByPk(id, {
+  async get(id: number): Promise<CustomerViewModel> {
+    const customer = await CustomerDb.findByPk(id, {
       attributes: {
         exclude: ['password']
       }
     });
 
-    if (!query) return null;
+    if (!customer) throw new CustomError('Customer not found', 404);
 
-    return query;
+    return CustomerViewModel.map(customer);
   }
 
-  async create(data: Customer): Promise<Customer> {
+  async create(data: CustomerCreateModel): Promise<Customer> {
     data.password = await hash(data.password);
 
     const emailExist = await this.checkEmail(data.email);
     if (emailExist) throw new CustomError('Email is in use', 400);
 
     const customerDb = await CustomerDb.create(data);
-    const customer = customerDb.toJSON() as Customer;
-    customer.password = null;
-    return customer;
+    return Customer.map(customerDb.toJSON());
   }
 
   async updateSquareId(id: number, squareId: string): Promise<void> {

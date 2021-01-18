@@ -5,7 +5,7 @@ import { CreateCustomerModel } from '../../shared/useCases/customer/create/Creat
 import CreateCustomerUseCase from '../../shared/useCases/customer/create/CreateCustomerUseCase';
 import { ListActivitiesUseCase } from '../../shared/useCases/customer/ListActivitiesUseCase';
 import { UpdateCustomerModel } from '../../shared/useCases/customer/update/UpdateCustomerModel';
-import UpdateCustomer from '../../shared/useCases/customer/update/UpdateCustomerUseCase';
+import UpdateCustomerUseCase from '../../shared/useCases/customer/update/UpdateCustomerUseCase';
 import ICustomerController, {
     IGetRequest, IIndexRequest, IStoreRequest, IUpdateRequest
 } from './interfaces/ICustomerController';
@@ -58,7 +58,7 @@ export class CustomerController implements ICustomerController {
         .parse(req.body)
         .withImageUrl(req.file?.url);
 
-      const model = await new UpdateCustomer(dto).update();
+      const model = await new UpdateCustomerUseCase(dto).update();
 
       return res.json(model);
     } catch (error) {

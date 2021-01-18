@@ -1,4 +1,5 @@
 import { Customer } from '../../../models/entities/Customer';
+import { CustomerViewModel } from '../../../models/viewmodels/CustomerViewModel';
 import { sendEmailCustomer } from '../../../sendingblue';
 import customerService from '../../../services/CustomerService';
 import { SquareCustomer } from '../../../square/models/SquareCustomer';
@@ -15,13 +16,13 @@ export default class CreateCustomerUseCase {
     this.tempPassword = generateTempPassword();
   }
 
-  async create(): Promise<Customer> {
+  async create(): Promise<CustomerViewModel> {
     await this.createCustomer();
     await this.createCustomerInSquare();
     await this.updateCustomerWithSquareId();
     await this.sendEmail();
 
-    return this.customer;
+    return CustomerViewModel.map(this.customer);
   }
 
   private async createCustomer(): Promise<void> {
