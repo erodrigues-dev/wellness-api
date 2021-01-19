@@ -33,4 +33,8 @@ export class EmployeeViewModel {
 
     return viewModel;
   }
+
+  static mapCollection(list: Employee[]): EmployeeViewModel[] {
+    return list.map(EmployeeViewModel.map);
+  }
 }

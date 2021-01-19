@@ -12,7 +12,7 @@ export class EmployeeService {
     filter: any,
     page: number = null,
     limit: number = null
-  ): Promise<any[]> {
+  ): Promise<EmployeeViewModel[]> {
     const where = this.buildQuery(filter);
     const whereProfile = filter.profile
       ? { name: { [Op.iLike]: `%${filter.profile}%` } }
@@ -38,7 +38,7 @@ export class EmployeeService {
 
     const list = await Employee.findAll(findOptions);
 
-    return list.map(item => item.toJSON());
+    return EmployeeViewModel.mapCollection(list);
   }
 
   count(filter: any): Promise<number> {
