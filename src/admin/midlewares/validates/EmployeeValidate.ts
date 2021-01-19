@@ -45,8 +45,7 @@ router.put(
     [Segments.BODY]: Joi.object().keys({
       id: Joi.number().required(),
       name: Joi.string().required(),
-      email: Joi.string().required().email(),
-      password: Joi.string().min(8).max(20).optional().allow(''),
+      phone: Joi.string().allow(null, '').max(20),
       specialty: Joi.string().max(100).optional().allow(''),
       profileId: Joi.number().required()
     })

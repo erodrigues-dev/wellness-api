@@ -3,6 +3,8 @@ import { NextFunction, Request, Response } from 'express';
 import employeeService, { EmployeeService } from '../../shared/services/EmployeeService';
 import { CreateEmployeeModel } from '../../shared/useCases/employee/create/CreateEmployeeModel';
 import { CreateEmployeeUseCase } from '../../shared/useCases/employee/create/CreateEmployeeUseCase';
+import { UpdateEmployeeModel } from '../../shared/useCases/employee/update/UpdateEmployeeModel';
+import { UpdateEmployeeUseCase } from '../../shared/useCases/employee/update/UpdateEmployeeUseCase';
 import { ICloudFile } from '../../shared/utils/interfaces/ICloudFile';
 
 export class EmployeeController {
@@ -77,16 +79,11 @@ export class EmployeeController {
     next: NextFunction
   ): Promise<Response> {
     try {
-      const { id, name, email, specialty, password, profileId } = req.body;
-      const model = await this.service.update({
-        id,
-        name,
-        email,
-        specialty,
-        password,
-        profileId,
-        imageUrl: (req.file as ICloudFile)?.url
-      });
+      const updateModel = new UpdateEmployeeModel()
+        .parse(req.body)
+        .withImageUrl(req.file as ICloudFile);
+
+      const model = await new UpdateEmployeeUseCase(updateModel).update();
       return res.json(model);
     } catch (error) {
       next(error);

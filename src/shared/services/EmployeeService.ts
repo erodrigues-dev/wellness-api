@@ -58,9 +58,6 @@ export class EmployeeService {
 
   async get(id: number): Promise<EmployeeViewModel> {
     const query: Employee = await Employee.findByPk(id, {
-      attributes: {
-        exclude: ['password', 'profileId']
-      },
       include: [
         {
           association: Employee.associations.profile,
@@ -72,31 +69,6 @@ export class EmployeeService {
     if (!query) throw new CustomError('Emplyee not found', 404);
 
     return EmployeeViewModel.map(query.toJSON() as Employee);
-  }
-
-  async update(data: IEmployee): Promise<IEmployee> {
-    const model: Employee = await Employee.findByPk(data.id);
-    if (!model) throw new CustomError('Employee not found', 404);
-
-    if (model.email !== data.email) {
-      const emailExist = await this.checkEmail(data.email, data.id);
-      if (emailExist) throw new CustomError('Email in use', 400);
-    }
-
-    model.name = data.name;
-    model.email = data.email;
-    model.specialty = data.specialty;
-    model.profileId = data.profileId;
-    if (data.password) model.password = await hash(data.password);
-
-    if (data.imageUrl) {
-      if (model.imageUrl) await deleteFileFromUrl(model.imageUrl);
-
-      model.imageUrl = data.imageUrl;
-    }
-
-    await model.save();
-    return model.toJSON() as IEmployee;
   }
 
   private buildQuery(filter: Filter) {
