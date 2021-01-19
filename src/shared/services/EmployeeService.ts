@@ -7,25 +7,27 @@ import { EmployeeViewModel } from '../models/viewmodels/EmployeeViewModel';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import { hash } from '../utils/hash-password';
 
+type Filter = {
+  name: string;
+  email: string;
+  specialty: string;
+  profile: string;
+};
+
 export class EmployeeService {
   async list(
-    filter: any,
+    filter: Filter,
     page: number = null,
     limit: number = null
   ): Promise<EmployeeViewModel[]> {
     const where = this.buildQuery(filter);
-    const whereProfile = filter.profile
-      ? { name: { [Op.iLike]: `%${filter.profile}%` } }
-      : {};
 
     const findOptions: FindOptions = {
       where,
-      attributes: { exclude: ['password', 'profileId'] },
       include: [
         {
           association: Employee.associations.profile,
-          attributes: ['id', 'name'],
-          where: { ...whereProfile }
+          attributes: ['id', 'name']
         }
       ],
       order: ['name']
@@ -41,17 +43,14 @@ export class EmployeeService {
     return EmployeeViewModel.mapCollection(list);
   }
 
-  count(filter: any): Promise<number> {
+  count(filter: Filter): Promise<number> {
     const where = this.buildQuery(filter);
-    const whereProfile = filter.profile
-      ? { name: { [Op.iLike]: `%${filter.profile}%` } }
-      : {};
+
     return Employee.count({
       where,
       include: [
         {
-          association: Employee.associations.profile,
-          where: { ...whereProfile }
+          association: Employee.associations.profile
         }
       ]
     });
@@ -100,26 +99,30 @@ export class EmployeeService {
     return model.toJSON() as IEmployee;
   }
 
-  private buildQuery(filter: any) {
-    const where = {
-      name: { [Op.iLike]: `%${filter.name}%` },
-      email: { [Op.iLike]: `%${filter.email}%` },
-      specialty: { [Op.iLike]: `%${filter.specialty}%` }
+  private buildQuery(filter: Filter) {
+    const where: any[] = [];
+
+    if (filter.name) {
+      where.push({ name: { [Op.iLike]: `%${filter.name}%` } });
+    }
+
+    if (filter.email) {
+      where.push({ email: { [Op.iLike]: `%${filter.email}%` } });
+    }
+
+    if (filter.specialty) {
+      where.push({ specialty: { [Op.iLike]: `%${filter.specialty}%` } });
+    }
+
+    if (filter.profile) {
+      where.push({
+        ['$profile.name$']: { [Op.iLike]: `%${filter.profile}%` }
+      });
+    }
+
+    return {
+      [Op.and]: where
     };
-
-    if (!filter.name) {
-      delete where.name;
-    }
-
-    if (!filter.email) {
-      delete where.email;
-    }
-
-    if (!filter.specialty) {
-      delete where.specialty;
-    }
-
-    return where;
   }
 
   async checkEmail(email: string, id: number = null): Promise<boolean> {
