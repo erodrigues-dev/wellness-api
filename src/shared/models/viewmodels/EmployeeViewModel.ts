@@ -12,6 +12,7 @@ export class EmployeeViewModel {
   specialty: string;
   imageUrl?: string;
   profile: Profile;
+  phone: string;
   createdAt: Date;
 
   static map(employee: Employee): EmployeeViewModel {
@@ -21,6 +22,7 @@ export class EmployeeViewModel {
     viewModel.name = employee.name;
     viewModel.email = employee.email;
     viewModel.specialty = employee.specialty;
+    viewModel.phone = employee.phone;
     viewModel.imageUrl = employee.imageUrl;
     viewModel.createdAt = employee.createdAt;
 

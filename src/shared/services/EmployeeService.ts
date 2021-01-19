@@ -3,6 +3,7 @@ import { FindOptions, Op } from 'sequelize';
 import CustomError from '../custom-error/CustomError';
 import Employee from '../database/models/Employee';
 import IEmployee from '../models/entities/IEmployee';
+import { EmployeeViewModel } from '../models/viewmodels/EmployeeViewModel';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import { hash } from '../utils/hash-password';
 
@@ -11,7 +12,7 @@ export class EmployeeService {
     filter: any,
     page: number = null,
     limit: number = null
-  ): Promise<IEmployee[]> {
+  ): Promise<any[]> {
     const where = this.buildQuery(filter);
     const whereProfile = filter.profile
       ? { name: { [Op.iLike]: `%${filter.profile}%` } }
@@ -37,7 +38,7 @@ export class EmployeeService {
 
     const list = await Employee.findAll(findOptions);
 
-    return list.map(item => item.toJSON() as IEmployee);
+    return list.map(item => item.toJSON());
   }
 
   count(filter: any): Promise<number> {
@@ -56,7 +57,7 @@ export class EmployeeService {
     });
   }
 
-  async get(id: number): Promise<IEmployee> {
+  async get(id: number): Promise<EmployeeViewModel> {
     const query: Employee = await Employee.findByPk(id, {
       attributes: {
         exclude: ['password', 'profileId']
@@ -71,7 +72,7 @@ export class EmployeeService {
 
     if (!query) throw new CustomError('Emplyee not found', 404);
 
-    return query.toJSON() as IEmployee;
+    return EmployeeViewModel.map(query.toJSON() as Employee);
   }
 
   async update(data: IEmployee): Promise<IEmployee> {
