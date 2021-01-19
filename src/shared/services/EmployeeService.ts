@@ -5,11 +5,10 @@ import Employee from '../database/models/Employee';
 import IEmployee from '../models/entities/IEmployee';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import { hash } from '../utils/hash-password';
-import IEmployeeService, { IFilter } from './interfaces/IEmployeeService';
 
-export class EmployeeService implements IEmployeeService {
+export class EmployeeService {
   async list(
-    filter: IFilter,
+    filter: any,
     page: number = null,
     limit: number = null
   ): Promise<IEmployee[]> {
@@ -41,7 +40,7 @@ export class EmployeeService implements IEmployeeService {
     return list.map(item => item.toJSON() as IEmployee);
   }
 
-  count(filter: IFilter): Promise<number> {
+  count(filter: any): Promise<number> {
     const where = this.buildQuery(filter);
     const whereProfile = filter.profile
       ? { name: { [Op.iLike]: `%${filter.profile}%` } }
@@ -75,19 +74,12 @@ export class EmployeeService implements IEmployeeService {
     return query.toJSON() as IEmployee;
   }
 
-  async create(data: IEmployee): Promise<IEmployee> {
-    data.password = await hash(data.password);
-    const model: Employee = await Employee.create(data);
-
-    return model.toJSON() as IEmployee;
-  }
-
   async update(data: IEmployee): Promise<IEmployee> {
     const model: Employee = await Employee.findByPk(data.id);
     if (!model) throw new CustomError('Employee not found', 404);
 
     if (model.email !== data.email) {
-      const emailExist = await this.checkEmail(data.id, data.email);
+      const emailExist = await this.checkEmail(data.email, data.id);
       if (emailExist) throw new CustomError('Email in use', 400);
     }
 
@@ -107,7 +99,7 @@ export class EmployeeService implements IEmployeeService {
     return model.toJSON() as IEmployee;
   }
 
-  private buildQuery(filter: IFilter) {
+  private buildQuery(filter: any) {
     const where = {
       name: { [Op.iLike]: `%${filter.name}%` },
       email: { [Op.iLike]: `%${filter.email}%` },
@@ -129,12 +121,12 @@ export class EmployeeService implements IEmployeeService {
     return where;
   }
 
-  private async checkEmail(id: number, email: string): Promise<boolean> {
+  async checkEmail(email: string, id: number = null): Promise<boolean> {
+    const queryParams: any[] = [{ email }];
+    if (id) queryParams.push({ id });
+
     const matchs = await Employee.count({
-      where: {
-        id: { [Op.ne]: id },
-        email: email
-      }
+      where: { [Op.and]: queryParams }
     });
 
     return matchs > 0;
