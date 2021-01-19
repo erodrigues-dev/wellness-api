@@ -1,0 +1,34 @@
+import Employee from '../../database/models/Employee';
+
+type Profile = {
+  id: number;
+  name: string;
+};
+
+export class EmployeeViewModel {
+  id: number;
+  name: string;
+  email: string;
+  specialty: string;
+  imageUrl?: string;
+  profile: Profile;
+  createdAt: Date;
+
+  static map(employee: Employee): EmployeeViewModel {
+    const viewModel = new EmployeeViewModel();
+
+    viewModel.id = employee.id;
+    viewModel.name = employee.name;
+    viewModel.email = employee.email;
+    viewModel.specialty = employee.specialty;
+    viewModel.imageUrl = employee.imageUrl;
+    viewModel.createdAt = employee.createdAt;
+
+    viewModel.profile = {
+      id: employee.profileId,
+      name: employee.profile?.name
+    };
+
+    return viewModel;
+  }
+}

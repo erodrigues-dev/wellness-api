@@ -1,25 +1,27 @@
-import { Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
-import employeeService from '../../shared/services/EmployeeService';
-import IEmployeeService from '../../shared/services/interfaces/IEmployeeService';
+import employeeService, { EmployeeService } from '../../shared/services/EmployeeService';
+import { CreateEmployeeModel } from '../../shared/useCases/employee/create/CreateEmployeeModel';
+import { CreateEmployeeUseCase } from '../../shared/useCases/employee/create/CreateEmployeeUseCase';
+import { ICloudFile } from '../../shared/utils/interfaces/ICloudFile';
 
-import IEmployeeController, {
-  IGetRequest,
-  IIndexRequest,
-  IStoreRequest,
-  IUpdateRequest
-} from './interfaces/IEmployeeController';
-
-export class EmployeeController implements IEmployeeController {
-  constructor(private service: IEmployeeService) {}
+export class EmployeeController {
+  constructor(private service: EmployeeService) {}
 
   async index(
-    req: IIndexRequest,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<Response> {
     try {
-      const { name, email, specialty, profile, page, limit } = req.query;
+      const {
+        name,
+        email,
+        specialty,
+        profile,
+        page,
+        limit
+      } = this.parseQueryIndexParams(req.query);
       const total = await this.service.count({
         name,
         email,
@@ -38,12 +40,12 @@ export class EmployeeController implements IEmployeeController {
   }
 
   async get(
-    req: IGetRequest,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<Response> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
       const model = await this.service.get(id);
       return res.json(model);
     } catch (error) {
@@ -52,20 +54,17 @@ export class EmployeeController implements IEmployeeController {
   }
 
   async store(
-    req: IStoreRequest,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<Response> {
     try {
-      const { name, email, specialty, password, profileId } = req.body;
-      const model = await this.service.create({
-        name,
-        email,
-        specialty,
-        password,
-        profileId,
-        imageUrl: req.file?.url
-      });
+      const createModel = new CreateEmployeeModel()
+        .parse(req.body)
+        .withImageUrl(req.file as ICloudFile);
+
+      const model = await new CreateEmployeeUseCase(createModel).create();
+
       return res.json(model);
     } catch (error) {
       next(error);
@@ -73,7 +72,7 @@ export class EmployeeController implements IEmployeeController {
   }
 
   async update(
-    req: IUpdateRequest,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<Response> {
@@ -86,12 +85,23 @@ export class EmployeeController implements IEmployeeController {
         specialty,
         password,
         profileId,
-        imageUrl: req.file?.url
+        imageUrl: (req.file as ICloudFile)?.url
       });
       return res.json(model);
     } catch (error) {
       next(error);
     }
+  }
+
+  private parseQueryIndexParams(query: any) {
+    return {
+      name: (query.name as string) || null,
+      email: (query.email as string) || null,
+      specialty: (query.specialty as string) || null,
+      profile: (query.profile as string) || null,
+      page: (query.page as number) || null,
+      limit: (query.limit as number) || null
+    };
   }
 }
 

@@ -1,5 +1,5 @@
-import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
+import { Router } from 'express';
 
 const router = Router();
 
@@ -32,7 +32,7 @@ router.post(
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().required(),
       email: Joi.string().required().email(),
-      password: Joi.string().required().min(8).max(20),
+      phone: Joi.string().allow(null, '').max(20),
       specialty: Joi.string().max(100).optional().allow(''),
       profileId: Joi.number().required()
     })
