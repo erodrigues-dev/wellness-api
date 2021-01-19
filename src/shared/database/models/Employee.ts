@@ -9,6 +9,7 @@ export default class Employee extends Model {
   password: string;
   specialty: string;
   imageUrl?: string;
+  phone: string;
 
   profileId: number;
   profile?: Profile;
@@ -28,7 +29,8 @@ export default class Employee extends Model {
         password: DataTypes.STRING,
         specialty: DataTypes.STRING,
         imageUrl: DataTypes.STRING,
-        profileId: DataTypes.INTEGER
+        profileId: DataTypes.INTEGER,
+        phone: DataTypes.STRING
       },
       {
         sequelize: connection,
