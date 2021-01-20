@@ -11,8 +11,8 @@ import { hash } from '../utils/hash-password';
 export class CustomerService {
   async list(
     filter: any,
-    page = 1,
-    limit = 10
+    page = null,
+    limit = null
   ): Promise<CustomerListViewModel[]> {
     const where = this.buildQuery(filter);
 
