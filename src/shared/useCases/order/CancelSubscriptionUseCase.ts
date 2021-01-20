@@ -28,6 +28,9 @@ export class CancelSubscriptionUseCase {
       ]
     });
     if (!order) throw new CustomError('Order not found', 404);
+
+    if (order.canceledDate) throw new CustomError('Order already is canceled');
+
     this.order = order;
   }
 
