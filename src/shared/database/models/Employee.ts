@@ -10,6 +10,7 @@ export default class Employee extends Model {
   specialty: string;
   imageUrl?: string;
   phone: string;
+  tempPassword: string;
 
   profileId: number;
   profile?: Profile;
@@ -30,7 +31,8 @@ export default class Employee extends Model {
         specialty: DataTypes.STRING,
         imageUrl: DataTypes.STRING,
         profileId: DataTypes.INTEGER,
-        phone: DataTypes.STRING
+        phone: DataTypes.STRING,
+        tempPassword: DataTypes.STRING
       },
       {
         sequelize: connection,

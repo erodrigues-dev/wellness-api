@@ -1,8 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 
 import { PermissionHelper } from '../../shared/models/entities/Permission';
 import service from '../../shared/services/UserService';
+import {
+    EmployeeRecoverPasswordUseCase
+} from '../../shared/useCases/employee/recover-password/EmployeeRecoverPasswordUseCase';
 
 export class SessionController {
   async login(req: Request, res: Response, next: NextFunction) {
@@ -49,6 +53,16 @@ export class SessionController {
       const permissions = PermissionHelper.listAll(req.user.permissions);
 
       return res.json(permissions);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async recoverPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email } = req.body;
+      await new EmployeeRecoverPasswordUseCase(email).recover();
+      return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (error) {
       next(error);
     }

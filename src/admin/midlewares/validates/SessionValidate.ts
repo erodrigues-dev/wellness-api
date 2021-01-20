@@ -1,5 +1,5 @@
-import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
+import { Router } from 'express';
 
 const router = Router();
 
@@ -9,6 +9,15 @@ router.post(
     [Segments.BODY]: Joi.object().keys({
       email: Joi.string().email().required(),
       password: Joi.string().required().min(8)
+    })
+  })
+);
+
+router.post(
+  '/sessions/recover-password',
+  celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      email: Joi.string().email().required()
     })
   })
 );
