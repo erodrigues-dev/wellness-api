@@ -5,6 +5,12 @@ export class SendingBlueTemplate {
     params: ['tempPassword']
   } as const;
 
+  static RecoverPassword = {
+    id: 2,
+    name: 'recover-password',
+    params: ['tempPassword']
+  } as const;
+
   static EmailConfirmation = {
     id: 3,
     name: 'email-confirmation',

@@ -1,3 +1,5 @@
+import { AxiosInstance } from 'axios';
+
 import { SendEmailService } from './SendEmailService';
 import { SendingBlueTemplate } from './SendingBlueTemplate';
 
@@ -7,7 +9,7 @@ type SendEmail = {
   tempPassword: string;
 };
 
-export class SendEmailSignUp {
+export class SendEmailRecoverPassword {
   constructor(private service: SendEmailService) {}
 
   async send(sendEmail: SendEmail): Promise<void> {
@@ -15,7 +17,7 @@ export class SendEmailSignUp {
     await this.service.send({
       to: [{ name, email }],
       params: { tempPassword },
-      templateId: SendingBlueTemplate.SignUp.id
+      templateId: SendingBlueTemplate.RecoverPassword.id
     });
   }
 }

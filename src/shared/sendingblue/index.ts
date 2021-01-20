@@ -1,7 +1,8 @@
 import Axios from 'axios';
 
-import { SendEmailCustomer } from './customer/SendEmailCustomer';
 import { SendEmailConfirmation } from './SendEmailConfirmation';
+import { SendEmailRecoverPassword } from './SendEmailRecoverPassword';
+import { SendEmailService } from './SendEmailService';
 import { SendEmailSignUp } from './SendEmailSignUp';
 
 const api = Axios.create({
@@ -11,6 +12,11 @@ const api = Axios.create({
   }
 });
 
-export const sendEmailCustomer = new SendEmailCustomer(api);
-export const sendEmailConfirmation = new SendEmailConfirmation(api);
-export const sendEmailSigup = new SendEmailSignUp(api);
+export const sendEmailService = new SendEmailService(api);
+export const sendEmailConfirmation = new SendEmailConfirmation(
+  sendEmailService
+);
+export const sendEmailSigup = new SendEmailSignUp(sendEmailService);
+export const sendEmailRecoverPassword = new SendEmailRecoverPassword(
+  sendEmailService
+);
