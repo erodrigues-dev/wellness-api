@@ -7,6 +7,7 @@ import service from '../../shared/services/UserService';
 import {
     EmployeeRecoverPasswordUseCase
 } from '../../shared/useCases/employee/recover-password/EmployeeRecoverPasswordUseCase';
+import { SendEmailConfirmationUseCase } from '../../shared/useCases/SendEmailConfirmationUseCase';
 
 export class SessionController {
   async login(req: Request, res: Response, next: NextFunction) {
@@ -62,6 +63,19 @@ export class SessionController {
     try {
       const { email } = req.body;
       await new EmployeeRecoverPasswordUseCase(email).recover();
+      return res.sendStatus(StatusCodes.NO_CONTENT);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async sendConfirmation(req: Request, res: Response, next: NextFunction) {
+    try {
+      await new SendEmailConfirmationUseCase(
+        req.body.name,
+        req.body.email
+      ).send();
+
       return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (error) {
       next(error);

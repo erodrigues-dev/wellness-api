@@ -13,3 +13,7 @@ export function compare(password: string, hash: string) {
 export function generateTempPassword() {
   return randomBytes(8).toString('hex');
 }
+
+export function generateConfirmationCode() {
+  return randomBytes(4).toString('hex').toUpperCase();
+}

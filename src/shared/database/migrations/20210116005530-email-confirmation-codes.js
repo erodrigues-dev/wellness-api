@@ -23,7 +23,8 @@ module.exports = {
         type: Sequelize.STRING(36),
         allowNull: false
       },
-      created_at: { type: Sequelize.DATE, allowNull: false }
+      created_at: { type: Sequelize.DATE, allowNull: false },
+      updated_at: { type: Sequelize.DATE, allowNull: true }
     });
 
     await queryInterface.addIndex('email_confirmation_codes', [

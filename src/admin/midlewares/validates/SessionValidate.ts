@@ -22,6 +22,16 @@ router.post(
   })
 );
 
+router.post(
+  '/sessions/send-confirmation',
+  celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      name: Joi.string().required(),
+      email: Joi.string().email().required()
+    })
+  })
+);
+
 router.put(
   '/sessions',
   celebrate({
