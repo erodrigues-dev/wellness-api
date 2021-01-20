@@ -21,10 +21,10 @@ type Params = {
   recurrency: RecurrencyPayEnum;
 };
 
-export class SendEmailOrder {
+export class SendEmailOrderCreate {
   constructor(private service: SendEmailService) {}
 
-  async sendCreate(sendEmail: SendEmail): Promise<void> {
+  async send(sendEmail: SendEmail): Promise<void> {
     await this.service.send({
       to: [sendEmail.to],
       params: this.formatParams(sendEmail.params),

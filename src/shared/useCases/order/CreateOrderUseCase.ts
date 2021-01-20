@@ -11,7 +11,7 @@ import { RecurrencyPayEnum } from '../../models/enums';
 import { DiscountTypeEnum } from '../../models/enums/DiscountTypeEnum';
 import { OrderItemTypeEnum } from '../../models/enums/OrderItemTypeEnum';
 import { PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
-import { sendEmailOrder } from '../../sendingblue';
+import { sendEmailOrderCreate } from '../../sendingblue';
 import CreateOrderDTO from './CreateOrderDTO';
 
 export default class CreateOrderUseCase {
@@ -207,7 +207,7 @@ export default class CreateOrderUseCase {
   }
 
   private async sendEmail() {
-    sendEmailOrder.sendCreate({
+    sendEmailOrderCreate.send({
       to: {
         name: this.customer.name,
         email: this.customer.email
