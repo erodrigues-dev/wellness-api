@@ -1,10 +1,8 @@
-import { FindOptions, Op, Transaction } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Package from '../database/models/Package';
-import { PackageDTO } from '../models/dto/PackageDTO';
 import IPackage, { IPackageWithIncludes } from '../models/entities/IPackage';
-import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import IPackageService, { IFilter } from './interfaces/IPackageService';
 
 export class PackageService implements IPackageService {
