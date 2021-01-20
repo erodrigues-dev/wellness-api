@@ -16,4 +16,16 @@ export class SendingBlueTemplate {
     name: 'email-confirmation',
     params: ['code']
   } as const;
+
+  static ScheduleCreate = {
+    id: 4,
+    name: 'create-schedule',
+    params: ['title', 'date', 'start', 'end']
+  } as const;
+
+  static ScheduleCancel = {
+    id: 5,
+    name: 'cancel-schedule',
+    params: ['title', 'date', 'start', 'end']
+  } as const;
 }
