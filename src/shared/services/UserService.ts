@@ -12,9 +12,12 @@ export class UserService {
     const user = await this.getUserWithProfileByEmail(email);
     if (!user) return null;
 
-    const match = await compare(password, user.password);
+    const matchPassword = await compare(password, user.password);
+    const matchTempPassword = await compare(password, user.tempPassword);
 
-    if (!match) throw new CustomError('Login or Password is not valid.', 401);
+    if (!matchPassword && !matchTempPassword) {
+      throw new CustomError('Login or Password is not valid.', 401);
+    }
 
     return LoginViewModel.parse(user.toJSON());
   }

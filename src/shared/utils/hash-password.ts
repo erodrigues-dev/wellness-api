@@ -6,6 +6,7 @@ export function hash(password: string) {
 }
 
 export function compare(password: string, hash: string) {
+  if (!hash) return false;
   return bcrypt.compare(password, hash);
 }
 
