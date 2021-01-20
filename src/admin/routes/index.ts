@@ -1,13 +1,13 @@
 import { Router } from 'express';
 
 import activityRouter from './ActivityRouter';
-import activityScheduleRouter from './ActivityScheduleRouter';
 import categoryRouter from './CategoryRouter';
 import checkoutRouter from './CheckoutRouter';
 import customerDiscountRouter from './CustomerDiscountRouter';
 import customerRouter from './CustomerRouter';
 import domainRouter from './DomainRouter';
 import employeeRouter from './EmployeeRouter';
+import eventRouter from './EventRouter';
 import orderRouter from './OrderRouter';
 import packageRouter from './PackageRouter';
 import profileRouter from './ProfileRouter';
@@ -18,7 +18,7 @@ const router = Router();
 
 router.use(sessionRouter);
 router.use(activityRouter);
-router.use(activityScheduleRouter);
+router.use(eventRouter);
 router.use(customerRouter);
 router.use(employeeRouter);
 router.use(packageRouter);

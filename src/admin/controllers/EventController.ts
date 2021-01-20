@@ -1,16 +1,16 @@
 import { parseISO } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
 
-import activityScheduleService from '../../shared/services/ActivityScheduleService';
-import IActivityScheduleService from '../../shared/services/interfaces/IActivityScheduleService';
+import eventService from '../../shared/services/EventService';
+import IEventService from '../../shared/services/interfaces/IEventService';
 import { ListDaysUseCase } from '../../shared/useCases/schedule/ListDaysUseCase';
 import { ListTimesUseCase } from '../../shared/useCases/schedule/ListTimesUseCase';
-import IActivityScheduleController, {
+import IEventController, {
     IDeleteRequest, IIndexRequest, IStoreRequest, IUpdateRequest
-} from './interfaces/IActivityScheduleController';
+} from './interfaces/IEventController';
 
-export class ActivityScheduleController implements IActivityScheduleController {
-  constructor(private service: IActivityScheduleService) {}
+export class EventController implements IEventController {
+  constructor(private service: IEventService) {}
 
   async index(req: IIndexRequest, res: Response, next: NextFunction) {
     try {
@@ -99,4 +99,4 @@ export class ActivityScheduleController implements IActivityScheduleController {
   }
 }
 
-export default new ActivityScheduleController(activityScheduleService);
+export default new EventController(eventService);

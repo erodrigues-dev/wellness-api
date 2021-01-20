@@ -1,7 +1,7 @@
 import { EndsInEnum } from '../enums/EndsInEnum';
 import { FrequencyEnum } from '../enums/FrequencyEnum';
 
-export default interface IActivitySchedule {
+export default interface IEvent {
   id?: number;
   activityId: number;
   title: string;

@@ -3,7 +3,7 @@ import { Op } from 'sequelize';
 
 import CustomError from '../../custom-error/CustomError';
 import Activity from '../../database/models/Activity';
-import ActivitySchedule from '../../database/models/ActivitySchedule';
+import Event from '../../database/models/Event';
 import Order from '../../database/models/Order';
 import OrderActivity from '../../database/models/OrderActivity';
 import OrderPackage from '../../database/models/OrderPackage';
@@ -42,15 +42,15 @@ export class ScheduleCreateUseCase {
     });
   }
 
-  async getEvent(eventId: number): Promise<ActivitySchedule> {
-    const event = await ActivitySchedule.findByPk(eventId);
+  async getEvent(eventId: number): Promise<Event> {
+    const event = await Event.findByPk(eventId);
 
     if (!event) throw new CustomError('Invalid activity schedule', 400);
 
-    return event.toJSON() as ActivitySchedule;
+    return event.toJSON() as Event;
   }
 
-  async checkAvailableTime(event: ActivitySchedule): Promise<void> {
+  async checkAvailableTime(event: Event): Promise<void> {
     if (isPast(new Date(`${this.formatedDate}T${event.start}`)))
       throw new CustomError('Cannot be scheduled on this time');
 

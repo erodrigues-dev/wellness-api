@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import controller from '../controllers/ActivityScheduleController';
+import controller from '../controllers/EventController';
 
 const router = Router();
 

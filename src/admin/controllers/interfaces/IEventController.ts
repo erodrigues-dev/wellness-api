@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import { EndsInEnum } from '../../../shared/models/enums/EndsInEnum';
 import { FrequencyEnum } from '../../../shared/models/enums/FrequencyEnum';
@@ -57,7 +57,7 @@ export interface IDeleteRequest extends Request<any, any, any, any> {
   };
 }
 
-export default interface IActivityScheduleController {
+export default interface IEventController {
   index(
     req: IIndexRequest,
     res: Response,

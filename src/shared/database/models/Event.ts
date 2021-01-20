@@ -1,13 +1,10 @@
 import { Association, DataTypes, Model, Sequelize } from 'sequelize';
 
-import IActivitySchedule from '../../models/entities/IActivitySchedule';
 import { EndsInEnum } from '../../models/enums/EndsInEnum';
 import { FrequencyEnum } from '../../models/enums/FrequencyEnum';
 import Activity from './Activity';
 
-export default class ActivitySchedule
-  extends Model<IActivitySchedule>
-  implements IActivitySchedule {
+export default class Event extends Model {
   id?: number;
   activityId: number;
   title: string;
@@ -30,11 +27,11 @@ export default class ActivitySchedule
   readonly updatedAt: Date;
 
   static associations: {
-    activity: Association<ActivitySchedule, Activity>;
+    activity: Association<Event, Activity>;
   };
 
   static setup(connection: Sequelize) {
-    ActivitySchedule.init(
+    Event.init(
       {
         title: DataTypes.STRING,
         color: DataTypes.STRING,
@@ -50,12 +47,12 @@ export default class ActivitySchedule
         ocurrences: DataTypes.INTEGER,
         activityId: DataTypes.INTEGER
       },
-      { sequelize: connection, tableName: 'activities_schedules' }
+      { sequelize: connection, tableName: 'events' }
     );
   }
 
   static setupAssociations() {
-    ActivitySchedule.belongsTo(Activity, {
+    Event.belongsTo(Activity, {
       foreignKey: 'activityId',
       as: 'activity'
     });

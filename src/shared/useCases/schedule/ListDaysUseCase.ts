@@ -2,7 +2,7 @@ import { format, isEqual, isFuture, isWithinInterval, parseISO, startOfDay } fro
 import RRule, { WeekdayStr } from 'rrule';
 import { Op } from 'sequelize';
 
-import ActivitySchedule from '../../database/models/ActivitySchedule';
+import Event from '../../database/models/Event';
 import Schedule from '../../database/models/Schedule';
 import { EndsInEnum } from '../../models/enums/EndsInEnum';
 import { convertToRRuleFrequency } from '../../models/enums/FrequencyEnum';
@@ -10,7 +10,7 @@ import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
 
 class DayDto {
   constructor(
-    public activityScheduleId: number,
+    public eventId: number,
     public maxPeople: number,
     public date: Date
   ) {}
@@ -32,9 +32,7 @@ export class ListDaysUseCase {
 
     const events = await this.listEvents();
     const days = this.buildDays(events);
-    const ids = days
-      .map(x => x.activityScheduleId)
-      .filter(this.removeDuplicates);
+    const ids = days.map(x => x.eventId).filter(this.removeDuplicates);
     const scheduleds = await this.searchScheduleds(ids);
     const daysAvailables = this.getDaysAvailables(days, scheduleds);
 
@@ -47,7 +45,7 @@ export class ListDaysUseCase {
   }
 
   private async listEvents() {
-    const times = await ActivitySchedule.findAll({
+    const times = await Event.findAll({
       where: {
         activityId: this.activityId,
         date: {
@@ -74,18 +72,18 @@ export class ListDaysUseCase {
       ]
     });
 
-    return times.map(time => time.toJSON() as ActivitySchedule);
+    return times.map(time => time.toJSON() as Event);
   }
 
-  private buildDays(times: ActivitySchedule[]) {
+  private buildDays(times: Event[]) {
     const notRecurrentsDays = times
-      .filter(activitySchedule => !activitySchedule.recurrent)
+      .filter(event => !event.recurrent)
       .map(
-        activitySchedule =>
+        event =>
           new DayDto(
-            activitySchedule.id,
-            activitySchedule.activity.maxPeople ?? 1,
-            parseISO(activitySchedule.date as any)
+            event.id,
+            event.activity.maxPeople ?? 1,
+            parseISO(event.date as any)
           )
       );
 
@@ -115,7 +113,7 @@ export class ListDaysUseCase {
     return list.map(item => item.toJSON() as Schedule);
   }
 
-  private getRecurrentItems(time: ActivitySchedule) {
+  private getRecurrentItems(time: Event) {
     const rrule = new RRule({
       dtstart: parseISO(time.date as any),
       interval: time.repeatEvery,
@@ -137,7 +135,7 @@ export class ListDaysUseCase {
     days.forEach(day => {
       const totalScheduleds = scheduleds.filter(
         x =>
-          x.activityScheduleId === day.activityScheduleId &&
+          x.activityScheduleId === day.eventId &&
           x.date === format(day.date, 'yyyy-MM-dd')
       ).length;
 

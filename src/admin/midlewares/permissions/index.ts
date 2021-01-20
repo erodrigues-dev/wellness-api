@@ -1,13 +1,13 @@
 import { Router } from 'express';
 
 import activity from './ActivityPermission';
-import activitySchedule from './ActivitySchedulePermission';
 import category from './CategoryPermission';
 import checkout from './CheckoutPermission';
 import customerDiscount from './CustomerDiscountPermission';
 import customer from './CustomerPermission';
 import domain from './DomainPermission';
 import employee from './EmployeePermission';
+import event from './EventPermission';
 import order from './OrderPermission';
 import package_ from './PackagePermission';
 import profile from './ProfilePermission';
@@ -16,7 +16,7 @@ import schedule from './SchedulePermission';
 const router = Router();
 
 router.use(activity);
-router.use(activitySchedule);
+router.use(event);
 router.use(customer);
 router.use(employee);
 router.use(package_);

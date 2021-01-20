@@ -2,42 +2,38 @@ import RRule from 'rrule';
 import { Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
-import ActivitySchedule from '../database/models/ActivitySchedule';
-import IActivitySchedule from '../models/entities/IActivitySchedule';
+import Event from '../database/models/Event';
+import IEvent from '../models/entities/IEvent';
 import { EndsInEnum } from '../models/enums/EndsInEnum';
 import { convertToRRuleFrequency } from '../models/enums/FrequencyEnum';
-import IActivityScheduleService from './interfaces/IActivityScheduleService';
+import IEventService from './interfaces/IEventService';
 
-export class ActivityScheduleService implements IActivityScheduleService {
-  private db = ActivitySchedule;
+export class EventService implements IEventService {
+  private db = Event;
 
-  async list(
-    start: Date,
-    end: Date,
-    activityId: number
-  ): Promise<IActivitySchedule[]> {
+  async list(start: Date, end: Date, activityId: number): Promise<IEvent[]> {
     const where = this.buildQuery(start, end, activityId);
-    const rows: ActivitySchedule[] = await this.db.findAll({
+    const rows: Event[] = await this.db.findAll({
       where,
       order: ['date']
     });
 
     return rows
-      .map(row => row.toJSON() as IActivitySchedule)
+      .map(row => row.toJSON() as IEvent)
       .filter(item => this.filterWithRRule(start, end, item));
   }
 
   async listDays(start: Date, end: Date) {}
 
-  async create(data: IActivitySchedule): Promise<number> {
+  async create(data: IEvent): Promise<number> {
     const { id } = await this.db.create(data);
 
     return id;
   }
 
-  async update(data: IActivitySchedule): Promise<void> {
+  async update(data: IEvent): Promise<void> {
     const { id } = data;
-    const model: ActivitySchedule = await this.db.findByPk(id);
+    const model: Event = await this.db.findByPk(id);
     if (!model) throw new CustomError('Schedule not found', 404);
 
     model.activityId = data.activityId;
@@ -87,7 +83,7 @@ export class ActivityScheduleService implements IActivityScheduleService {
     return query;
   }
 
-  private filterWithRRule(start: Date, end: Date, item: IActivitySchedule) {
+  private filterWithRRule(start: Date, end: Date, item: IEvent) {
     if (item.endsIn === EndsInEnum.AFTER) {
       const rrule = new RRule({
         dtstart: new Date(item.date),
@@ -102,4 +98,4 @@ export class ActivityScheduleService implements IActivityScheduleService {
   }
 }
 
-export default new ActivityScheduleService();
+export default new EventService();

@@ -1,13 +1,13 @@
 import { errors } from 'celebrate';
 import { Router } from 'express';
 
-import activityScheduleValidate from './ActivityScheduleValidate';
 import activityValidate from './ActivityValidate';
 import categoryValidate from './CategoryValidate';
 import checkoutValidate from './CheckoutValidate';
 import customerDiscountValidate from './CustomerDiscountValidate';
 import customerValidate from './CustomerValidate';
 import employeeValidate from './EmployeeValidate';
+import eventValidate from './EventValidate';
 import orderValidate from './OrderValidate';
 import packageValidate from './PackageValidate';
 import profileValidate from './ProfileValidate';
@@ -18,7 +18,7 @@ const router = Router();
 
 router.use(sessionValidate);
 router.use(activityValidate);
-router.use(activityScheduleValidate);
+router.use(eventValidate);
 router.use(customerValidate);
 router.use(employeeValidate);
 router.use(packageValidate);

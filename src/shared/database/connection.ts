@@ -2,12 +2,12 @@ import { Sequelize } from 'sequelize';
 
 import { DB_CONFIG } from '../config/database';
 import Activity from './models/Activity';
-import ActivitySchedule from './models/ActivitySchedule';
 import Category from './models/Category';
 import Customer from './models/Customer';
 import CustomerDiscount from './models/CustomerDiscount';
 import EmailConfirmationCode from './models/EmailConfirmationCode';
 import Employee from './models/Employee';
+import Event from './models/Event';
 import Order from './models/Order';
 import OrderActivity from './models/OrderActivity';
 import OrderPackage from './models/OrderPackage';
@@ -20,7 +20,7 @@ const connection = new Sequelize(DB_CONFIG);
 export function databaseConfig() {
   Activity.setup(connection);
   Employee.setup(connection);
-  ActivitySchedule.setup(connection);
+  Event.setup(connection);
   Customer.setup(connection);
   Package.setup(connection);
   Profile.setup(connection);
@@ -33,7 +33,7 @@ export function databaseConfig() {
   EmailConfirmationCode.setup(connection);
 
   Activity.setupAssociations();
-  ActivitySchedule.setupAssociations();
+  Event.setupAssociations();
   Customer.setupAssociations();
   Employee.setupAssociations();
   Package.setupAssociations();
