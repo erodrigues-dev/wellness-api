@@ -1,17 +1,20 @@
 import { Transaction } from 'sequelize';
 
 import Activity from '../../database/models/Activity';
+import Customer from '../../database/models/Customer';
 import CustomerDiscount from '../../database/models/CustomerDiscount';
 import Order from '../../database/models/Order';
 import OrderActivity from '../../database/models/OrderActivity';
 import OrderPackage from '../../database/models/OrderPackage';
 import Package from '../../database/models/Package';
+import { RecurrencyPayEnum } from '../../models/enums';
 import { DiscountTypeEnum } from '../../models/enums/DiscountTypeEnum';
 import { OrderItemTypeEnum } from '../../models/enums/OrderItemTypeEnum';
 import { PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
+import { sendEmailOrder } from '../../sendingblue';
 import CreateOrderDTO from './CreateOrderDTO';
 
-export default class CreateOrder {
+export default class CreateOrderUseCase {
   private data: CreateOrderDTO;
 
   private discount: number = 0;
@@ -24,6 +27,7 @@ export default class CreateOrder {
   private order: Order;
   private orderActivity: OrderActivity;
   private orderPackage: OrderPackage;
+  private customer: Customer;
 
   useTransaction(transaction: Transaction) {
     this.transaction = transaction;
@@ -42,6 +46,8 @@ export default class CreateOrder {
     this.calculateDiscount();
     await this.createOrder();
     await this.createItems();
+
+    this.transaction.afterCommit(() => this.sendEmail());
 
     return this.order;
   }
@@ -83,6 +89,10 @@ export default class CreateOrder {
         relationId: this.data.itemId,
         relationType: this.data.itemType
       }
+    });
+
+    this.customer = await Customer.findByPk(this.data.customerId, {
+      attributes: ['name', 'email']
     });
   }
 
@@ -194,5 +204,26 @@ export default class CreateOrder {
     );
 
     this.orderPackage.orderActivities = orderActivities;
+  }
+
+  private async sendEmail() {
+    sendEmailOrder.sendCreate({
+      to: {
+        name: this.customer.name,
+        email: this.customer.email
+      },
+      params: {
+        type: this.order.type,
+        name:
+          this.order.type === OrderItemTypeEnum.Activity
+            ? this.activity.name
+            : this.package.name,
+        discount: this.order.discount,
+        total: this.order.amount,
+        quantity: this.order.quantity,
+        paymentType: this.order.paymentType,
+        recurrency: this.package?.recurrencyPay ?? RecurrencyPayEnum.oneTime
+      }
+    });
   }
 }

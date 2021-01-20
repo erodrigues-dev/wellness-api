@@ -28,4 +28,16 @@ export class SendingBlueTemplate {
     name: 'cancel-schedule',
     params: ['title', 'date', 'start', 'end']
   } as const;
+
+  static OrderCreate = {
+    id: 6,
+    name: 'order-create',
+    params: ['type', 'name', 'quantity', 'discount', 'total', 'paymentType']
+  } as const;
+
+  static OrderCancel = {
+    id: 7,
+    name: 'order-cancel',
+    params: ['type', 'name', 'quantity', 'discount', 'total', 'paymentType']
+  } as const;
 }
