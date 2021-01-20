@@ -38,8 +38,9 @@ router.put(
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().required(),
       email: Joi.string().email().required(),
-      specialty: Joi.string().max(100).optional().allow(null, ''),
-      password: Joi.string().optional().allow(null)
+      confirmationCode: Joi.string().allow(null, ''),
+      specialty: Joi.string().max(100).allow(null, ''),
+      password: Joi.string().allow(null, '')
     })
   })
 );

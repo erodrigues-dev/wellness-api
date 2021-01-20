@@ -8,6 +8,7 @@ import {
     EmployeeRecoverPasswordUseCase
 } from '../../shared/useCases/employee/recover-password/EmployeeRecoverPasswordUseCase';
 import { SendEmailConfirmationUseCase } from '../../shared/useCases/SendEmailConfirmationUseCase';
+import { ICloudFile } from '../../shared/utils/interfaces/ICloudFile';
 
 export class SessionController {
   async login(req: Request, res: Response, next: NextFunction) {
@@ -27,15 +28,16 @@ export class SessionController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.user;
-      const { name, email, password, specialty } = req.body;
-      const file = req.file as any;
+      const { name, email, confirmationCode, password, specialty } = req.body;
+      const file = req.file as ICloudFile;
       const payload = await service.update({
         id,
         name,
         email,
+        confirmationCode,
         password,
         specialty,
-        imageUrl: file?.url as string
+        imageUrl: file?.url
       });
 
       const token = jwt.sign({ ...payload }, process.env.JWT_SECRET, {
