@@ -2,6 +2,7 @@ import CustomError from '../../custom-error/CustomError';
 import Customer from '../../database/models/Customer';
 import Order from '../../database/models/Order';
 import { OrderItemTypeEnum, PaymentTypeEnum, RecurrencyPayEnum } from '../../models/enums';
+import { sendEmailOrderCancel } from '../../sendingblue';
 import { SquareSubscription } from '../../square/models/SquareSubscription';
 import { squareSubscriptionService } from '../../square/services';
 
@@ -16,6 +17,7 @@ export class CancelSubscriptionUseCase {
     await this.checkIsRecurrencyOrder();
     await this.cancelInSquare();
     await this.updateOrder();
+    await this.sendEmail();
   }
 
   async loadOrder(): Promise<void> {
@@ -24,6 +26,10 @@ export class CancelSubscriptionUseCase {
         {
           association: 'orderPackages',
           attributes: ['recurrencyPay']
+        },
+        {
+          association: 'customer',
+          attributes: ['name', 'email']
         }
       ]
     });
@@ -55,11 +61,29 @@ export class CancelSubscriptionUseCase {
 
   private async updateOrder(): Promise<void> {
     this.order.canceledDate = new Date();
-    this.order.paidUntilDate = new Date(
-      `${this.subscription.paid_until_date}T00:00:00`
-    );
+    if (this.subscription.paid_until_date) {
+      this.order.paidUntilDate = new Date(
+        `${this.subscription.paid_until_date}T00:00:00`
+      );
+    }
     this.order.status = this.subscription.status;
 
     await this.order.save();
+  }
+
+  private async sendEmail(): Promise<void> {
+    const [packageObj] = this.order.orderPackages;
+    await sendEmailOrderCancel.send({
+      to: {
+        name: this.order.customer.name,
+        email: this.order.customer.email
+      },
+      params: {
+        name: packageObj.name,
+        recurrency: packageObj.recurrencyPay,
+        canceledDate: this.order.canceledDate,
+        paidUntilDate: this.order.paidUntilDate
+      }
+    });
   }
 }

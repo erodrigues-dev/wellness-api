@@ -6,5 +6,6 @@ export function formatTime24To12(time: string): string {
 }
 
 export function formatDateToDisplay(date: Date | string) {
+  if (!date) return null;
   return format(new Date(date), 'MM/dd/yyyy');
 }

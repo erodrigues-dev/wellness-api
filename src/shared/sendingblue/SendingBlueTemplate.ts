@@ -38,6 +38,6 @@ export class SendingBlueTemplate {
   static OrderCancel = {
     id: 7,
     name: 'order-cancel',
-    params: ['type', 'name', 'quantity', 'discount', 'total', 'paymentType']
+    params: ['name', 'recurrency', 'canceledDate', 'paidUntilDate']
   } as const;
 }

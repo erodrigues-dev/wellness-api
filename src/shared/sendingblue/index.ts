@@ -1,6 +1,7 @@
 import Axios from 'axios';
 
 import { SendEmailConfirmation } from './SendEmailConfirmation';
+import { SendEmailOrderCancel } from './SendEmailOrderCancel';
 import { SendEmailOrderCreate } from './SendEmailOrderCreate';
 import { SendEmailRecoverPassword } from './SendEmailRecoverPassword';
 import { SendEmailSchedule } from './SendEmailSchedule';
@@ -25,3 +26,4 @@ export const sendEmailRecoverPassword = new SendEmailRecoverPassword(
 );
 export const sendEmailSchedule = new SendEmailSchedule(sendEmailService);
 export const sendEmailOrderCreate = new SendEmailOrderCreate(sendEmailService);
+export const sendEmailOrderCancel = new SendEmailOrderCancel(sendEmailService);
