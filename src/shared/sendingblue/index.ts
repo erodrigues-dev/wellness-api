@@ -16,7 +16,7 @@ export const sendEmailService = new SendEmailService(api);
 export const sendEmailConfirmation = new SendEmailConfirmation(
   sendEmailService
 );
-export const sendEmailSigup = new SendEmailSignUp(sendEmailService);
+export const sendEmailSignUp = new SendEmailSignUp(sendEmailService);
 export const sendEmailRecoverPassword = new SendEmailRecoverPassword(
   sendEmailService
 );

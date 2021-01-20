@@ -1,6 +1,6 @@
 import { Customer } from '../../../models/entities/Customer';
 import { CustomerViewModel } from '../../../models/viewmodels/CustomerViewModel';
-import { sendEmailCustomer } from '../../../sendingblue';
+import { sendEmailSignUp } from '../../../sendingblue';
 import customerService from '../../../services/CustomerService';
 import { SquareCustomer } from '../../../square/models/SquareCustomer';
 import { squareCustomerService } from '../../../square/services/index';
@@ -54,7 +54,7 @@ export default class CreateCustomerUseCase {
   }
 
   private async sendEmail(): Promise<void> {
-    await sendEmailCustomer.sendSignUp({
+    await sendEmailSignUp.send({
       name: this.customer.name,
       email: this.customer.email,
       tempPassword: this.tempPassword

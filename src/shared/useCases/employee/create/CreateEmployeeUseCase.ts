@@ -3,7 +3,7 @@ import { ForeignKeyConstraintError } from 'sequelize';
 import CustomError from '../../../custom-error/CustomError';
 import Employee from '../../../database/models/Employee';
 import { EmployeeViewModel } from '../../../models/viewmodels/EmployeeViewModel';
-import { sendEmailSigup } from '../../../sendingblue';
+import { sendEmailSignUp } from '../../../sendingblue';
 import employeeService from '../../../services/EmployeeService';
 import { generateTempPassword, hash } from '../../../utils/hash-password';
 import { CreateEmployeeModel } from './CreateEmployeeModel';
@@ -50,7 +50,7 @@ export class CreateEmployeeUseCase {
   }
 
   private async sendEmail(): Promise<void> {
-    await sendEmailSigup.send({
+    await sendEmailSignUp.send({
       name: this.data.name,
       email: this.data.email,
       tempPassword: this.tempPassword
