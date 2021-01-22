@@ -24,7 +24,7 @@ router.get(
       name: Joi.string().allow('').optional(),
       activityName: Joi.string().allow('').optional(),
       categoryId: Joi.number().integer().positive().allow('').optional(),
-      page: Joi.number().min(1),
+      page: Joi.number().min(1).optional(),
       limit: Joi.number().min(1).optional()
     })
   })

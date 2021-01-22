@@ -1,24 +1,20 @@
-import { Op, Transaction } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Package from '../database/models/Package';
-import { PackageDTO } from '../models/dto/PackageDTO';
 import IPackage, { IPackageWithIncludes } from '../models/entities/IPackage';
-import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import IPackageService, { IFilter } from './interfaces/IPackageService';
 
 export class PackageService implements IPackageService {
   async list(
     filter: IFilter,
-    page: number = 1,
-    limit: number = 10
+    page: number = null,
+    limit: number = null
   ): Promise<IPackage[]> {
     const [where, whereActivity] = this.buildQuery(filter);
 
-    const rows: Package[] = await Package.findAll({
+    const findOptions: FindOptions = {
       where,
-      limit: limit,
-      offset: (page - 1) * limit,
       include: [
         {
           association: Package.associations.activities,
@@ -30,7 +26,14 @@ export class PackageService implements IPackageService {
         }
       ],
       order: ['name']
-    });
+    };
+
+    if (!!page && !!limit) {
+      findOptions.limit = limit;
+      findOptions.offset = (page - 1) * limit;
+    }
+
+    const rows: Package[] = await Package.findAll(findOptions);
 
     return rows.map(this.serialize);
   }

@@ -1,8 +1,10 @@
-import { isPast, parseISO, isToday } from 'date-fns';
+import { isPast, isToday, parseISO } from 'date-fns';
 
 import CustomError from '../../custom-error/CustomError';
 import Schedule from '../../database/models/Schedule';
 import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
+import { sendEmailSchedule } from '../../sendingblue';
+import { formatDateToDisplay, formatTime24To12 } from '../../utils/date-utils';
 
 export class ScheduleChangeStatusUseCase {
   constructor(
@@ -12,12 +14,24 @@ export class ScheduleChangeStatusUseCase {
   ) {}
 
   async changeStatus() {
-    const schedule = await Schedule.findByPk(this.scheduleId);
-
+    const schedule = await this.getSchedule();
     this.checkIsPermited(schedule, this.status);
+    await this.updateSchedule(schedule);
+    await this.sendEmail(schedule);
+  }
 
+  private async getSchedule() {
+    return await Schedule.findByPk(this.scheduleId, {
+      include: [
+        { association: 'customer', attributes: ['id', 'name', 'email'] }
+      ]
+    });
+  }
+
+  private async updateSchedule(schedule: Schedule) {
     if (this.status === ScheduleStatusEnum.Completed)
       schedule.attenderId = this.userId;
+
     schedule.status = this.status;
 
     await schedule.save();
@@ -84,5 +98,17 @@ export class ScheduleChangeStatusUseCase {
         this.errorPermitedMessage(scheduleStatus, newStatus),
         400
       );
+  }
+
+  private async sendEmail(schedule: Schedule): Promise<void> {
+    if (schedule.status !== ScheduleStatusEnum.Canceled) return;
+    await sendEmailSchedule.sendCancel({
+      name: schedule.customer.name,
+      email: schedule.customer.email,
+      title: schedule.title,
+      date: formatDateToDisplay(schedule.date),
+      start: formatTime24To12(schedule.start),
+      end: formatTime24To12(schedule.end)
+    });
   }
 }

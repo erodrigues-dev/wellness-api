@@ -1,20 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
 
-import customerService from '../../shared/services/CustomerService';
-import ICustomerService from '../../shared/services/interfaces/ICustomerService';
-import CreateCustomer from '../../shared/useCases/customer/CreateCustomer';
-import { CustomerDTO } from '../../shared/useCases/customer/CustomerDTO';
+import customerService, { CustomerService } from '../../shared/services/CustomerService';
+import { CreateCustomerModel } from '../../shared/useCases/customer/create/CreateCustomerModel';
+import CreateCustomerUseCase from '../../shared/useCases/customer/create/CreateCustomerUseCase';
 import { ListActivitiesUseCase } from '../../shared/useCases/customer/ListActivitiesUseCase';
-import UpdateCustomer from '../../shared/useCases/customer/UpdateCustomer';
+import { UpdateCustomerModel } from '../../shared/useCases/customer/update/UpdateCustomerModel';
+import UpdateCustomerUseCase from '../../shared/useCases/customer/update/UpdateCustomerUseCase';
 import ICustomerController, {
-  IGetRequest,
-  IIndexRequest,
-  IStoreRequest,
-  IUpdateRequest
+    IGetRequest, IIndexRequest, IStoreRequest, IUpdateRequest
 } from './interfaces/ICustomerController';
 
 export class CustomerController implements ICustomerController {
-  constructor(private service: ICustomerService) {}
+  constructor(private service: CustomerService) {}
 
   async index(req: IIndexRequest, res: Response, next: NextFunction) {
     try {
@@ -43,11 +40,11 @@ export class CustomerController implements ICustomerController {
 
   async store(req: IStoreRequest, res: Response, next: NextFunction) {
     try {
-      const dto = new CustomerDTO()
-        .parseFromBody(req.body)
+      const dto = new CreateCustomerModel()
+        .parse(req.body)
         .withImageUrl(req.file?.url);
 
-      const model = await new CreateCustomer(dto).create();
+      const model = await new CreateCustomerUseCase(dto).create();
 
       return res.json(model);
     } catch (error) {
@@ -57,11 +54,11 @@ export class CustomerController implements ICustomerController {
 
   async update(req: IUpdateRequest, res: Response<any>, next: NextFunction) {
     try {
-      const dto = new CustomerDTO()
-        .parseFromBody(req.body)
+      const dto = new UpdateCustomerModel()
+        .parse(req.body)
         .withImageUrl(req.file?.url);
 
-      const model = await new UpdateCustomer(dto).update();
+      const model = await new UpdateCustomerUseCase(dto).update();
 
       return res.json(model);
     } catch (error) {
@@ -81,6 +78,4 @@ export class CustomerController implements ICustomerController {
   }
 }
 
-const controller = new CustomerController(customerService);
-
-export default controller;
+export default new CustomerController(customerService);

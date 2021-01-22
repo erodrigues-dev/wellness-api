@@ -1,25 +1,33 @@
-import { Op, Transaction } from 'sequelize';
+import { FindOptions, Op, Transaction } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Profile from '../database/models/Profile';
 import { ProfileDto } from '../models/dto/ProfileDto';
 import { ProfileFilterDto } from '../models/dto/ProfileFilterDto';
-import { ProfileListViewModel, ProfileViewModel } from '../models/viewmodels/ProfileViewModel';
+import {
+  ProfileListViewModel,
+  ProfileViewModel
+} from '../models/viewmodels/ProfileViewModel';
 
 export class ProfileService {
   async list(
     filter: ProfileFilterDto,
-    page: number = 1,
-    limit: number = 10
+    page: number = null,
+    limit: number = null
   ): Promise<ProfileListViewModel[]> {
     const where = this.buildQuery(filter);
 
-    const rows: Profile[] = await Profile.findAll({
+    const findOptions: FindOptions = {
       where,
-      limit,
-      offset: (page - 1) * limit,
       order: ['name']
-    });
+    };
+
+    if (!!page && !!limit) {
+      findOptions.limit = limit;
+      findOptions.offset = (page - 1) * limit;
+    }
+
+    const rows: Profile[] = await Profile.findAll(findOptions);
 
     return rows.map(row => ProfileListViewModel.parse(row.toJSON()));
   }

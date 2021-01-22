@@ -1,22 +1,23 @@
-import { Op } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Activity from '../database/models/Activity';
 import IActivity from '../models/entities/IActivity';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
-import IActivityService, { IActivityFilter } from './interfaces/IActivityService';
+import IActivityService, {
+  IActivityFilter
+} from './interfaces/IActivityService';
 
 export class ActivityService implements IActivityService {
   async list(
     filter: IActivityFilter,
-    page = 1,
-    limit = 10
+    page: number = null,
+    limit: number = null
   ): Promise<IActivity[]> {
     const where = this.buildQuery(filter);
-    return await Activity.findAll({
+
+    const findOptions: FindOptions = {
       where,
-      limit: limit,
-      offset: (page - 1) * limit,
       order: ['name'],
       include: [
         {
@@ -28,7 +29,14 @@ export class ActivityService implements IActivityService {
           attributes: ['id', 'name']
         }
       ]
-    });
+    };
+
+    if (!!page && !!limit) {
+      findOptions.limit = limit;
+      findOptions.offset = (page - 1) * limit;
+    }
+
+    return await Activity.findAll(findOptions);
   }
 
   count(filter: IActivityFilter): Promise<number> {

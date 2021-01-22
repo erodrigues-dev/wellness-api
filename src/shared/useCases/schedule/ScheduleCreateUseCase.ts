@@ -3,15 +3,17 @@ import { Op } from 'sequelize';
 
 import CustomError from '../../custom-error/CustomError';
 import Activity from '../../database/models/Activity';
-import ActivitySchedule from '../../database/models/ActivitySchedule';
+import Customer from '../../database/models/Customer';
+import Event from '../../database/models/Event';
 import Order from '../../database/models/Order';
 import OrderActivity from '../../database/models/OrderActivity';
-import OrderPackage from '../../database/models/OrderPackage';
 import Schedule from '../../database/models/Schedule';
 import { PackageTypeEnum } from '../../models/enums/PackageTypeEnum';
-import { PAID_STATUS, PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
+import { PAID_STATUS } from '../../models/enums/PaymentStatusEnum';
 import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
 import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
+import { sendEmailSchedule } from '../../sendingblue';
+import { formatDateToDisplay, formatTime24To12 } from '../../utils/date-utils';
 
 export class ScheduleCreateUseCase {
   constructor(
@@ -29,8 +31,12 @@ export class ScheduleCreateUseCase {
     const event = await this.getEvent(this.eventId);
     await this.checkAvailableTime(event);
     await this.checkOrderAvailable(this.orderActivityId);
+    const schedule = await this.createSchedule(event);
+    await this.sendEmail(schedule);
+  }
 
-    await Schedule.create({
+  private async createSchedule(event: Event) {
+    return Schedule.create({
       customerId: this.customerId,
       orderActivityId: this.orderActivityId,
       activityScheduleId: this.eventId,
@@ -42,15 +48,15 @@ export class ScheduleCreateUseCase {
     });
   }
 
-  async getEvent(eventId: number): Promise<ActivitySchedule> {
-    const event = await ActivitySchedule.findByPk(eventId);
+  async getEvent(eventId: number): Promise<Event> {
+    const event = await Event.findByPk(eventId);
 
     if (!event) throw new CustomError('Invalid activity schedule', 400);
 
-    return event.toJSON() as ActivitySchedule;
+    return event.toJSON() as Event;
   }
 
-  async checkAvailableTime(event: ActivitySchedule): Promise<void> {
+  async checkAvailableTime(event: Event): Promise<void> {
     if (isPast(new Date(`${this.formatedDate}T${event.start}`)))
       throw new CustomError('Cannot be scheduled on this time');
 
@@ -260,5 +266,22 @@ export class ScheduleCreateUseCase {
     }
 
     return [date, date];
+  }
+
+  private async sendEmail(schedule: Schedule) {
+    const { name, email } = await this.getCustomer();
+    const { title, date, start, end } = schedule;
+    await sendEmailSchedule.sendCreate({
+      name,
+      email,
+      title,
+      date: formatDateToDisplay(date),
+      start: formatTime24To12(start),
+      end: formatTime24To12(end)
+    });
+  }
+
+  private async getCustomer(): Promise<Customer> {
+    return Customer.findByPk(this.customerId);
   }
 }

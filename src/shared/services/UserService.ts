@@ -6,33 +6,31 @@ import { EmployeeSelfUpdateDto } from '../models/dto/EmployeeSelfUpdateDto';
 import { LoginViewModel } from '../models/viewmodels/LoginViewModel';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import { compare, hash } from '../utils/hash-password';
+import emailConfirmationCodeService from './EmailConfirmationCodeService';
 
 export class UserService {
   async login(email: string, password: string): Promise<LoginViewModel> {
     const user = await this.getUserWithProfileByEmail(email);
     if (!user) return null;
 
-    const match = await compare(password, user.password);
+    const matchPassword = await compare(password, user.password);
+    const matchTempPassword = await compare(password, user.tempPassword);
 
-    if (!match) throw new CustomError('Login or Password is not valid.', 401);
+    if (!matchPassword && !matchTempPassword) {
+      throw new CustomError('Login or Password is not valid.', 401);
+    }
 
     return LoginViewModel.parse(user.toJSON());
   }
 
   async update(data: EmployeeSelfUpdateDto) {
     const model = await Employee.findByPk(data.id, {
-      include: [
-        {
-          association: Employee.associations.profile
-        }
-      ]
+      include: ['profile']
     });
     if (!model) throw new CustomError('Employee not found', 404);
 
-    if (model.email !== data.email) {
-      const emailExist = await this.checkEmail(data.id, data.email);
-      if (emailExist) throw new CustomError('Email in use', 400);
-    }
+    if (model.email !== data.email)
+      await this.checkChangeEmail(data.id, data.email, data.confirmationCode);
 
     model.name = data.name;
     model.email = data.email;
@@ -48,7 +46,23 @@ export class UserService {
 
     await model.save();
 
+    await emailConfirmationCodeService.deleteByEmail(model.email);
+
     return LoginViewModel.parse(model.toJSON());
+  }
+
+  private async checkChangeEmail(userId: number, email: string, code: string) {
+    const emailExist = await this.checkEmail(userId, email);
+    if (emailExist) throw new CustomError('Email in use', 400);
+
+    if (!code)
+      throw new CustomError('Confirmation code is required to change email');
+
+    const codeIsValid = await emailConfirmationCodeService.codeIsValid(
+      email,
+      code
+    );
+    if (!codeIsValid) throw new CustomError('Confirmation code is invalid');
   }
 
   private getUserWithProfileByEmail(email: string): Promise<Employee> {

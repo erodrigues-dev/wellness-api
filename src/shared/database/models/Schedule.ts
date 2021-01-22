@@ -1,8 +1,8 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
 
-import ActivitySchedule from './ActivitySchedule';
+import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
 import Customer from './Customer';
+import Event from './Event';
 import OrderActivity from './OrderActivity';
 
 export default class Schedule extends Model {
@@ -22,7 +22,7 @@ export default class Schedule extends Model {
 
   customer?: Customer;
   orderActivity?: OrderActivity;
-  activitySchedule?: ActivitySchedule;
+  activitySchedule?: Event;
 
   static setup(connection: Sequelize) {
     Schedule.init(
@@ -46,7 +46,7 @@ export default class Schedule extends Model {
       as: 'customer'
     });
 
-    Schedule.belongsTo(ActivitySchedule, {
+    Schedule.belongsTo(Event, {
       foreignKey: 'activityScheduleId',
       as: 'activitySchedule'
     });

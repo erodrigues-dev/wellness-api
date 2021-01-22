@@ -1,8 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 
 import { PermissionHelper } from '../../shared/models/entities/Permission';
 import service from '../../shared/services/UserService';
+import {
+    EmployeeRecoverPasswordUseCase
+} from '../../shared/useCases/employee/recover-password/EmployeeRecoverPasswordUseCase';
+import { SendEmailConfirmationUseCase } from '../../shared/useCases/SendEmailConfirmationUseCase';
+import { ICloudFile } from '../../shared/utils/interfaces/ICloudFile';
 
 export class SessionController {
   async login(req: Request, res: Response, next: NextFunction) {
@@ -22,15 +28,16 @@ export class SessionController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.user;
-      const { name, email, password, specialty } = req.body;
-      const file = req.file as any;
+      const { name, email, confirmationCode, password, specialty } = req.body;
+      const file = req.file as ICloudFile;
       const payload = await service.update({
         id,
         name,
         email,
+        confirmationCode,
         password,
         specialty,
-        imageUrl: file?.url as string
+        imageUrl: file?.url
       });
 
       const token = jwt.sign({ ...payload }, process.env.JWT_SECRET, {
@@ -49,6 +56,29 @@ export class SessionController {
       const permissions = PermissionHelper.listAll(req.user.permissions);
 
       return res.json(permissions);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async recoverPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email } = req.body;
+      await new EmployeeRecoverPasswordUseCase(email).recover();
+      return res.sendStatus(StatusCodes.NO_CONTENT);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async sendConfirmation(req: Request, res: Response, next: NextFunction) {
+    try {
+      await new SendEmailConfirmationUseCase(
+        req.body.name,
+        req.body.email
+      ).send();
+
+      return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (error) {
       next(error);
     }

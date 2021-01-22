@@ -1,57 +1,63 @@
-import { Op } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Employee from '../database/models/Employee';
 import IEmployee from '../models/entities/IEmployee';
+import { EmployeeViewModel } from '../models/viewmodels/EmployeeViewModel';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import { hash } from '../utils/hash-password';
-import IEmployeeService, { IFilter } from './interfaces/IEmployeeService';
 
-export class EmployeeService implements IEmployeeService {
-  async list(filter: IFilter, page = 1, limit = 10): Promise<IEmployee[]> {
+type Filter = {
+  name: string;
+  email: string;
+  specialty: string;
+  profile: string;
+};
+
+export class EmployeeService {
+  async list(
+    filter: Filter,
+    page: number = null,
+    limit: number = null
+  ): Promise<EmployeeViewModel[]> {
     const where = this.buildQuery(filter);
-    const whereProfile = filter.profile
-      ? { name: { [Op.iLike]: `%${filter.profile}%` } }
-      : {};
-    const list = await Employee.findAll({
+
+    const findOptions: FindOptions = {
       where,
-      limit: limit,
-      offset: (page - 1) * limit,
-      attributes: { exclude: ['password', 'profileId'] },
       include: [
         {
           association: Employee.associations.profile,
-          attributes: ['id', 'name'],
-          where: { ...whereProfile }
+          attributes: ['id', 'name']
         }
       ],
       order: ['name']
-    });
+    };
 
-    return list.map(item => item.toJSON() as IEmployee);
+    if (!!page && !!limit) {
+      findOptions.limit = limit;
+      findOptions.offset = (page - 1) * limit;
+    }
+
+    const list = await Employee.findAll(findOptions);
+
+    return EmployeeViewModel.mapCollection(list);
   }
 
-  count(filter: IFilter): Promise<number> {
+  count(filter: Filter): Promise<number> {
     const where = this.buildQuery(filter);
-    const whereProfile = filter.profile
-      ? { name: { [Op.iLike]: `%${filter.profile}%` } }
-      : {};
+
     return Employee.count({
       where,
       include: [
         {
-          association: Employee.associations.profile,
-          where: { ...whereProfile }
+          association: Employee.associations.profile
         }
       ]
     });
   }
 
-  async get(id: number): Promise<IEmployee> {
+  async get(id: number): Promise<EmployeeViewModel> {
     const query: Employee = await Employee.findByPk(id, {
-      attributes: {
-        exclude: ['password', 'profileId']
-      },
       include: [
         {
           association: Employee.associations.profile,
@@ -62,69 +68,41 @@ export class EmployeeService implements IEmployeeService {
 
     if (!query) throw new CustomError('Emplyee not found', 404);
 
-    return query.toJSON() as IEmployee;
+    return EmployeeViewModel.map(query.toJSON() as Employee);
   }
 
-  async create(data: IEmployee): Promise<IEmployee> {
-    data.password = await hash(data.password);
-    const model: Employee = await Employee.create(data);
+  private buildQuery(filter: Filter) {
+    const where: any[] = [];
 
-    return model.toJSON() as IEmployee;
-  }
-
-  async update(data: IEmployee): Promise<IEmployee> {
-    const model: Employee = await Employee.findByPk(data.id);
-    if (!model) throw new CustomError('Employee not found', 404);
-
-    if (model.email !== data.email) {
-      const emailExist = await this.checkEmail(data.id, data.email);
-      if (emailExist) throw new CustomError('Email in use', 400);
+    if (filter.name) {
+      where.push({ name: { [Op.iLike]: `%${filter.name}%` } });
     }
 
-    model.name = data.name;
-    model.email = data.email;
-    model.specialty = data.specialty;
-    model.profileId = data.profileId;
-    if (data.password) model.password = await hash(data.password);
-
-    if (data.imageUrl) {
-      if (model.imageUrl) await deleteFileFromUrl(model.imageUrl);
-
-      model.imageUrl = data.imageUrl;
+    if (filter.email) {
+      where.push({ email: { [Op.iLike]: `%${filter.email}%` } });
     }
 
-    await model.save();
-    return model.toJSON() as IEmployee;
-  }
+    if (filter.specialty) {
+      where.push({ specialty: { [Op.iLike]: `%${filter.specialty}%` } });
+    }
 
-  private buildQuery(filter: IFilter) {
-    const where = {
-      name: { [Op.iLike]: `%${filter.name}%` },
-      email: { [Op.iLike]: `%${filter.email}%` },
-      specialty: { [Op.iLike]: `%${filter.specialty}%` }
+    if (filter.profile) {
+      where.push({
+        ['$profile.name$']: { [Op.iLike]: `%${filter.profile}%` }
+      });
+    }
+
+    return {
+      [Op.and]: where
     };
-
-    if (!filter.name) {
-      delete where.name;
-    }
-
-    if (!filter.email) {
-      delete where.email;
-    }
-
-    if (!filter.specialty) {
-      delete where.specialty;
-    }
-
-    return where;
   }
 
-  private async checkEmail(id: number, email: string): Promise<boolean> {
+  async checkEmail(email: string, id: number = null): Promise<boolean> {
+    const queryParams: any[] = [{ email }];
+    if (id) queryParams.push({ id });
+
     const matchs = await Employee.count({
-      where: {
-        id: { [Op.ne]: id },
-        email: email
-      }
+      where: { [Op.and]: queryParams }
     });
 
     return matchs > 0;

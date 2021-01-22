@@ -46,8 +46,6 @@
 
 - [x] cancelar
 - [ ] enviar email
-- [ ] disponibilizar horario
-- [ ] estornar uso da atividade na conta do cliente
 
 ## workflow status
 
@@ -58,3 +56,11 @@
 ## create order_activity
 
 - [x] field quantity
+
+## Create Customer (Send Emails)
+
+- [x] send email with temporary password
+
+## Update Customer
+
+- [x] bloquear alteração de email

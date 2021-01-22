@@ -18,8 +18,8 @@ export interface IUpdate extends IStore {
 export interface IFilter {
   relationName?: string;
   customerId?: number;
-  page?: number;
-  limit?: number;
+  page?: unknown;
+  limit?: unknown;
 }
 
 export default interface ICustomerDiscountService {

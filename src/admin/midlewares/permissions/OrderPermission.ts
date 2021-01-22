@@ -5,10 +5,7 @@ import { checkPermission } from '../../../shared/utils/permission';
 
 const router = Router();
 
-router.get('/orders', checkPermission('orders', Permission.OrderList));
-router.put(
-  '/orders/:id/cancel',
-  checkPermission('orders', Permission.OrderCancel)
-);
+router.get('/orders', checkPermission(Permission.OrderList));
+router.put('/orders/:id/cancel', checkPermission(Permission.OrderCancel));
 
 export default router;

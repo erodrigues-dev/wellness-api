@@ -13,7 +13,7 @@ import { SquareSubscriptionCreateData } from '../../square/models/SquareSubscrip
 import {
     squareCustomerService, squarePaymentService, squareSubscriptionService
 } from '../../square/services/index';
-import CreateOrder from './CreateOrder';
+import CreateOrderUseCase from './CreateOrderUseCase';
 import CreateOrderWithCardDTO from './CreateOrderWithCardDTO';
 
 class PaymentData {
@@ -25,7 +25,7 @@ class PaymentData {
 
 export default class PayWithCard {
   private transaction: Transaction;
-  private createOrder = new CreateOrder();
+  private createOrder = new CreateOrderUseCase();
   private payment = new PaymentData();
 
   constructor(private data: CreateOrderWithCardDTO) {}

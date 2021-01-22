@@ -1,5 +1,5 @@
-import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
+import { Router } from 'express';
 
 const router = Router();
 
@@ -11,8 +11,8 @@ router.get(
       email: Joi.string().allow('').optional(),
       profile: Joi.string().allow('').optional(),
       specialty: Joi.string().allow('').optional(),
-      page: Joi.number(),
-      limit: Joi.number()
+      page: Joi.number().min(1).optional(),
+      limit: Joi.number().min(1).optional()
     })
   })
 );
@@ -32,7 +32,7 @@ router.post(
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().required(),
       email: Joi.string().required().email(),
-      password: Joi.string().required().min(8).max(20),
+      phone: Joi.string().allow(null, '').max(20),
       specialty: Joi.string().max(100).optional().allow(''),
       profileId: Joi.number().required()
     })
@@ -45,8 +45,7 @@ router.put(
     [Segments.BODY]: Joi.object().keys({
       id: Joi.number().required(),
       name: Joi.string().required(),
-      email: Joi.string().required().email(),
-      password: Joi.string().min(8).max(20).optional().allow(''),
+      phone: Joi.string().allow(null, '').max(20),
       specialty: Joi.string().max(100).optional().allow(''),
       profileId: Joi.number().required()
     })

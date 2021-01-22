@@ -15,6 +15,10 @@ export default function useAdminModule(app: Express) {
         {
           url: '/admin/sessions',
           methods: ['POST']
+        },
+        {
+          url: '/admin/sessions/recover-password',
+          methods: ['POST']
         }
       ]
     })

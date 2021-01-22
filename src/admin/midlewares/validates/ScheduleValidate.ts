@@ -13,8 +13,8 @@ router.get(
       dateStart: Joi.string().isoDate().allow('').options({ convert: false }),
       dateEnd: Joi.string().isoDate().allow('').options({ convert: false }),
       status: Joi.string().allow(''),
-      page: Joi.number().default(1).allow(''),
-      limit: Joi.number().default(10).allow('')
+      page: Joi.number().min(1).optional(),
+      limit: Joi.number().min(1).optional()
     })
   })
 );

@@ -1,14 +1,14 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
-import ICustomer from '../../models/entities/ICustomer';
-
-export default class Customer extends Model<ICustomer> implements ICustomer {
-  id?: number;
+export default class Customer extends Model {
+  id: number;
   name: string;
   email: string;
   password: string;
   imageUrl: string;
   squareId: string;
+  privateNotes: string;
+  phone: string;
 
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -20,7 +20,9 @@ export default class Customer extends Model<ICustomer> implements ICustomer {
         email: DataTypes.STRING,
         password: DataTypes.STRING,
         imageUrl: DataTypes.STRING,
-        squareId: DataTypes.STRING
+        squareId: DataTypes.STRING,
+        privateNotes: DataTypes.STRING,
+        phone: DataTypes.STRING
       },
       { sequelize: connection, tableName: 'customers' }
     );

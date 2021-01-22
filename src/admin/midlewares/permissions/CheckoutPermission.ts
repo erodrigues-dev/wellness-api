@@ -7,15 +7,15 @@ const router = Router();
 
 router.post(
   '/checkout/customers/:customerId/cards',
-  checkPermission('checkout', Permission.OrderList)
+  checkPermission(Permission.OrderList)
 );
 router.post(
   '/checkout/pay-with-money',
-  checkPermission('checkout', Permission.OrderCheckout)
+  checkPermission(Permission.OrderCheckout)
 );
 router.post(
   '/checkout/pay-with-card',
-  checkPermission('checkout', Permission.OrderCheckout)
+  checkPermission(Permission.OrderCheckout)
 );
 
 export default router;

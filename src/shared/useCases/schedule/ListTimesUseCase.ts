@@ -2,7 +2,7 @@ import { format, isFuture, isToday, parseISO, startOfDay } from 'date-fns';
 import RRule, { WeekdayStr } from 'rrule';
 import { Op } from 'sequelize';
 
-import ActivitySchedule from '../../database/models/ActivitySchedule';
+import Event from '../../database/models/Event';
 import Schedule from '../../database/models/Schedule';
 import { convertToRRuleFrequency } from '../../models/enums/FrequencyEnum';
 import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
@@ -30,7 +30,7 @@ export class ListTimesUseCase {
       .map(this.mapToViewModel);
   }
 
-  private checkIfRecurrentEventHasOcurrenceInDate(item: ActivitySchedule) {
+  private checkIfRecurrentEventHasOcurrenceInDate(item: Event) {
     if (!item.recurrent) return false;
 
     const rrule = new RRule({
@@ -47,7 +47,7 @@ export class ListTimesUseCase {
     return events.length === 1;
   }
 
-  private checkIfIsFutureTime(item: ActivitySchedule) {
+  private checkIfIsFutureTime(item: Event) {
     const eventDatetime = parseISO(
       `${format(this.date, 'yyyy-MM-dd')}T${item.start}`
     );
@@ -55,7 +55,7 @@ export class ListTimesUseCase {
   }
 
   private async listEvents() {
-    const list = await ActivitySchedule.findAll({
+    const list = await Event.findAll({
       where: {
         activityId: this.activityId,
         [Op.or]: [
@@ -78,10 +78,10 @@ export class ListTimesUseCase {
       order: ['start']
     });
 
-    return list.map(item => item.toJSON() as ActivitySchedule);
+    return list.map(item => item.toJSON() as Event);
   }
 
-  private mapToViewModel(item: ActivitySchedule): ScheduleTimeViewModel {
+  private mapToViewModel(item: Event): ScheduleTimeViewModel {
     return {
       id: item.id,
       title: item.title,
@@ -90,7 +90,7 @@ export class ListTimesUseCase {
     };
   }
 
-  private isAvailableTime(event: ActivitySchedule, scheduleds: Schedule[]) {
+  private isAvailableTime(event: Event, scheduleds: Schedule[]) {
     const maxSchedules = event.activity.maxPeople ?? 1;
     const totalSchedules = scheduleds.filter(
       x => x.activityScheduleId === event.id

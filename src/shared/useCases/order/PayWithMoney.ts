@@ -5,15 +5,15 @@ import Order from '../../database/models/Order';
 import { PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
 import { PaymentTypeEnum } from '../../models/enums/PaymentTypeEnum';
 import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
-import CreateOrder from './CreateOrder';
 import CreateOrderDTO from './CreateOrderDTO';
+import CreateOrderUseCase from './CreateOrderUseCase';
 
 export default class PayWithMoney {
-  private createOrder: CreateOrder;
+  private createOrder: CreateOrderUseCase;
   private transaction: Transaction;
 
   constructor() {
-    this.createOrder = new CreateOrder();
+    this.createOrder = new CreateOrderUseCase();
   }
 
   async pay(data: CreateOrderDTO): Promise<void> {

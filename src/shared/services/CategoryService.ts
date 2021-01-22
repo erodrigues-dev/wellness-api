@@ -15,12 +15,13 @@ export class CategoryService implements ICategoryService {
     limit: number = null
   ): Promise<ICategory[]> {
     const where = this.buildQuery(name, type);
+
     const findOptions: FindOptions = {
       where,
       order: ['name']
     };
 
-    if (page && limit) {
+    if (!!page && !!limit) {
       findOptions.limit = limit;
       findOptions.offset = (page - 1) * limit;
     }

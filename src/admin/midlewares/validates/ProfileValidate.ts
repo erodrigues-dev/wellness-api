@@ -9,7 +9,7 @@ router.get(
     [Segments.QUERY]: Joi.object({
       name: Joi.string().allow('').optional(),
       description: Joi.string().allow('').optional(),
-      page: Joi.number().min(1),
+      page: Joi.number().min(1).optional(),
       limit: Joi.number().min(1).optional()
     })
   })
