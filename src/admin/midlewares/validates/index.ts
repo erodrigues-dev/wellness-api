@@ -1,4 +1,3 @@
-import { errors } from 'celebrate';
 import { Router } from 'express';
 
 import activityValidate from './ActivityValidate';
@@ -28,8 +27,5 @@ router.use(customerDiscountValidate);
 router.use(orderValidate);
 router.use(checkoutValidate);
 router.use(scheduleValidate);
-
-// required in last position
-router.use(errors());
 
 export default router;
