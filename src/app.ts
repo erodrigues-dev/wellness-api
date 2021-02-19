@@ -8,6 +8,7 @@ import morgan from 'morgan';
 import useAdminModule from './admin/admin-module';
 import { databaseConfig } from './shared/database/connection';
 import useErrorHandlers from './shared/error-handlers';
+import useSiteModule from './site/site-module';
 import useWebhooksModule from './webhooks/webhook-module';
 
 databaseConfig();
@@ -32,9 +33,7 @@ app.get('/', (_, res) => {
 
 useAdminModule(app);
 useWebhooksModule(app);
-//useSiteModule(app)
-//useAppEmployeeModule(app)
-//useAppCustomerModule(app)
+useSiteModule(app);
 
 useErrorHandlers(app);
 
