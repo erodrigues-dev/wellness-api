@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import { SigninUseCase } from '../use-cases/SigninUseCase';
 
 export class SigninController {
-  async create(req: Request, res: Response, next: NextFunction) {
+  async handle(req: Request, res: Response, next: NextFunction) {
     try {
       const useCase = new SigninUseCase();
       const token = await useCase.signin(req.body.email, req.body.password);
