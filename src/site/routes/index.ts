@@ -1,11 +1,10 @@
 import { Router } from 'express';
 
-import { SigninController } from '../controllers';
+import { SigninController, SignupController } from '../controllers';
 
 const router = Router();
 
-router.post('/sessions', (req, res, next) =>
-  new SigninController().handle(req, res, next)
-);
+router.post('/sessions/signin', new SigninController().handle);
+router.post('/sessions/signup', new SignupController().handle);
 
 export default router;

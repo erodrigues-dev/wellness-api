@@ -12,7 +12,7 @@ export default function useSiteModule(app: Express) {
     }).unless({
       path: [
         {
-          url: '/site/sessions',
+          url: /\/site\/sessions\/*/,
           methods: ['POST']
         }
       ]
