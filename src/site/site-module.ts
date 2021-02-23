@@ -14,6 +14,10 @@ export default function useSiteModule(app: Express) {
         {
           url: /\/site\/sessions\/*/,
           methods: ['POST']
+        },
+        {
+          url: /\/site\/products\/*/,
+          methods: ['GET']
         }
       ]
     })

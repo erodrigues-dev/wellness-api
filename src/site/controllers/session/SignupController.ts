@@ -2,7 +2,7 @@ import { Joi } from 'celebrate';
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { SignupUseCase } from '../use-cases';
+import { SignupUseCase } from '../../use-cases';
 
 const schema = Joi.object({
   name: Joi.string().required(),
