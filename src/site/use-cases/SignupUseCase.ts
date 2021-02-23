@@ -1,8 +1,10 @@
+import { string } from '@hapi/joi';
 import { Transaction } from 'sequelize';
 
 import CustomError from '../../shared/custom-error/CustomError';
 import conn from '../../shared/database/connection';
 import Customer from '../../shared/database/models/Customer';
+import { sendEmailConfirmation } from '../../shared/sendingblue';
 import emailConfirmationCodeService from '../../shared/services/EmailConfirmationCodeService';
 import { squareCustomerService } from '../../shared/square/services';
 import { hash } from '../../shared/utils/hash-password';
@@ -13,6 +15,11 @@ export interface SignupData {
   phone: string;
   code: string;
   password: string;
+}
+
+export interface SendCodeData {
+  name: string;
+  email: string;
 }
 
 export class SignupUseCase {
@@ -32,6 +39,11 @@ export class SignupUseCase {
     } catch (error) {
       if (this.transaction) this.transaction.rollback();
     }
+  }
+
+  async sendCode(data: SendCodeData) {
+    const confirmation = await emailConfirmationCodeService.create(data.email);
+    await sendEmailConfirmation.send(data.name, data.email, confirmation.code);
   }
 
   private async checkEmailInUse(email: string): Promise<void> {

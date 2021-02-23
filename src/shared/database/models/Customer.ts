@@ -9,6 +9,7 @@ export default class Customer extends Model {
   squareId: string;
   privateNotes: string;
   phone: string;
+  tempPassword: string;
 
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -19,6 +20,7 @@ export default class Customer extends Model {
         name: DataTypes.STRING,
         email: DataTypes.STRING,
         password: DataTypes.STRING,
+        tempPassword: DataTypes.STRING,
         imageUrl: DataTypes.STRING,
         squareId: DataTypes.STRING,
         privateNotes: DataTypes.STRING,

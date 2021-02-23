@@ -12,12 +12,32 @@ const schema = Joi.object({
   password: Joi.string().required().min(8).max(16)
 });
 
+const codeSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().required()
+});
+
 export class SignupController {
+  useCase: SignupUseCase;
+  constructor() {
+    this.useCase = new SignupUseCase();
+  }
+
   async handle(req: Request, res: Response, next: NextFunction) {
     try {
       await schema.validateAsync(req.body);
-      await new SignupUseCase().create(req.body);
+      await this.useCase.create(req.body);
       return res.sendStatus(StatusCodes.CREATED);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async sendCode(req: Request, res: Response, next: NextFunction) {
+    try {
+      await codeSchema.validateAsync(req.body);
+      await this.useCase.sendCode(req.body);
+      return res.sendStatus(StatusCodes.OK);
     } catch (error) {
       next(error);
     }
