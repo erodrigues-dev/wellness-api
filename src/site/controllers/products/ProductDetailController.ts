@@ -1,5 +1,6 @@
 import { Joi } from 'celebrate';
 import { NextFunction, Request, Response } from 'express';
+import { ProductDetailUseCase } from '../../use-cases/products/ProductDetailUseCase';
 
 const schema = Joi.object({
   id: Joi.number().required(),
@@ -7,12 +8,12 @@ const schema = Joi.object({
 });
 
 export class ProductDetailController {
-  constructor() {}
-
   async handle(req: Request, res: Response, next: NextFunction) {
     try {
-      const objParams = await schema.validateAsync(req.params);
-      return res.json(objParams);
+      const params = await schema.validateAsync(req.params);
+      const useCase = new ProductDetailUseCase();
+      const detail = await useCase.load(params.id, params.type);
+      return res.json(detail);
     } catch (error) {
       next(error);
     }
