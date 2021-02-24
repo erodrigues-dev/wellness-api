@@ -1,6 +1,7 @@
 import { Joi } from 'celebrate';
 import { NextFunction, Request, Response } from 'express';
-import { ProductDetailUseCase } from '../../use-cases/products/ProductDetailUseCase';
+
+import { ProductDetailUseCase } from '../../use-cases/products';
 
 const schema = Joi.object({
   id: Joi.number().required(),
