@@ -1,13 +1,12 @@
 import jwt from 'jsonwebtoken';
 
-import Customer from '../../shared/database/models/Customer';
-import { compare } from '../../shared/utils/hash-password';
-import emailConfirmationCodeService from '../../shared/services/EmailConfirmationCodeService';
+import Customer from '../../../shared/database/models/Customer';
+import { compare } from '../../../shared/utils/hash-password';
+import { sendEmailRecoverPassword } from '../../../shared/sendingblue';
 import {
-  sendEmailConfirmation,
-  sendEmailRecoverPassword
-} from '../../shared/sendingblue';
-import { generateTempPassword, hash } from '../../shared/utils/hash-password';
+  generateTempPassword,
+  hash
+} from '../../../shared/utils/hash-password';
 
 export class SigninUseCase {
   async signin(email: string, password: string): Promise<string> {

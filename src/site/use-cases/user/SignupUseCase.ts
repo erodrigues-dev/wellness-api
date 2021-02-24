@@ -1,26 +1,13 @@
-import { string } from '@hapi/joi';
 import { Transaction } from 'sequelize';
 
-import CustomError from '../../shared/custom-error/CustomError';
-import conn from '../../shared/database/connection';
-import Customer from '../../shared/database/models/Customer';
-import { sendEmailConfirmation } from '../../shared/sendingblue';
-import emailConfirmationCodeService from '../../shared/services/EmailConfirmationCodeService';
-import { squareCustomerService } from '../../shared/square/services';
-import { hash } from '../../shared/utils/hash-password';
-
-export interface SignupData {
-  name: string;
-  email: string;
-  phone: string;
-  code: string;
-  password: string;
-}
-
-export interface SendCodeData {
-  name: string;
-  email: string;
-}
+import CustomError from '../../../shared/custom-error/CustomError';
+import conn from '../../../shared/database/connection';
+import Customer from '../../../shared/database/models/Customer';
+import { sendEmailConfirmation } from '../../../shared/sendingblue';
+import emailConfirmationCodeService from '../../../shared/services/EmailConfirmationCodeService';
+import { squareCustomerService } from '../../../shared/square/services';
+import { hash } from '../../../shared/utils/hash-password';
+import { SignupData, SendCodeData } from './models';
 
 export class SignupUseCase {
   private transaction: Transaction;

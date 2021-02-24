@@ -2,7 +2,7 @@ import { Joi } from 'celebrate';
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { SigninUseCase } from '../../use-cases';
+import { SigninUseCase } from '../../use-cases/user';
 
 const schema = Joi.object().keys({
   email: Joi.string().email().required(),
@@ -18,7 +18,7 @@ export class SigninController {
     this.useCase = new SigninUseCase();
   }
 
-  async handle(req: Request, res: Response, next: NextFunction) {
+  async signin(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
       await schema.validateAsync({ email, password });

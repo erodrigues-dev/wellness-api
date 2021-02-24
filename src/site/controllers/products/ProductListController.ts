@@ -1,6 +1,6 @@
 import { Joi } from 'celebrate';
 import { NextFunction, Request, Response } from 'express';
-import { ProductListUseCase } from '../../use-cases/ProductListUseCase';
+import { ProductListUseCase } from '../../use-cases/products';
 
 const listSchema = Joi.object({
   page: Joi.number().positive().default(1),
@@ -14,7 +14,7 @@ export class ProductListController {
     this.useCase = new ProductListUseCase();
   }
 
-  async list(req: Request, res: Response, next: NextFunction) {
+  async handle(req: Request, res: Response, next: NextFunction) {
     try {
       const values = await listSchema.validateAsync(req.query);
       const list = await this.useCase.list(values.page, values.limit);

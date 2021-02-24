@@ -2,7 +2,7 @@ import { Joi } from 'celebrate';
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { SignupUseCase } from '../../use-cases';
+import { SignupUseCase } from '../../use-cases/user';
 
 const schema = Joi.object({
   name: Joi.string().required(),
@@ -23,7 +23,7 @@ export class SignupController {
     this.useCase = new SignupUseCase();
   }
 
-  async handle(req: Request, res: Response, next: NextFunction) {
+  async signup(req: Request, res: Response, next: NextFunction) {
     try {
       await schema.validateAsync(req.body);
       await this.useCase.create(req.body);
