@@ -8,7 +8,7 @@ export class ProductListUseCase {
   async list(page = 1, limit = 10): Promise<List<ProductListViewModel>> {
     const result = await conn.query<ProductListViewModel>(
       `
-      SELECT p.title, p.image_url, p.price, p."type", c2."name" category FROM (
+      SELECT p.id, p.title, p.image_url, p.price, p.type, c2."name" category FROM (
         SELECT id, "name" title, image_url, price, category_id, 'activity' "type" FROM activities
         UNION SELECT id, "name" title, image_url, price, category_id, 'package' "type" FROM packages
       ) p
