@@ -31,6 +31,9 @@ router.post('/sessions/send-confirmation-code', (req, res, next) =>
 router.get('/products', (req, res, next) =>
   productListController.handle(req, res, next)
 );
+router.get('/products/search', (req, res, next) =>
+  productSearchController.search(req, res, next)
+);
 router.get('/products/categories', (req, res, next) =>
   productSearchController.listCategories(req, res, next)
 );
