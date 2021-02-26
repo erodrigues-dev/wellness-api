@@ -3,24 +3,27 @@ import jwt from 'jsonwebtoken';
 import Customer from '../../../shared/database/models/Customer';
 import { compare } from '../../../shared/utils/hash-password';
 import { sendEmailRecoverPassword } from '../../../shared/sendingblue';
-import {
-  generateTempPassword,
-  hash
-} from '../../../shared/utils/hash-password';
+import { generateTempPassword, hash } from '../../../shared/utils/hash-password';
 
 export class SigninUseCase {
-  async signin(email: string, password: string): Promise<string> {
+  async signin(email: string, password: string): Promise<any> {
     const user = await this.findByEmail(email);
 
     if (!user) return null;
 
-    const isValidPassword =
-      (await compare(password, user.password)) ||
-      (await compare(password, user.tempPassword));
+    const isValidPassword = (await compare(password, user.password)) || (await compare(password, user.tempPassword));
 
     if (!isValidPassword) return null;
 
-    return this.generateToken(user);
+    const token = await this.generateToken(user);
+    return {
+      token,
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      image_url: user.imageUrl
+    };
   }
 
   async recoverPassword(email: string): Promise<void> {
@@ -49,9 +52,7 @@ export class SigninUseCase {
   private generateToken(user: Customer) {
     return jwt.sign(
       {
-        name: user.name,
-        email: user.email,
-        imageUrl: user.imageUrl
+        id: user.id
       },
       process.env.JWT_SECRET,
       {

@@ -1,9 +1,16 @@
 import { Router } from 'express';
 
+import upload from '../../shared/utils/multer-google-cloud-storage';
 import {
-    makeProductSearchController, ProductDetailController, ProductListController, SigninController,
-    SignupController
+  makeAccountController,
+  makeProductSearchController,
+  ProductDetailController,
+  ProductListController,
+  SigninController,
+  SignupController
 } from '../controllers';
+
+const mimetypes = ['image/png', 'image/jpg', 'image/jpeg'];
 
 const router = Router();
 
@@ -12,33 +19,31 @@ const signupController = new SignupController();
 const productListController = new ProductListController();
 const productDetailController = new ProductDetailController();
 const productSearchController = makeProductSearchController();
+const accountController = makeAccountController();
 
 //- sessions
-router.post('/sessions/signin', (req, res, next) =>
-  signinController.signin(req, res, next)
-);
-router.post('/sessions/recover-password', (req, res, next) =>
-  signinController.recoverPassword(req, res, next)
-);
-router.post('/sessions/signup', (req, res, next) =>
-  signupController.signup(req, res, next)
-);
-router.post('/sessions/send-confirmation-code', (req, res, next) =>
-  signupController.sendCode(req, res, next)
-);
+router.post('/sessions/signin', signinController.signin.bind(signinController));
+router.post('/sessions/recover-password', signinController.recoverPassword.bind(signinController));
+router.post('/sessions/signup', signupController.signup.bind(signupController));
+router.post('/sessions/send-confirmation-code', signupController.sendCode.bind(signupController));
 
 //- producs
-router.get('/products', (req, res, next) =>
-  productListController.handle(req, res, next)
+router.get('/products', productListController.handle.bind(productListController));
+router.get('/products/search', productSearchController.search.bind(productSearchController));
+router.get('/products/categories', productSearchController.listCategories.bind(productSearchController));
+router.get('/products/:id/:type', productDetailController.handle.bind(productDetailController));
+
+//- account
+router.get('/account', accountController.get.bind(accountController));
+
+router.put('/account', accountController.save.bind(accountController));
+
+router.put(
+  '/account/change-image',
+  upload(mimetypes).single('image'),
+  accountController.changeImage.bind(accountController)
 );
-router.get('/products/search', (req, res, next) =>
-  productSearchController.search(req, res, next)
-);
-router.get('/products/categories', (req, res, next) =>
-  productSearchController.listCategories(req, res, next)
-);
-router.get('/products/:id/:type', (req, res, next) =>
-  productDetailController.handle(req, res, next)
-);
+
+router.get('/account/cards', accountController.cards.bind(accountController));
 
 export default router;

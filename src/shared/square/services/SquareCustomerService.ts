@@ -29,6 +29,11 @@ export class SquareCustomerService {
     return new SquareCustomer(customer);
   }
 
+  async createOrUpdate(customer: SquareCustomer): Promise<SquareCustomer> {
+    if (customer.id) return this.update(customer);
+    return this.create(customer);
+  }
+
   async create(createCustomer: SquareCustomer): Promise<SquareCustomer> {
     const {
       data: { customer }
@@ -58,8 +63,6 @@ export class SquareCustomerService {
 
   async listCards(customerId: string): Promise<SquareCard[]> {
     const { data } = await this.api.get(`/customers/${customerId}`);
-    return (
-      data?.customer?.cards?.map((card: any) => new SquareCard(card)) || []
-    );
+    return data?.customer?.cards?.map((card: any) => new SquareCard(card)) || [];
   }
 }

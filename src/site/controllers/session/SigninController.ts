@@ -22,14 +22,9 @@ export class SigninController {
     try {
       const { email, password } = req.body;
       await schema.validateAsync({ email, password });
-      const token = await this.useCase.signin(email, password);
-
-      if (!token)
-        return res
-          .status(StatusCodes.UNAUTHORIZED)
-          .json({ message: 'Email or password are invalid!' });
-
-      return res.json({ token });
+      const result = await this.useCase.signin(email, password);
+      if (!result) return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Email or password are invalid!' });
+      return res.json(result);
     } catch (error) {
       next(error);
     }
