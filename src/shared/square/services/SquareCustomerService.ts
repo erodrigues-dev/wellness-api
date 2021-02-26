@@ -61,6 +61,10 @@ export class SquareCustomerService {
     return new SquareCard(card);
   }
 
+  async deleteCard(customerId: string, cardId: string) {
+    await this.api.delete(`/customers/${customerId}/cards/${cardId}`);
+  }
+
   async listCards(customerId: string): Promise<SquareCard[]> {
     const { data } = await this.api.get(`/customers/${customerId}`);
     return data?.customer?.cards?.map((card: any) => new SquareCard(card)) || [];

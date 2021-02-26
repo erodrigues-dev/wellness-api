@@ -45,5 +45,7 @@ router.put(
 );
 
 router.get('/account/cards', accountController.cards.bind(accountController));
+router.post('/account/cards', accountController.createCard.bind(accountController));
+router.delete('/account/cards/:card_id', accountController.deleteCard.bind(accountController));
 
 export default router;

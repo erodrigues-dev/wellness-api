@@ -8,8 +8,8 @@ import { AccountData } from './AccountData';
 import { AccountViewModel } from './AccountViewModel';
 
 export class AccountUseCase {
-  async get(id: number): Promise<AccountViewModel> {
-    const model = await Customer.findByPk(id);
+  async get(userId: number): Promise<AccountViewModel> {
+    const model = await Customer.findByPk(userId);
 
     return {
       id: model.id,
@@ -41,17 +41,27 @@ export class AccountUseCase {
     };
   }
 
-  async changeImage(id: number, imageUrl: string) {
+  async changeImage(userId: number, imageUrl: string) {
     if (!imageUrl) throw new CustomError('Image is required');
-    const user = await Customer.findByPk(id);
+    const user = await Customer.findByPk(userId);
     if (user.imageUrl) await deleteFileFromUrl(user.imageUrl);
     user.imageUrl = imageUrl;
     await user.save();
   }
 
-  async cards(id: number) {
-    const user = await Customer.findByPk(id);
+  async listCards(userId: number) {
+    const user = await Customer.findByPk(userId);
     return squareCustomerService.listCards(user.squareId);
+  }
+
+  async createCard(userId: number, cardNonce: string, cardName: string) {
+    const user = await Customer.findByPk(userId);
+    return squareCustomerService.createCard(user.squareId, cardNonce, cardName);
+  }
+
+  async deleteCard(userId: number, cardId: string) {
+    const user = await Customer.findByPk(userId);
+    await squareCustomerService.deleteCard(user.squareId, cardId);
   }
 
   private async changeEmail(user: Customer, newEmail: string, verificationCode: string): Promise<void> {
