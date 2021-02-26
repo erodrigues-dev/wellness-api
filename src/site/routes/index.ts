@@ -3,6 +3,7 @@ import { Router } from 'express';
 import upload from '../../shared/utils/multer-google-cloud-storage';
 import {
   makeAccountController,
+  makeOrdersController,
   makeProductSearchController,
   ProductDetailController,
   ProductListController,
@@ -20,6 +21,7 @@ const productListController = new ProductListController();
 const productDetailController = new ProductDetailController();
 const productSearchController = makeProductSearchController();
 const accountController = makeAccountController();
+const ordersController = makeOrdersController();
 
 //- sessions
 router.post('/sessions/signin', signinController.signin.bind(signinController));
@@ -44,8 +46,13 @@ router.put(
   accountController.changeImage.bind(accountController)
 );
 
+//- account/cards
 router.get('/account/cards', accountController.cards.bind(accountController));
 router.post('/account/cards', accountController.createCard.bind(accountController));
 router.delete('/account/cards/:card_id', accountController.deleteCard.bind(accountController));
+
+//- orders
+router.get('/orders', ordersController.list.bind(ordersController));
+router.get('/orders/:id', ordersController.get.bind(ordersController));
 
 export default router;

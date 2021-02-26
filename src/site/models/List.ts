@@ -1,4 +1,4 @@
-export interface List<T> {
+export interface List<T = any> {
   hasNextPage: boolean;
   rows: T[];
 }
