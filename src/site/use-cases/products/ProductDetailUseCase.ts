@@ -1,9 +1,7 @@
 import CustomError from '../../../shared/custom-error/CustomError';
 import Activity from '../../../shared/database/models/Activity';
 import Package from '../../../shared/database/models/Package';
-import {
-    ProductDetailViewModel, ProductInfoActivity, ProductInfoPackage, ProductType
-} from './models';
+import { ProductDetailViewModel, ProductInfoActivity, ProductInfoPackage, ProductType } from './models';
 
 export class ProductDetailUseCase {
   async load(id: number, type: ProductType): Promise<ProductDetailViewModel> {
@@ -12,9 +10,7 @@ export class ProductDetailUseCase {
     return this.loadPackage(id);
   }
 
-  async loadActivity(
-    id: number
-  ): Promise<ProductDetailViewModel<ProductInfoActivity>> {
+  async loadActivity(id: number): Promise<ProductDetailViewModel<ProductInfoActivity>> {
     const model = await Activity.findByPk(id, {
       include: {
         association: 'category',
@@ -39,9 +35,7 @@ export class ProductDetailUseCase {
     };
   }
 
-  async loadPackage(
-    id: number
-  ): Promise<ProductDetailViewModel<ProductInfoPackage>> {
+  async loadPackage(id: number): Promise<ProductDetailViewModel<ProductInfoPackage>> {
     const model = await Package.findByPk(id, {
       include: [
         { association: 'category', attributes: ['name'] },
@@ -69,7 +63,8 @@ export class ProductDetailUseCase {
           title: item.name,
           category: item.category.name,
           type: 'activity',
-          quantity: item.PackageActivity?.quantity
+          quantity: item.PackageActivity?.quantity,
+          duration: item.duration
         }))
       }
     };
