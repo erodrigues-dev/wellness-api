@@ -25,6 +25,7 @@ export class SignupUseCase {
       this.transaction.commit();
     } catch (error) {
       if (this.transaction) this.transaction.rollback();
+      throw error;
     }
   }
 
