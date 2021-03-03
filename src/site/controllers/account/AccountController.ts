@@ -53,9 +53,9 @@ export class AccountController {
   async changeImage(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.user;
-      const imageUrl = (req.file as any)?.url;
-      await this.useCase.changeImage(id, imageUrl);
-      return res.json({ imageUrl });
+      const image_url = (req.file as any)?.url;
+      await this.useCase.changeImage(id, image_url);
+      return res.json({ image_url });
     } catch (error) {
       next(error);
     }
