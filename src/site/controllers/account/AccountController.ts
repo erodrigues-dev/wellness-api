@@ -63,6 +63,7 @@ export class AccountController {
 
   async cards(req: Request, res: Response, next: NextFunction) {
     try {
+      console.log('> list cards');
       const { id } = req.user;
       const cards = await this.useCase.listCards(id);
       return res.json(cards);
