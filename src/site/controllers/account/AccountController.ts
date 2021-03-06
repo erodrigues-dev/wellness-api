@@ -21,8 +21,7 @@ const saveSchema = Joi.object({
 });
 
 const createCardSchema = Joi.object({
-  card_nonce: Joi.string().required(),
-  card_name: Joi.string().required()
+  card_nonce: Joi.string().required()
 });
 
 export class AccountController {
@@ -75,8 +74,8 @@ export class AccountController {
   async createCard(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.user;
-      const { card_nonce, card_name } = await createCardSchema.validateAsync(req.body);
-      const card = await this.useCase.createCard(id, card_nonce, card_name);
+      const { card_nonce } = await createCardSchema.validateAsync(req.body);
+      const card = await this.useCase.createCard(id, card_nonce);
       return res.json(card);
     } catch (error) {
       next(error);

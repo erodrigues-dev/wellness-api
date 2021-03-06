@@ -56,7 +56,7 @@ export class AccountUseCase {
 
   async createCard(userId: number, cardNonce: string, cardName: string) {
     const user = await Customer.findByPk(userId);
-    return squareCustomerService.createCard(user.squareId, cardNonce, cardName);
+    return squareCustomerService.createCard(user.squareId, cardNonce);
   }
 
   async deleteCard(userId: number, cardId: string) {
