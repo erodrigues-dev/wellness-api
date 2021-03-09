@@ -54,7 +54,7 @@ export class AccountUseCase {
     return squareCustomerService.listCards(user.squareId);
   }
 
-  async createCard(userId: number, cardNonce: string, cardName: string) {
+  async createCard(userId: number, cardNonce: string) {
     const user = await Customer.findByPk(userId);
     return squareCustomerService.createCard(user.squareId, cardNonce);
   }
