@@ -12,7 +12,7 @@ const saveSchema = Joi.object({
   password: Joi.string().allow('', null),
   confirm_password: Joi.string()
     .when('password', {
-      is: Joi.string().required(),
+      is: password => Boolean(password),
       then: Joi.string().required().valid(Joi.ref('password'))
     })
     .messages({
