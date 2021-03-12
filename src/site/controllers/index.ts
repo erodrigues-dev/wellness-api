@@ -5,3 +5,4 @@ export * from './products/ProductSearchController';
 export * from './session/SigninController';
 export * from './session/SignupController';
 export * from './orders/OrdersController';
+export * from './checkout/GetDiscountController';

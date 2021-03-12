@@ -2,19 +2,21 @@ import { Router } from 'express';
 
 import upload from '../../shared/utils/multer-google-cloud-storage';
 import {
-  makeAccountController,
-  makeOrdersController,
-  makeProductSearchController,
   ProductDetailController,
   ProductListController,
   SigninController,
-  SignupController
+  SignupController,
+  makeAccountController,
+  makeOrdersController,
+  makeProductSearchController,
+  makeGetDiscountController
 } from '../controllers';
 
 const mimetypes = ['image/png', 'image/jpg', 'image/jpeg'];
 
 const router = Router();
 
+//- controllers
 const signinController = new SigninController();
 const signupController = new SignupController();
 const productListController = new ProductListController();
@@ -22,6 +24,7 @@ const productDetailController = new ProductDetailController();
 const productSearchController = makeProductSearchController();
 const accountController = makeAccountController();
 const ordersController = makeOrdersController();
+const getDiscountController = makeGetDiscountController();
 
 //- sessions
 router.post('/sessions/signin', signinController.signin.bind(signinController));
@@ -54,5 +57,8 @@ router.delete('/account/cards/:card_id', accountController.deleteCard.bind(accou
 //- orders
 router.get('/orders', ordersController.list.bind(ordersController));
 router.get('/orders/:id', ordersController.get.bind(ordersController));
+
+//- checkout
+router.get('/checkout/discounts', getDiscountController.handle.bind(getDiscountController));
 
 export default router;
