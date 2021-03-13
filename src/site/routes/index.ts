@@ -9,7 +9,8 @@ import {
   makeAccountController,
   makeOrdersController,
   makeProductSearchController,
-  makeGetDiscountController
+  makeGetDiscountController,
+  makeCheckoutController
 } from '../controllers';
 
 const mimetypes = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -25,6 +26,7 @@ const productSearchController = makeProductSearchController();
 const accountController = makeAccountController();
 const ordersController = makeOrdersController();
 const getDiscountController = makeGetDiscountController();
+const checkoutController = makeCheckoutController();
 
 //- sessions
 router.post('/sessions/signin', signinController.signin.bind(signinController));
@@ -59,6 +61,7 @@ router.get('/orders', ordersController.list.bind(ordersController));
 router.get('/orders/:id', ordersController.get.bind(ordersController));
 
 //- checkout
+router.post('/checkout', checkoutController.handle.bind(checkoutController));
 router.get('/checkout/discounts', getDiscountController.handle.bind(getDiscountController));
 
 export default router;
