@@ -9,7 +9,7 @@ export interface ProductListViewModel {
   price: number;
 }
 
-export interface ProductDetailViewModel<TInfo = any> {
+export interface ProductDetailViewModel<TInfo = CommonInfo> {
   id: number;
   type: ProductType;
   title: string;
@@ -18,17 +18,18 @@ export interface ProductDetailViewModel<TInfo = any> {
   info: TInfo;
 }
 
-export interface ProductInfoActivity {
-  duration: number;
+export interface CommonInfo {
   price: number;
-  max_peoples?: number;
   category: string;
+  recurrency?: string;
 }
 
-export interface ProductInfoPackage {
-  price: number;
-  category: string;
-  recurrency: string;
+export interface ProductInfoActivity extends CommonInfo {
+  duration: number;
+  max_peoples?: number;
+}
+
+export interface ProductInfoPackage extends CommonInfo {
   type: string;
   total?: number;
   expiration?: Date;

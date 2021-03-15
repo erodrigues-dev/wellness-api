@@ -19,7 +19,11 @@ export class OrdersController {
 
   async get(req: Request, res: Response, next: NextFunction) {
     try {
-      return res.json({});
+      const model = await this.useCase.get({
+        user_id: req.user.id,
+        order_id: Number(req.params.id)
+      });
+      return res.json(model);
     } catch (error) {
       next(error);
     }
