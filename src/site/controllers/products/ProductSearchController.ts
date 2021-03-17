@@ -8,14 +8,10 @@ export const makeProductSearchController = () => {
   return new ProductSearchController(useCase);
 };
 
-const listCategoriesSchema = Joi.object({
-  type: Joi.string().valid('activity', 'package').required()
-});
-
 const searchSchema = Joi.object({
-  term: Joi.string(),
+  term: Joi.string().allow('', null),
   type: Joi.string().valid('activity', 'package'),
-  category_ids: Joi.array().items(Joi.number()),
+  categories: Joi.array().items(Joi.string()),
   page: Joi.number().positive().default(1),
   limit: Joi.number().default(10)
 });
@@ -36,8 +32,7 @@ export class ProductSearchController {
 
   async listCategories(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await listCategoriesSchema.validateAsync(req.query);
-      const list = await this.useCase.listCategories(data.type);
+      const list = await this.useCase.listCategories();
       return res.json(list);
     } catch (error) {
       next(error);
