@@ -8,7 +8,7 @@
 
 ## orders
 
-- [ ] list
+- [x] list
 - [ ] detail
 
 ## appointments
@@ -18,10 +18,10 @@
 
 ## checkout
 
-- [ ] get product detail
-- [ ] list cards
-- [ ] get discount
-- [ ] create order
+- [x] get product detail
+- [x] list cards
+- [x] get discount
+- [x] create order
 
 ## book-now
 
@@ -29,3 +29,12 @@
 - [ ] list dates
 - [ ] list times
 - [ ] book
+
+## search
+
+- [x] search [term, type, categories]
+- [x] list categories
+
+## signup
+
+- [ ] criar usuario no square
