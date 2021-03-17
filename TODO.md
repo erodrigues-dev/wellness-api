@@ -37,4 +37,4 @@
 
 ## signup
 
-- [ ] criar usuario no square
+- [x] criar usuario no square

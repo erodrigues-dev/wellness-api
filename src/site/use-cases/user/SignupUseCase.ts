@@ -70,7 +70,7 @@ export class SignupUseCase {
 
   private async update(customer: Customer, squareId: string): Promise<void> {
     customer.squareId = squareId;
-    await customer.save();
+    await customer.save({ transaction: this.transaction });
   }
 
   private async deleteCode(email: string) {
