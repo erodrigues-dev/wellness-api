@@ -1,5 +1,3 @@
-import { AxiosInstance } from 'axios';
-
 import { SendEmailService } from './SendEmailService';
 import { SendingBlueTemplate } from './SendingBlueTemplate';
 

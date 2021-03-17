@@ -1,66 +1,31 @@
-# TODO CARD#76 appointments
+# SITE TODO
 
-## Permission
+## account
 
-- [x] listar atividades
-- [x] agendar atividade
-- [x] cancelar atividade
+- [x] list cards
+- [x] create card
+- [x] delete card
 
-## listar atividades
+## orders
 
-- [x] listar atividades compradas pelo cliente
-- [x] verificar status do pagamento
-- [ ] verificar a quantidade/plano comprado
+- [ ] list
+- [ ] detail
 
-## listar dias
+## appointments
 
-- [x] listar dias por periodo;
-- [x] listar apenas dias disponiveis
-- [x] listar apenas data >= date.now
+- [ ] list
+- [ ] detail
 
-## listar horarios
+## checkout
 
-- [x] listar horarios
-- [x] verificar disponibilidade
-- [x] listar apenas horarios >= date.time.now
+- [ ] get product detail
+- [ ] list cards
+- [ ] get discount
+- [ ] create order
 
-## agendar atividade
+## book-now
 
-- [x] criar tabela de agendamento
-- [x] agendar
-- [x] listar agendamentos
-- [x] verificar disponibilidade de horario
-- [x] verificar quantidade de pessoas
-- [x] verificar pagamento
-- [x] validar date.time >= date.time.now ???
-- [x] validar package recurrency
-- [x] validar package tipo unlimeted
-- [x] validar package tipo minutes
-- [x] validar package tipo amount
-- [x] validar package tipo appointments
-- [x] validar recurrency
-- [x] validate activity plano/quantidade
-- [ ] send email
-
-## cancelar agendamento
-
-- [x] cancelar
-- [ ] enviar email
-
-## workflow status
-
-- [x] workflow: scheduled -> arrived -> completed
-- [x] change status
-- [ ] send email: scheduled, canceled
-
-## create order_activity
-
-- [x] field quantity
-
-## Create Customer (Send Emails)
-
-- [x] send email with temporary password
-
-## Update Customer
-
-- [x] bloquear alteração de email
+- [ ] list activities
+- [ ] list dates
+- [ ] list times
+- [ ] book

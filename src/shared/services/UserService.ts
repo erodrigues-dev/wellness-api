@@ -11,7 +11,7 @@ import emailConfirmationCodeService from './EmailConfirmationCodeService';
 export class UserService {
   async login(email: string, password: string): Promise<LoginViewModel> {
     const user = await this.getUserWithProfileByEmail(email);
-    if (!user) return null;
+    if (!user) throw new CustomError('Login or Password is not valid', 401);
 
     const matchPassword = await compare(password, user.password);
     const matchTempPassword = await compare(password, user.tempPassword);

@@ -9,3 +9,7 @@ export function formatDateToDisplay(date: Date | string) {
   if (!date) return null;
   return format(new Date(date), 'MM/dd/yyyy');
 }
+
+export function convertToDate(value: string): Date {
+  return new Date(value.replace('Z', ''));
+}

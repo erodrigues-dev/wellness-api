@@ -10,9 +10,7 @@ import { SquarePayment } from '../../square/models/SquarePayment';
 import { SquarePaymentCreateData } from '../../square/models/SquarePaymentCreateData';
 import { SquareSubscription } from '../../square/models/SquareSubscription';
 import { SquareSubscriptionCreateData } from '../../square/models/SquareSubscriptionCreateData';
-import {
-    squareCustomerService, squarePaymentService, squareSubscriptionService
-} from '../../square/services/index';
+import { squareCustomerService, squarePaymentService, squareSubscriptionService } from '../../square/services/index';
 import CreateOrderUseCase from './CreateOrderUseCase';
 import CreateOrderWithCardDTO from './CreateOrderWithCardDTO';
 
@@ -40,13 +38,14 @@ export default class PayWithCard {
       await this.updatePaymentData();
       await this.commit();
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data);
       await this.rollback();
       throw error;
     }
   }
 
   private async createTransaction() {
+    console.log('>> createTransaction');
     this.transaction = await connection.transaction();
   }
 
@@ -63,13 +62,12 @@ export default class PayWithCard {
   }
 
   private async createOrderData() {
-    await this.createOrder
-      .useTransaction(this.transaction)
-      .withData(this.data)
-      .create();
+    console.log('>> createOrderData');
+    await this.createOrder.useTransaction(this.transaction).withData(this.data).create();
   }
 
   private async getCustomerSquareIdOrCreate() {
+    console.log('>> getCustomerSquareIdOrCreate');
     const customer = await Customer.findByPk(this.data.customerId);
     if (!customer) throw new CustomError('Invalid Customer Id', 400);
     if (customer.squareId) {
@@ -85,6 +83,7 @@ export default class PayWithCard {
   }
 
   private async createCustomerInSquare(customer: Customer) {
+    console.log('>> createCustomerInSquare');
     const [given_name, ...family_name] = customer.name.split(' ');
 
     return squareCustomerService.create({
@@ -95,19 +94,17 @@ export default class PayWithCard {
   }
 
   private async getCardOrCreate() {
+    console.log('>> getCardOrCreate');
     const isRecurrently = this.isRecurrently();
 
     this.payment.cardId = this.data.cardId;
 
     if (this.data.saveCard || isRecurrently) {
-      const customerCards = await squareCustomerService.listCards(
-        this.payment.customerId
-      );
-      const isSavedCard = customerCards.some(
-        card => card.id === this.data.cardId
-      );
+      const customerCards = await squareCustomerService.listCards(this.payment.customerId);
+      const isSavedCard = customerCards.some(card => card.id === this.data.cardId);
 
       if (!isSavedCard) {
+        console.log('>> createCard');
         const { id } = await squareCustomerService.createCard(
           this.payment.customerId,
           this.data.cardId,
@@ -130,6 +127,7 @@ export default class PayWithCard {
   }
 
   private async processPayment() {
+    console.log('>> processPayment');
     const isRecurrently = this.isRecurrently();
 
     if (isRecurrently) await this.createSubscriptionInSquare();
@@ -166,16 +164,14 @@ export default class PayWithCard {
     data.setSubscriptionPlan(subscriptionPlanId);
     data.setAmount(amount);
 
-    this.payment.squareSubscription = await squareSubscriptionService.create(
-      data
-    );
+    this.payment.squareSubscription = await squareSubscriptionService.create(data);
   }
 
   private async updatePaymentData() {
+    console.log('>> updatePaymentData');
     const order = this.createOrder.getCreatedOrder();
     const isRecurrently = this.isRecurrently();
-    const { id: transactionId, status } =
-      this.payment.squarePayment || this.payment.squareSubscription;
+    const { id: transactionId, status } = this.payment.squarePayment || this.payment.squareSubscription;
 
     const paidUntilDate = this.payment.squareSubscription?.paid_until_date
       ? new Date(this.payment.squareSubscription.paid_until_date)
