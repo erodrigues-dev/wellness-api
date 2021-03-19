@@ -1,4 +1,4 @@
-import { Association, DataTypes, Model, Sequelize } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 
 import { OrderItemTypeEnum } from '../../models/enums/OrderItemTypeEnum';
 import { PaymentStatusEnum } from '../../models/enums/PaymentStatusEnum';
