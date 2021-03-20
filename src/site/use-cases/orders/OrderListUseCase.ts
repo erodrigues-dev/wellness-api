@@ -68,6 +68,7 @@ export class OrderListUseCase {
       activities: activities.map(item => ({
         id: item.id,
         title: item.name,
+        image_url: item.activity?.imageUrl,
         category: item.category.name,
         duration: item.duration,
         quantity: item.packageQuantity

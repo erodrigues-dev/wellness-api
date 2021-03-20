@@ -37,6 +37,7 @@ export interface OrderDetailViewModel {
   activities: {
     id: number;
     title: string;
+    image_url: string;
     category: string;
     duration: number;
     quantity: number;
