@@ -1,13 +1,51 @@
-import { Op, fn, literal } from 'sequelize';
+import { Op, fn } from 'sequelize';
 
-import Order from '../../../shared/database/models/Order';
 import OrderActivity from '../../../shared/database/models/OrderActivity';
 import { PAID_STATUS } from '../../../shared/models/enums';
 
+interface Service {
+  id: number;
+  title: string;
+  category: string;
+  image_url: string;
+  duration: number;
+}
+
 export class MyServicesListUseCase {
-  async list(userId: number) {
-    const data = await OrderActivity.findAll({
-      attributes: ['id', 'activityId', 'name', 'duration'],
+  async list(userId: number): Promise<Service[]> {
+    const data = await this.query(userId);
+    const all_activities = data.map(this.mapToService);
+    const group_by_id: { [key: number]: Service } = all_activities.reduce(this.groupById, {});
+    return Object.values(group_by_id).sort(this.sortByTitle);
+  }
+
+  private groupById(group: any, item: Service) {
+    group[item.id] = item;
+    return group;
+  }
+
+  private sortByTitle(a: Service, b: Service): number {
+    const title_a = a.title.toLowerCase();
+    const title_b = b.title.toLowerCase();
+
+    if (title_a === title_b) return 0;
+    if (title_a > title_b) return 1;
+    return -1;
+  }
+
+  private mapToService(item: OrderActivity): Service {
+    return {
+      id: item.activityId,
+      title: item.name,
+      category: item.category.name,
+      image_url: item.activity.imageUrl || null,
+      duration: item.duration
+    };
+  }
+
+  private query(userId: number) {
+    return OrderActivity.findAll({
+      attributes: ['activityId', 'name', 'duration'],
       include: [
         {
           association: 'activity',
@@ -36,29 +74,6 @@ export class MyServicesListUseCase {
           }
         }
       ]
-    });
-
-    const all_activities = data.map(item => ({
-      order_activity_id: item.id,
-      id: item.activityId,
-      title: item.name,
-      category: item.category.name,
-      image_url: item.activity.imageUrl,
-      duration: item.duration
-    }));
-
-    const group_by_id = all_activities.reduce((group, item) => {
-      group[item.id] = item;
-      return group;
-    }, {});
-
-    return Object.values(group_by_id).sort((a: any, b: any) => {
-      const title_a = a.title.toLowerCase();
-      const title_b = b.title.toLowerCase();
-
-      if (title_a === title_b) return 0;
-      if (title_a > title_b) return 1;
-      return -1;
     });
   }
 }
