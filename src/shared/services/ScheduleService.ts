@@ -24,11 +24,6 @@ export class FilterDto {
     dto.page = obj.page || null;
     dto.limit = obj.limit || null;
 
-    console.log('====================================');
-    console.log('filter schedule:');
-    console.log(dto);
-    console.log('====================================');
-
     return dto;
   }
 
@@ -39,8 +34,7 @@ export class FilterDto {
     if (this.dateStart) ands.push({ date: { [Op.gte]: this.dateStart } });
     if (this.dateEnd) ands.push({ date: { [Op.lte]: this.dateEnd } });
 
-    if (this.activityId)
-      ands.push({ '$orderActivity.activity_id$': this.activityId });
+    if (this.activityId) ands.push({ '$orderActivity.activity_id$': this.activityId });
 
     if (this.status) ands.push({ status: this.status });
 
