@@ -67,6 +67,6 @@ router.post('/checkout', checkoutController.handle.bind(checkoutController));
 router.get('/checkout/discounts', getDiscountController.handle.bind(getDiscountController));
 
 //- services
-router.get('/my-services', servicesListController.handle.bind(servicesListController));
+router.get('/services', servicesListController.handle.bind(servicesListController));
 
 export default router;
