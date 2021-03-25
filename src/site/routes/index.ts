@@ -11,7 +11,8 @@ import {
   makeProductSearchController,
   makeGetDiscountController,
   makeCheckoutController,
-  makeMyServicesListController
+  makeMyServicesListController,
+  makeAppointmetnsListController
 } from '../controllers';
 
 const mimetypes = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -29,6 +30,7 @@ const ordersController = makeOrdersController();
 const getDiscountController = makeGetDiscountController();
 const checkoutController = makeCheckoutController();
 const servicesListController = makeMyServicesListController();
+const appointmentsListController = makeAppointmetnsListController();
 
 //- sessions
 router.post('/sessions/signin', signinController.signin.bind(signinController));
@@ -44,15 +46,12 @@ router.get('/products/:id/:type', productDetailController.handle.bind(productDet
 
 //- account
 router.get('/account', accountController.get.bind(accountController));
-
 router.put('/account', accountController.save.bind(accountController));
-
 router.put(
   '/account/change-image',
   upload(mimetypes).single('image'),
   accountController.changeImage.bind(accountController)
 );
-
 //- account/cards
 router.get('/account/cards', accountController.cards.bind(accountController));
 router.post('/account/cards', accountController.createCard.bind(accountController));
@@ -68,5 +67,8 @@ router.get('/checkout/discounts', getDiscountController.handle.bind(getDiscountC
 
 //- services
 router.get('/services', servicesListController.handle.bind(servicesListController));
+
+// - appointments
+router.get('/appointments', appointmentsListController.handle.bind(appointmentsListController));
 
 export default router;
