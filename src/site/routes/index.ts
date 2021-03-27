@@ -13,7 +13,8 @@ import {
   makeCheckoutController,
   makeMyServicesListController,
   makeAppointmetnsListController,
-  makeListDaysController
+  makeListDaysController,
+  makeListSlotsController
 } from '../controllers';
 
 const mimetypes = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -33,6 +34,7 @@ const checkoutController = makeCheckoutController();
 const servicesListController = makeMyServicesListController();
 const appointmentsListController = makeAppointmetnsListController();
 const listDaysController = makeListDaysController();
+const listSlotsController = makeListSlotsController();
 
 //- sessions
 router.post('/sessions/signin', signinController.signin.bind(signinController));
@@ -75,5 +77,6 @@ router.get('/appointments', appointmentsListController.handle.bind(appointmentsL
 
 //- book
 router.get('/book/days', listDaysController.handle.bind(listDaysController));
+router.get('/book/slots', listSlotsController.handle.bind(listSlotsController));
 
 export default router;
