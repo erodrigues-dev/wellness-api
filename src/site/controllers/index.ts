@@ -9,3 +9,4 @@ export * from './checkout/GetDiscountController';
 export * from './checkout/CheckoutController';
 export * from './my-services/MyServicesListController';
 export * from './appointments/AppointmentsListController';
+export * from './book/ListDaysController';

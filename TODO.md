@@ -9,12 +9,11 @@
 ## orders
 
 - [x] list
-- [ ] detail
+- [x] detail
 
 ## appointments
 
-- [ ] list
-- [ ] detail
+- [x] list
 
 ## checkout
 
@@ -25,8 +24,8 @@
 
 ## book-now
 
-- [ ] list activities
-- [ ] list dates
+- [x] list activities
+- [ ] list dates <--
 - [ ] list times
 - [ ] book
 
