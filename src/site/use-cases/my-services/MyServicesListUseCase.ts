@@ -61,19 +61,19 @@ export class MyServicesListUseCase {
         },
         {
           association: 'order',
-          attributes: ['customerId'],
-          where: {
-            customerId: userId,
-            paidUntilDate: {
-              [Op.or]: [{ [Op.is]: null }, { [Op.gt]: fn('now') }]
-            },
-            status: { [Op.in]: PAID_STATUS },
-            ['$orderPackage.expiration$']: {
-              [Op.or]: [{ [Op.is]: null }, { [Op.gt]: fn('now') }]
-            }
-          }
+          attributes: []
         }
-      ]
+      ],
+      where: {
+        ['$order.customer_id$']: userId,
+        ['$order.paid_until_date$']: {
+          [Op.or]: [{ [Op.is]: null }, { [Op.gt]: fn('now') }]
+        },
+        ['$order.status$']: { [Op.in]: PAID_STATUS },
+        ['$orderPackage.expiration$']: {
+          [Op.or]: [{ [Op.is]: null }, { [Op.gt]: fn('now') }]
+        }
+      }
     });
   }
 }
