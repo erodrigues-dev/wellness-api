@@ -1,6 +1,8 @@
+import CustomError from '../../../shared/custom-error/CustomError';
 import Order from '../../../shared/database/models/Order';
 import { OrderItemTypeEnum } from '../../../shared/models/enums';
 import { List } from '../../models/List';
+import { OrderDetailViewModel, OrderListViewModel } from './models';
 
 interface OrderListData {
   user_id: number;
@@ -23,42 +25,10 @@ export class OrderListUseCase {
     };
   }
 
-  async get({ order_id, user_id }: OrderGetData): Promise<any> {
-    const order = await Order.findOne({
-      where: {
-        id: order_id,
-        customerId: user_id
-      },
-      include: [
-        {
-          association: 'orderActivities',
-          attributes: ['id', 'name', 'description', 'duration', 'packageQuantity'],
-          include: [
-            {
-              association: 'activity',
-              attributes: ['imageUrl']
-            },
-            {
-              association: 'category',
-              attributes: ['name']
-            }
-          ]
-        },
-        {
-          association: 'orderPackages',
-          include: [
-            {
-              association: 'package',
-              attributes: ['imageUrl']
-            },
-            {
-              association: 'category',
-              attributes: ['name']
-            }
-          ]
-        }
-      ]
-    });
+  async get(data: OrderGetData): Promise<OrderDetailViewModel> {
+    const order = await this.queryGetOrder(data);
+
+    if (!order) throw new CustomError('Order not found', 404);
 
     const isPackage = order.type === OrderItemTypeEnum.Package;
     const values = isPackage ? order.orderPackages[0] : order.orderActivities[0];
@@ -74,31 +44,31 @@ export class OrderListUseCase {
 
     return {
       id: order.id,
-      name,
+      title: name,
       description,
       image_url,
-
       type: order.type,
+
+      amount: Number(order.amount),
+      tip: Number(order.tip),
+      discount: Number(order.discount),
+      quantity: Number(order.quantity),
       payment_type: order.paymentType,
       status: order.status,
-      paid_until_date: order.paidUntilDate,
-      canceled_date: order.canceledDate,
-      amount: Number(order.amount),
-      discount: Number(order.discount),
-      tip: Number(order.tip),
-      quantity: Number(order.quantity),
 
       recurrency,
       package_type,
       package_total,
       expiration_date,
 
+      paid_until_date: order.paidUntilDate,
+      canceled_date: order.canceledDate,
       created_at: order.createdAt,
 
       activities: activities.map(item => ({
         id: item.id,
-        name: item.name,
-        description: item.description,
+        title: item.name,
+        image_url: item.activity?.imageUrl,
         category: item.category.name,
         duration: item.duration,
         quantity: item.packageQuantity
@@ -106,7 +76,7 @@ export class OrderListUseCase {
     };
   }
 
-  private async queryListOrders(customerId: number, page: number, limit: number) {
+  private async queryListOrders(customerId: number, page: number, limit: number): Promise<OrderListViewModel[]> {
     const orders = await Order.findAll({
       where: { customerId },
       limit: limit + 1,
@@ -165,6 +135,44 @@ export class OrderListUseCase {
         payment_type: order.paymentType,
         created_at: order.createdAt
       };
+    });
+  }
+
+  private async queryGetOrder({ order_id, user_id }: OrderGetData) {
+    return Order.findOne({
+      where: {
+        id: order_id,
+        customerId: user_id
+      },
+      include: [
+        {
+          association: 'orderActivities',
+          attributes: ['id', 'name', 'description', 'duration', 'packageQuantity'],
+          include: [
+            {
+              association: 'activity',
+              attributes: ['imageUrl']
+            },
+            {
+              association: 'category',
+              attributes: ['name']
+            }
+          ]
+        },
+        {
+          association: 'orderPackages',
+          include: [
+            {
+              association: 'package',
+              attributes: ['imageUrl']
+            },
+            {
+              association: 'category',
+              attributes: ['name']
+            }
+          ]
+        }
+      ]
     });
   }
 }

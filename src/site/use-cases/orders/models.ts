@@ -3,9 +3,12 @@ export type OrderType = 'activity' | 'package';
 export interface OrderListViewModel {
   id: number;
   title: string;
+  image_url: string;
   category: string;
   type: OrderType;
-  image_url: string;
+  status: string;
+  payment_type: string;
+  created_at: Date;
 }
 
 export interface OrderDetailViewModel {
@@ -15,30 +18,28 @@ export interface OrderDetailViewModel {
   image_url: string;
   type: OrderType;
 
-  price: number;
-  quantity: number;
+  amount: number;
+  tip: number;
   discount: number;
-  total: number;
+  quantity: number;
   payment_type: string;
+  status: string;
 
-  activities?: OrderActivityViewModel[];
-  info?: PackageInfoViewModel;
-
-  created_at: Date;
-}
-
-export interface PackageInfoViewModel {
   recurrency: string;
-  type: string;
-  total_type?: number;
-  expiration_at?: Date;
-}
+  package_type: string;
+  package_total: number;
+  expiration_date: Date;
 
-export interface OrderActivityViewModel {
-  id: number;
-  title: string;
-  image_url: string;
-  category: string;
-  duration: number;
-  quantity?: number;
+  paid_until_date: Date;
+  canceled_date: Date;
+  created_at: Date;
+
+  activities: {
+    id: number;
+    title: string;
+    image_url: string;
+    category: string;
+    duration: number;
+    quantity: number;
+  }[];
 }

@@ -7,3 +7,8 @@ export * from './session/SignupController';
 export * from './orders/OrdersController';
 export * from './checkout/GetDiscountController';
 export * from './checkout/CheckoutController';
+export * from './my-services/MyServicesListController';
+export * from './appointments/AppointmentsListController';
+export * from './book/ListDaysController';
+export * from './book/ListSlotsController';
+export * from './book/BookController';

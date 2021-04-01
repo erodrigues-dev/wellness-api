@@ -8,8 +8,8 @@ export class OrdersController {
     try {
       const list = await this.useCase.list({
         user_id: req.user.id,
-        page: req.body.page,
-        limit: req.body.limit
+        page: Number(req.query.page) || undefined,
+        limit: Number(req.query.limit) || undefined
       });
       return res.json(list);
     } catch (error) {

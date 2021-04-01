@@ -10,7 +10,12 @@ import {
   makeOrdersController,
   makeProductSearchController,
   makeGetDiscountController,
-  makeCheckoutController
+  makeCheckoutController,
+  makeMyServicesListController,
+  makeAppointmetnsListController,
+  makeListDaysController,
+  makeListSlotsController,
+  makeBookController
 } from '../controllers';
 
 const mimetypes = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -27,6 +32,11 @@ const accountController = makeAccountController();
 const ordersController = makeOrdersController();
 const getDiscountController = makeGetDiscountController();
 const checkoutController = makeCheckoutController();
+const servicesListController = makeMyServicesListController();
+const appointmentsListController = makeAppointmetnsListController();
+const listDaysController = makeListDaysController();
+const listSlotsController = makeListSlotsController();
+const bookController = makeBookController();
 
 //- sessions
 router.post('/sessions/signin', signinController.signin.bind(signinController));
@@ -42,15 +52,12 @@ router.get('/products/:id/:type', productDetailController.handle.bind(productDet
 
 //- account
 router.get('/account', accountController.get.bind(accountController));
-
 router.put('/account', accountController.save.bind(accountController));
-
 router.put(
   '/account/change-image',
   upload(mimetypes).single('image'),
   accountController.changeImage.bind(accountController)
 );
-
 //- account/cards
 router.get('/account/cards', accountController.cards.bind(accountController));
 router.post('/account/cards', accountController.createCard.bind(accountController));
@@ -63,5 +70,16 @@ router.get('/orders/:id', ordersController.get.bind(ordersController));
 //- checkout
 router.post('/checkout', checkoutController.handle.bind(checkoutController));
 router.get('/checkout/discounts', getDiscountController.handle.bind(getDiscountController));
+
+//- services
+router.get('/services', servicesListController.handle.bind(servicesListController));
+
+// - appointments
+router.get('/appointments', appointmentsListController.handle.bind(appointmentsListController));
+
+//- book
+router.get('/book/days', listDaysController.handle.bind(listDaysController));
+router.get('/book/slots', listSlotsController.handle.bind(listSlotsController));
+router.post('/book', bookController.handle.bind(bookController));
 
 export default router;
