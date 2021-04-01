@@ -35,6 +35,15 @@ export class ScheduleCreateUseCase {
     await this.sendEmail(schedule);
   }
 
+  async checkOrderAvailable(orderActivityId: number): Promise<void> {
+    const orderActivity = await this.loadOrderActivityWithIncludes(orderActivityId);
+
+    await this.checkOrderPayment(orderActivity.order);
+
+    if (orderActivity.orderPackage) await this.checkOrderPackage(orderActivity);
+    else await this.checkActivity(orderActivity);
+  }
+
   private async createSchedule(event: Event) {
     return Schedule.create({
       customerId: this.customerId,
@@ -48,7 +57,7 @@ export class ScheduleCreateUseCase {
     });
   }
 
-  async getEvent(eventId: number): Promise<Event> {
+  private async getEvent(eventId: number): Promise<Event> {
     const event = await Event.findByPk(eventId);
 
     if (!event) throw new CustomError('Invalid activity schedule', 400);
@@ -56,7 +65,7 @@ export class ScheduleCreateUseCase {
     return event.toJSON() as Event;
   }
 
-  async checkAvailableTime(event: Event): Promise<void> {
+  private async checkAvailableTime(event: Event): Promise<void> {
     if (isPast(new Date(`${this.formatedDate}T${event.start}`)))
       throw new CustomError('Cannot be scheduled on this time');
 
@@ -72,38 +81,24 @@ export class ScheduleCreateUseCase {
       }
     });
 
-    if (maxSchedules <= countSchedules)
-      throw new CustomError('Time is not available', 400);
+    if (maxSchedules <= countSchedules) throw new CustomError('Time is not available', 400);
   }
 
-  async checkOrderAvailable(orderActivityId: number): Promise<void> {
-    const orderActivity = await this.loadOrderActivityWithIncludes(
-      orderActivityId
-    );
-
-    await this.checkOrderPayment(orderActivity.order);
-
-    if (orderActivity.orderPackage) await this.checkOrderPackage(orderActivity);
-    else await this.checkActivity(orderActivity);
+  private async checkOrderPayment(order: Order): Promise<void> {
+    if (!PAID_STATUS.includes(order.status)) throw new CustomError('Check your order payment status');
   }
 
-  async checkOrderPayment(order: Order): Promise<void> {
-    if (!PAID_STATUS.includes(order.status))
-      throw new CustomError('Check your order payment status');
-  }
-
-  async checkOrderPackage(orderActivity: OrderActivity): Promise<void> {
+  private async checkOrderPackage(orderActivity: OrderActivity): Promise<void> {
     this.checkPackageExpirationDate(orderActivity);
     await this.checkPackageAppointments(orderActivity);
     await this.checkPackageAmount(orderActivity);
     await this.checkPackageMinutes(orderActivity);
   }
 
-  async checkActivity(orderActivity: OrderActivity): Promise<void> {
+  private async checkActivity(orderActivity: OrderActivity): Promise<void> {
     const { order } = orderActivity;
     const count = await this.countScheduleByOrderActivity(orderActivity.id);
-    if (count + 1 > order.quantity)
-      throw new CustomError('Limit of appointments was exceeded');
+    if (count + 1 > order.quantity) throw new CustomError('Limit of appointments was exceeded');
   }
 
   private async checkPackageMinutes(orderActivity: OrderActivity) {
@@ -111,19 +106,11 @@ export class ScheduleCreateUseCase {
 
     if (orderPackage.type !== PackageTypeEnum.minutes) return;
 
-    const [startDate, endDate] = this.getDateRange(
-      this.date,
-      orderPackage.recurrencyPay
-    );
+    const [startDate, endDate] = this.getDateRange(this.date, orderPackage.recurrencyPay);
     const total = order.quantity * Number(orderPackage.total);
-    const sum = await this.sumScheduledDuration(
-      startDate,
-      endDate,
-      orderPackage.id
-    );
+    const sum = await this.sumScheduledDuration(startDate, endDate, orderPackage.id);
 
-    if (sum + orderActivity.duration > total)
-      throw new CustomError('Total minutes was exceeded');
+    if (sum + orderActivity.duration > total) throw new CustomError('Total minutes was exceeded');
   }
 
   private async checkPackageAmount(orderActivity: OrderActivity) {
@@ -131,19 +118,11 @@ export class ScheduleCreateUseCase {
 
     if (orderPackage.type !== PackageTypeEnum.amount) return;
 
-    const [startDate, endDate] = this.getDateRange(
-      this.date,
-      orderPackage.recurrencyPay
-    );
+    const [startDate, endDate] = this.getDateRange(this.date, orderPackage.recurrencyPay);
     const total = order.quantity * Number(orderPackage.total);
-    const sum = await this.sumScheduledPrice(
-      startDate,
-      endDate,
-      orderPackage.id
-    );
+    const sum = await this.sumScheduledPrice(startDate, endDate, orderPackage.id);
 
-    if (sum + Number(orderActivity.price) > total)
-      throw new CustomError('Total amount was exceeded');
+    if (sum + Number(orderActivity.price) > total) throw new CustomError('Total amount was exceeded');
   }
 
   private async checkPackageAppointments(orderActivity: OrderActivity) {
@@ -151,34 +130,21 @@ export class ScheduleCreateUseCase {
 
     if (orderPackage.type !== PackageTypeEnum.appointments) return;
 
-    const [startDate, endDate] = this.getDateRange(
-      this.date,
-      orderPackage.recurrencyPay
-    );
+    const [startDate, endDate] = this.getDateRange(this.date, orderPackage.recurrencyPay);
 
-    const countSchedules = await this.countSchedule(
-      startDate,
-      endDate,
-      orderActivity.id
-    );
+    const countSchedules = await this.countSchedule(startDate, endDate, orderActivity.id);
 
     const total = order.quantity * orderActivity.packageQuantity;
 
-    if (countSchedules + 1 > total)
-      throw new CustomError('Limit of appointments was exceeded');
+    if (countSchedules + 1 > total) throw new CustomError('Limit of appointments was exceeded');
   }
 
   private checkPackageExpirationDate(orderActivity: OrderActivity) {
     const { orderPackage } = orderActivity;
-    if (orderPackage.expiration && orderPackage.expiration < this.date)
-      throw new CustomError('Package expired');
+    if (orderPackage.expiration && orderPackage.expiration < this.date) throw new CustomError('Package expired');
   }
 
-  private async countSchedule(
-    start: Date,
-    end: Date,
-    orderActivityId?: number
-  ) {
+  private async countSchedule(start: Date, end: Date, orderActivityId?: number) {
     const ands: any[] = [
       { date: { [Op.gte]: format(start, 'yyyy-MM-dd') } },
       { date: { [Op.lte]: format(end, 'yyyy-MM-dd') } },
@@ -192,9 +158,7 @@ export class ScheduleCreateUseCase {
     });
   }
 
-  private async countScheduleByOrderActivity(
-    orderActivityId: number
-  ): Promise<number> {
+  private async countScheduleByOrderActivity(orderActivityId: number): Promise<number> {
     return Schedule.count({
       where: {
         orderActivityId: orderActivityId,
@@ -204,29 +168,14 @@ export class ScheduleCreateUseCase {
   }
 
   private sumScheduledPrice(start: Date, end: Date, orderPackageId: number) {
-    return this.sumScheduledOrderActivityAttribute(
-      'price',
-      start,
-      end,
-      orderPackageId
-    );
+    return this.sumScheduledOrderActivityAttribute('price', start, end, orderPackageId);
   }
 
   private sumScheduledDuration(start: Date, end: Date, orderPackageId: number) {
-    return this.sumScheduledOrderActivityAttribute(
-      'duration',
-      start,
-      end,
-      orderPackageId
-    );
+    return this.sumScheduledOrderActivityAttribute('duration', start, end, orderPackageId);
   }
 
-  private async sumScheduledOrderActivityAttribute(
-    attribute: string,
-    start: Date,
-    end: Date,
-    orderPackageId: number
-  ) {
+  private async sumScheduledOrderActivityAttribute(attribute: string, start: Date, end: Date, orderPackageId: number) {
     const prices = await Schedule.findAll({
       attributes: [],
       include: [{ association: 'orderActivity', attributes: [attribute] }],
@@ -240,23 +189,16 @@ export class ScheduleCreateUseCase {
       }
     });
 
-    return prices
-      .map(x => Number(x.orderActivity[attribute]))
-      .reduce((acc, current) => acc + current, 0);
+    return prices.map(x => Number(x.orderActivity[attribute])).reduce((acc, current) => acc + current, 0);
   }
 
-  private async loadOrderActivityWithIncludes(
-    orderActivityId: number
-  ): Promise<OrderActivity> {
+  private async loadOrderActivityWithIncludes(orderActivityId: number): Promise<OrderActivity> {
     return OrderActivity.findByPk(orderActivityId, {
       include: ['order', 'orderPackage']
     });
   }
 
-  private getDateRange(
-    date: Date,
-    recurrency: RecurrencyPayEnum
-  ): [Date, Date] {
+  private getDateRange(date: Date, recurrency: RecurrencyPayEnum): [Date, Date] {
     if (recurrency === RecurrencyPayEnum.weekly) {
       return [startOfWeek(date), endOfWeek(date)];
     }
