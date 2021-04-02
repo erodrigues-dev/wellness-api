@@ -25,7 +25,7 @@ export class CreateOrderUseCase {
     dto.cardId = data.card_id;
     dto.dueDate = convertToDate(data.due_date);
     dto.quantity = data.quantity;
-    dto.tip = data.tip;
+    dto.tip = data.tip || 0;
     dto.itemId = data.product_id;
     dto.itemType = data.product_type as OrderItemTypeEnum;
     dto.customerId = data.user_id;

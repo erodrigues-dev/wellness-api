@@ -38,7 +38,7 @@ export default class PayWithCard {
       await this.updatePaymentData();
       await this.commit();
     } catch (error) {
-      console.log(error.response.data);
+      console.error(error);
       await this.rollback();
       throw error;
     }
