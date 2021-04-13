@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 import customerService, { CustomerService } from '../../shared/services/CustomerService';
 import { CreateCustomerModel } from '../../shared/useCases/customer/create/CreateCustomerModel';
@@ -7,7 +8,10 @@ import { ListActivitiesUseCase } from '../../shared/useCases/customer/ListActivi
 import { UpdateCustomerModel } from '../../shared/useCases/customer/update/UpdateCustomerModel';
 import UpdateCustomerUseCase from '../../shared/useCases/customer/update/UpdateCustomerUseCase';
 import ICustomerController, {
-    IGetRequest, IIndexRequest, IStoreRequest, IUpdateRequest
+  IGetRequest,
+  IIndexRequest,
+  IStoreRequest,
+  IUpdateRequest
 } from './interfaces/ICustomerController';
 
 export class CustomerController implements ICustomerController {
@@ -30,8 +34,7 @@ export class CustomerController implements ICustomerController {
     try {
       const { id } = req.params;
       const model = await this.service.get(id);
-      if (!model)
-        return res.status(404).json({ message: 'Customer not found' });
+      if (!model) return res.status(404).json({ message: 'Customer not found' });
       return res.json(model);
     } catch (error) {
       next(error);
@@ -40,9 +43,7 @@ export class CustomerController implements ICustomerController {
 
   async store(req: IStoreRequest, res: Response, next: NextFunction) {
     try {
-      const dto = new CreateCustomerModel()
-        .parse(req.body)
-        .withImageUrl(req.file?.url);
+      const dto = new CreateCustomerModel().parse(req.body).withImageUrl(req.file?.url);
 
       const model = await new CreateCustomerUseCase(dto).create();
 
@@ -54,13 +55,20 @@ export class CustomerController implements ICustomerController {
 
   async update(req: IUpdateRequest, res: Response<any>, next: NextFunction) {
     try {
-      const dto = new UpdateCustomerModel()
-        .parse(req.body)
-        .withImageUrl(req.file?.url);
+      const dto = new UpdateCustomerModel().parse(req.body).withImageUrl(req.file?.url);
 
       const model = await new UpdateCustomerUseCase(dto).update();
 
       return res.json(model);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async delete(req: Request, res: Response, next: NextFunction) {
+    try {
+      await this.service.delete(Number(req.params.id));
+      return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (error) {
       next(error);
     }

@@ -9,11 +9,7 @@ import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 import { hash } from '../utils/hash-password';
 
 export class CustomerService {
-  async list(
-    filter: any,
-    page = null,
-    limit = null
-  ): Promise<CustomerListViewModel[]> {
+  async list(filter: any, page = null, limit = null): Promise<CustomerListViewModel[]> {
     const where = this.buildQuery(filter);
 
     const findOptions: FindOptions = {
@@ -58,6 +54,14 @@ export class CustomerService {
     return Customer.map(customerDb.toJSON());
   }
 
+  async delete(id: number): Promise<void> {
+    const count = await CustomerDb.destroy({
+      where: { id }
+    });
+
+    if (count === 0) throw new CustomError('Customer not found', 404);
+  }
+
   async updateSquareId(id: number, squareId: string): Promise<void> {
     await CustomerDb.update(
       { squareId },
@@ -77,8 +81,7 @@ export class CustomerService {
 
     if (data.imageUrl) {
       // delete old image
-      if (customer.imageUrl)
-        await deleteFileFromUrl(customer.imageUrl).catch(() => {});
+      if (customer.imageUrl) await deleteFileFromUrl(customer.imageUrl).catch(() => {});
 
       customer.imageUrl = data.imageUrl;
     }
