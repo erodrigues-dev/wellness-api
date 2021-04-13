@@ -8,5 +8,6 @@ const router = Router();
 router.get('/customers', checkPermission(Permission.CustomerList));
 router.get('/customers/:id', checkPermission(Permission.CustomerList));
 router.put('/customers', checkPermission(Permission.CustomerCreateUpdate));
+router.delete('/customers/:id', checkPermission(Permission.CustomerDelete));
 
 export default router;

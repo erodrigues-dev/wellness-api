@@ -46,6 +46,12 @@ export class Permission {
     name: 'Create/Update customers'
   };
 
+  static readonly CustomerDelete: PermissionItem = {
+    id: 1 << 21,
+    group: 'Customer',
+    name: 'Delete customers'
+  };
+
   static readonly OrderList: PermissionItem = {
     id: 1 << 5,
     group: 'Orders',
