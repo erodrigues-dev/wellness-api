@@ -6,8 +6,10 @@ import jsonErrorHandler from './JsonErrorHandler';
 import uploadErrorHandler from './UploadErrorHandler';
 import validatorErrorHandler from './ValidatorErrorHandler';
 import jwtErrorHandler from './JwtErrorHandler';
+import logErrorHandler from './LogErrorHandler';
 
 export default function useErrorHandlers(app: Express) {
+  app.use(logErrorHandler);
   app.use(jwtErrorHandler);
   app.use(validatorErrorHandler);
   app.use(uploadErrorHandler);
