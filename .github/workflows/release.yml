@@ -15,7 +15,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /www/wellness-api-release
-            git pull --rebase
+            git pull origin release
             docker-compose up --build -d
             docker-compose ps
-            docker-compose logs
+            docker-compose logs -t
