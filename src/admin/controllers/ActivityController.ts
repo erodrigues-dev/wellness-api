@@ -1,6 +1,5 @@
 import { Response, NextFunction } from 'express';
 
-import IActivityService from '../../shared/services/interfaces/IActivityService';
 import IActivityController, {
   IGetRequest,
   IIndexRequest,
