@@ -33,8 +33,8 @@ router.post(
       description: Joi.string().required(),
       price: Joi.number().precision(2).required(),
       duration: Joi.number().integer().required(),
-      employeeId: Joi.number().integer().required(),
       categoryId: Joi.number().integer().required(),
+      employeeId: Joi.number().allow('', null),
       showInApp: Joi.boolean().default(true),
       showInWeb: Joi.boolean().default(true),
       maxPeople: Joi.number().integer().positive().optional()
@@ -51,7 +51,7 @@ router.put(
       description: Joi.string().required(),
       price: Joi.number().precision(2).required(),
       duration: Joi.number().integer().required(),
-      employeeId: Joi.number().integer().required(),
+      employeeId: Joi.number().allow('', null),
       categoryId: Joi.number().integer().required(),
       showInApp: Joi.boolean().default(true),
       showInWeb: Joi.boolean().default(true),

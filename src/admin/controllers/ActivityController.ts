@@ -8,35 +8,23 @@ import IActivityController, {
   IUpdateRequest
 } from './interfaces/IActivityController';
 
-import activityService from '../../shared/services/ActivityService';
+import activityService, { ActivityService } from '../../shared/services/ActivityService';
 
 export class ActivityController implements IActivityController {
-  constructor(private service: IActivityService) {}
+  constructor(private service: ActivityService) {}
 
-  async index(
-    req: IIndexRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> {
+  async index(req: IIndexRequest, res: Response, next: NextFunction): Promise<Response> {
     try {
       const { name, employeeId, categoryId, page, limit } = req.query;
       const total = await this.service.count({ name, employeeId, categoryId });
-      const list = await this.service.list(
-        { name, employeeId, categoryId },
-        page,
-        limit
-      );
+      const list = await this.service.list({ name, employeeId, categoryId }, page, limit);
       return res.header('X-Total-Count', total.toString()).json(list);
     } catch (error) {
       next(error);
     }
   }
 
-  async get(
-    req: IGetRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> {
+  async get(req: IGetRequest, res: Response, next: NextFunction): Promise<Response> {
     try {
       const { id } = req.params;
       const model = await this.service.get(id);
@@ -46,11 +34,7 @@ export class ActivityController implements IActivityController {
     }
   }
 
-  async store(
-    req: IStoreRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> {
+  async store(req: IStoreRequest, res: Response, next: NextFunction): Promise<Response> {
     try {
       const {
         name,
@@ -82,11 +66,7 @@ export class ActivityController implements IActivityController {
     }
   }
 
-  async update(
-    req: IUpdateRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> {
+  async update(req: IUpdateRequest, res: Response, next: NextFunction): Promise<Response> {
     try {
       const {
         id,
