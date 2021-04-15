@@ -17,6 +17,7 @@ export default class Employee extends Model {
 
   readonly createdAt: Date;
   readonly updatedAt: Date;
+  readonly deletedAt: Date;
 
   static associations: {
     profile: Association<Employee, Profile>;
@@ -36,7 +37,8 @@ export default class Employee extends Model {
       },
       {
         sequelize: connection,
-        tableName: 'employees'
+        tableName: 'employees',
+        paranoid: true
       }
     );
   }

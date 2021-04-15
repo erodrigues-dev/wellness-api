@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 import employeeService, { EmployeeService } from '../../shared/services/EmployeeService';
 import { CreateEmployeeModel } from '../../shared/useCases/employee/create/CreateEmployeeModel';
@@ -10,42 +11,23 @@ import { ICloudFile } from '../../shared/utils/interfaces/ICloudFile';
 export class EmployeeController {
   constructor(private service: EmployeeService) {}
 
-  async index(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> {
+  async index(req: Request, res: Response, next: NextFunction): Promise<Response> {
     try {
-      const {
-        name,
-        email,
-        specialty,
-        profile,
-        page,
-        limit
-      } = this.parseQueryIndexParams(req.query);
+      const { name, email, specialty, profile, page, limit } = this.parseQueryIndexParams(req.query);
       const total = await this.service.count({
         name,
         email,
         specialty,
         profile
       });
-      const list = await this.service.list(
-        { name, email, specialty, profile },
-        page,
-        limit
-      );
+      const list = await this.service.list({ name, email, specialty, profile }, page, limit);
       return res.header('X-Total-Count', total.toString()).json(list);
     } catch (error) {
       next(error);
     }
   }
 
-  async get(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> {
+  async get(req: Request, res: Response, next: NextFunction): Promise<Response> {
     try {
       const { id } = req.params as any;
       const model = await this.service.get(id);
@@ -55,15 +37,9 @@ export class EmployeeController {
     }
   }
 
-  async store(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> {
+  async store(req: Request, res: Response, next: NextFunction): Promise<Response> {
     try {
-      const createModel = new CreateEmployeeModel()
-        .parse(req.body)
-        .withImageUrl(req.file as ICloudFile);
+      const createModel = new CreateEmployeeModel().parse(req.body).withImageUrl(req.file as ICloudFile);
 
       const model = await new CreateEmployeeUseCase(createModel).create();
 
@@ -73,18 +49,21 @@ export class EmployeeController {
     }
   }
 
-  async update(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> {
+  async update(req: Request, res: Response, next: NextFunction): Promise<Response> {
     try {
-      const updateModel = new UpdateEmployeeModel()
-        .parse(req.body)
-        .withImageUrl(req.file as ICloudFile);
+      const updateModel = new UpdateEmployeeModel().parse(req.body).withImageUrl(req.file as ICloudFile);
 
       const model = await new UpdateEmployeeUseCase(updateModel).update();
       return res.json(model);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async destroy(req: Request, res: Response, next: NextFunction) {
+    try {
+      await this.service.destroy(Number(req.params.id));
+      return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (error) {
       next(error);
     }

@@ -28,6 +28,10 @@ export class CreateEmployeeUseCase {
   private async checkEmail(): Promise<void> {
     const existEmail = await employeeService.checkEmail(this.data.email);
     if (existEmail) throw new CustomError('Email is in use');
+
+    const existDeletedEmail = await employeeService.checkDeletedEmail(this.data.email);
+    if (existDeletedEmail)
+      throw new CustomError('Email is in use by a disable account, contact an administrator for more info');
   }
 
   private async createOnDB(): Promise<void> {
@@ -42,8 +46,7 @@ export class CreateEmployeeUseCase {
         password: await hash(this.tempPassword)
       });
     } catch (error) {
-      if (error instanceof ForeignKeyConstraintError)
-        throw new CustomError('Profile id is invalid');
+      if (error instanceof ForeignKeyConstraintError) throw new CustomError('Profile id is invalid');
 
       throw error;
     }

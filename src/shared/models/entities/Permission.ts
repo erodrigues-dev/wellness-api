@@ -116,6 +116,13 @@ export class Permission {
     name: 'Create/Update employees'
   };
 
+  static readonly EmployeeDelete: PermissionItem = {
+    id: 1 << 22,
+    group: 'Settings',
+    subgroup: 'Employees',
+    name: 'Delete employees'
+  };
+
   static readonly ProfileList: PermissionItem = {
     id: 1 << 15,
     group: 'Settings',
@@ -157,4 +164,6 @@ export class Permission {
     subgroup: 'Discount',
     name: 'Create/Update discounts'
   };
+
+  // proximo id << 23
 }
