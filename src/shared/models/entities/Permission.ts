@@ -165,5 +165,24 @@ export class Permission {
     name: 'Create/Update discounts'
   };
 
-  // proximo id << 23
+  static readonly SpecialtyList: PermissionItem = {
+    id: 1 << 23,
+    group: 'Settings',
+    subgroup: 'Specialty',
+    name: 'List specialties'
+  };
+
+  static readonly SpecialtyCreateUpdate: PermissionItem = {
+    id: 1 << 24,
+    group: 'Settings',
+    subgroup: 'Specialty',
+    name: 'Create/Update specialties'
+  };
+
+  static readonly SpecialtyDelete: PermissionItem = {
+    id: 1 << 25,
+    group: 'Settings',
+    subgroup: 'Specialty',
+    name: 'Delete specialties'
+  };
 }
