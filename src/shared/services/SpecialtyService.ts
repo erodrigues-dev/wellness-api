@@ -1,6 +1,8 @@
+import { Op } from 'sequelize';
 import Specialty from '../database/models/Specialty';
 
 interface ListFilter {
+  name?: string;
   page?: number;
   limit?: number;
 }
@@ -11,10 +13,13 @@ interface UpdateData {
 }
 
 export class SpecialtyService {
-  async list({ page = 1, limit = 10 }: ListFilter) {
+  async list({ name, page, limit }: ListFilter) {
+    const where = name ? { name: { [Op.iLike]: `%${name}%` } } : {};
     return Specialty.findAndCountAll({
       limit,
-      offset: (page - 1) * limit
+      offset: (page - 1) * limit,
+      where,
+      order: ['name']
     });
   }
 
