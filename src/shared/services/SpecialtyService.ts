@@ -18,6 +18,10 @@ export class SpecialtyService {
     });
   }
 
+  async get(id: number) {
+    return Specialty.findByPk(id);
+  }
+
   async create(name: string) {
     return Specialty.create({
       name
