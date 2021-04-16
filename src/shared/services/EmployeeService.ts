@@ -21,6 +21,9 @@ export class EmployeeService {
         {
           association: Employee.associations.profile,
           attributes: ['id', 'name']
+        },
+        {
+          association: 'specialty'
         }
       ],
       order: ['name']
@@ -55,6 +58,9 @@ export class EmployeeService {
         {
           association: Employee.associations.profile,
           attributes: ['id', 'name']
+        },
+        {
+          association: 'specialty'
         }
       ]
     });

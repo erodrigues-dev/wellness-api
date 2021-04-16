@@ -40,7 +40,7 @@ export class CreateEmployeeUseCase {
         name: this.data.name,
         email: this.data.email,
         phone: this.data.phone,
-        specialty: this.data.specialty,
+        specialtyId: this.data.specialtyId,
         imageUrl: this.data.imageUrl,
         profileId: this.data.profileId,
         password: await hash(this.tempPassword)
