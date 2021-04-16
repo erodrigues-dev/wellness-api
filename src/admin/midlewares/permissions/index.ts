@@ -12,6 +12,7 @@ import order from './OrderPermission';
 import package_ from './PackagePermission';
 import profile from './ProfilePermission';
 import schedule from './SchedulePermission';
+import specialty from './SpecialtyPermission';
 
 const router = Router();
 
@@ -27,5 +28,6 @@ router.use(order);
 router.use(checkout);
 router.use(schedule);
 router.use(domain);
+router.use(specialty);
 
 export default router;
