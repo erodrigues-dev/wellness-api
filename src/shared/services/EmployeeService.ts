@@ -23,7 +23,8 @@ export class EmployeeService {
           attributes: ['id', 'name']
         },
         {
-          association: 'specialty'
+          association: 'specialty',
+          attributes: ['id', 'name']
         }
       ],
       order: ['name']
@@ -60,7 +61,8 @@ export class EmployeeService {
           attributes: ['id', 'name']
         },
         {
-          association: 'specialty'
+          association: 'specialty',
+          attributes: ['id', 'name']
         }
       ]
     });
