@@ -39,7 +39,7 @@ router.put(
       name: Joi.string().required(),
       email: Joi.string().email().required(),
       confirmationCode: Joi.string().allow(null, ''),
-      specialty: Joi.string().max(100).allow(null, ''),
+      specialtyId: Joi.number().allow(null, ''),
       password: Joi.string().allow(null, '')
     })
   })

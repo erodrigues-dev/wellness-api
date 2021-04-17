@@ -10,7 +10,7 @@ import emailConfirmationCodeService from './EmailConfirmationCodeService';
 
 export class UserService {
   async login(email: string, password: string): Promise<LoginViewModel> {
-    const user = await this.getUserWithProfileByEmail(email);
+    const user = await this.getUserByEmail(email);
     if (!user) throw new CustomError('Login or Password is not valid', 401);
 
     const matchPassword = await compare(password, user.password);
@@ -25,16 +25,15 @@ export class UserService {
 
   async update(data: EmployeeSelfUpdateDto) {
     const model = await Employee.findByPk(data.id, {
-      include: ['profile']
+      include: ['profile', 'specialty']
     });
     if (!model) throw new CustomError('Employee not found', 404);
 
-    if (model.email !== data.email)
-      await this.checkChangeEmail(data.id, data.email, data.confirmationCode);
+    if (model.email !== data.email) await this.checkChangeEmail(data.id, data.email, data.confirmationCode);
 
     model.name = data.name;
     model.email = data.email;
-    model.specialty = data.specialty;
+    model.specialtyId = data.specialtyId || null;
 
     if (data.password) model.password = await hash(data.password);
 
@@ -45,6 +44,7 @@ export class UserService {
     }
 
     await model.save();
+    await model.reload();
 
     await emailConfirmationCodeService.deleteByEmail(model.email);
 
@@ -55,24 +55,16 @@ export class UserService {
     const emailExist = await this.checkEmail(userId, email);
     if (emailExist) throw new CustomError('Email in use', 400);
 
-    if (!code)
-      throw new CustomError('Confirmation code is required to change email');
+    if (!code) throw new CustomError('Confirmation code is required to change email');
 
-    const codeIsValid = await emailConfirmationCodeService.codeIsValid(
-      email,
-      code
-    );
+    const codeIsValid = await emailConfirmationCodeService.codeIsValid(email, code);
     if (!codeIsValid) throw new CustomError('Confirmation code is invalid');
   }
 
-  private getUserWithProfileByEmail(email: string): Promise<Employee> {
+  private getUserByEmail(email: string): Promise<Employee> {
     return Employee.findOne({
       where: { email },
-      include: [
-        {
-          association: Employee.associations.profile
-        }
-      ]
+      include: ['profile', 'specialty']
     });
   }
 

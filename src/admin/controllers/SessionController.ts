@@ -4,9 +4,7 @@ import jwt from 'jsonwebtoken';
 
 import { PermissionHelper } from '../../shared/models/entities/Permission';
 import service from '../../shared/services/UserService';
-import {
-    EmployeeRecoverPasswordUseCase
-} from '../../shared/useCases/employee/recover-password/EmployeeRecoverPasswordUseCase';
+import { EmployeeRecoverPasswordUseCase } from '../../shared/useCases/employee/recover-password/EmployeeRecoverPasswordUseCase';
 import { SendEmailConfirmationUseCase } from '../../shared/useCases/SendEmailConfirmationUseCase';
 import { ICloudFile } from '../../shared/utils/interfaces/ICloudFile';
 
@@ -28,7 +26,7 @@ export class SessionController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.user;
-      const { name, email, confirmationCode, password, specialty } = req.body;
+      const { name, email, confirmationCode, password, specialtyId } = req.body;
       const file = req.file as ICloudFile;
       const payload = await service.update({
         id,
@@ -36,7 +34,7 @@ export class SessionController {
         email,
         confirmationCode,
         password,
-        specialty,
+        specialtyId,
         imageUrl: file?.url
       });
 
@@ -73,10 +71,7 @@ export class SessionController {
 
   async sendConfirmation(req: Request, res: Response, next: NextFunction) {
     try {
-      await new SendEmailConfirmationUseCase(
-        req.body.name,
-        req.body.email
-      ).send();
+      await new SendEmailConfirmationUseCase(req.body.name, req.body.email).send();
 
       return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (error) {

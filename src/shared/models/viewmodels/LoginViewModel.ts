@@ -2,7 +2,10 @@ export class LoginViewModel {
   id: number;
   name: string;
   email: string;
-  specialty: string;
+  specialty: {
+    id: number;
+    name: string;
+  };
   imageUrl: string;
   permissions: number;
 
