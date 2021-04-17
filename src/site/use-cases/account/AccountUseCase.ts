@@ -16,7 +16,8 @@ export class AccountUseCase {
       name: model.name,
       email: model.email,
       phone: model.phone,
-      image_url: model.imageUrl
+      image_url: model.imageUrl,
+      public_notes: model.publicNotes
     };
   }
 
@@ -37,7 +38,8 @@ export class AccountUseCase {
       name: user.name,
       email: user.email,
       phone: user.phone,
-      image_url: user.imageUrl
+      image_url: user.imageUrl,
+      public_notes: user.publicNotes
     };
   }
 

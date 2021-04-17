@@ -4,4 +4,5 @@ export interface AccountViewModel {
   email: string;
   phone: string;
   image_url: string;
+  public_notes: string;
 }
