@@ -4,6 +4,6 @@ export class EmployeeSelfUpdateDto {
   email: string;
   confirmationCode: string;
   password: string;
-  specialty: string;
+  specialtyId: number;
   imageUrl?: string;
 }

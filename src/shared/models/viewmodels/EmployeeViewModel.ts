@@ -9,7 +9,10 @@ export class EmployeeViewModel {
   id: number;
   name: string;
   email: string;
-  specialty: string;
+  specialty: {
+    id: number;
+    name: string;
+  };
   imageUrl?: string;
   profile: Profile;
   phone: string;
