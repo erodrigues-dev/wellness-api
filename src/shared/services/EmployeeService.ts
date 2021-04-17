@@ -2,10 +2,7 @@ import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Employee from '../database/models/Employee';
-import IEmployee from '../models/entities/IEmployee';
 import { EmployeeViewModel } from '../models/viewmodels/EmployeeViewModel';
-import { deleteFileFromUrl } from '../utils/google-cloud-storage';
-import { hash } from '../utils/hash-password';
 
 type Filter = {
   name: string;
@@ -15,18 +12,18 @@ type Filter = {
 };
 
 export class EmployeeService {
-  async list(
-    filter: Filter,
-    page: number = null,
-    limit: number = null
-  ): Promise<EmployeeViewModel[]> {
+  async list(filter: Filter, page: number = null, limit: number = null): Promise<EmployeeViewModel[]> {
     const where = this.buildQuery(filter);
 
     const findOptions: FindOptions = {
       where,
       include: [
         {
-          association: Employee.associations.profile,
+          association: 'profile',
+          attributes: ['id', 'name']
+        },
+        {
+          association: 'specialty',
           attributes: ['id', 'name']
         }
       ],
@@ -50,7 +47,12 @@ export class EmployeeService {
       where,
       include: [
         {
-          association: Employee.associations.profile
+          association: 'profile',
+          attributes: ['id', 'name']
+        },
+        {
+          association: 'specialty',
+          attributes: ['id', 'name']
         }
       ]
     });
@@ -61,6 +63,10 @@ export class EmployeeService {
       include: [
         {
           association: Employee.associations.profile,
+          attributes: ['id', 'name']
+        },
+        {
+          association: 'specialty',
           attributes: ['id', 'name']
         }
       ]
@@ -83,7 +89,7 @@ export class EmployeeService {
     }
 
     if (filter.specialty) {
-      where.push({ specialty: { [Op.iLike]: `%${filter.specialty}%` } });
+      where.push({ ['$specialty.name$']: { [Op.iLike]: `%${filter.specialty}%` } });
     }
 
     if (filter.profile) {
@@ -106,6 +112,23 @@ export class EmployeeService {
     });
 
     return matchs > 0;
+  }
+
+  async checkDeletedEmail(email: string) {
+    const matchs = await Employee.count({
+      where: { email, deletedAt: { [Op.not]: null } },
+      paranoid: false
+    });
+
+    return matchs > 0;
+  }
+
+  async destroy(id: number) {
+    const count = await Employee.destroy({
+      where: { id }
+    });
+
+    if (count === 0) throw new CustomError('Employee not found', 404);
   }
 }
 

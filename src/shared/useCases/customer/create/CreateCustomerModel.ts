@@ -3,6 +3,7 @@ export class CreateCustomerModel {
   email: string;
   imageUrl: string;
   privateNotes: string;
+  publicNotes: string;
   phone: string;
 
   parse(data: any) {
@@ -10,6 +11,7 @@ export class CreateCustomerModel {
     this.email = data.email;
     this.imageUrl = data.imageUrl;
     this.privateNotes = data.privateNotes;
+    this.publicNotes = data.publicNotes;
     this.phone = data.phone;
 
     return this;

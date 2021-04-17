@@ -7,12 +7,12 @@ router.get(
   '/employees',
   celebrate({
     [Segments.QUERY]: Joi.object().keys({
-      name: Joi.string().allow('').optional(),
-      email: Joi.string().allow('').optional(),
-      profile: Joi.string().allow('').optional(),
-      specialty: Joi.string().allow('').optional(),
-      page: Joi.number().min(1).optional(),
-      limit: Joi.number().min(1).optional()
+      name: Joi.string().allow(''),
+      email: Joi.string().allow(''),
+      profile: Joi.string().allow(''),
+      specialty: Joi.string().allow(''),
+      page: Joi.number().min(1),
+      limit: Joi.number().min(1)
     })
   })
 );
@@ -33,7 +33,7 @@ router.post(
       name: Joi.string().required(),
       email: Joi.string().required().email(),
       phone: Joi.string().allow(null, '').max(20),
-      specialty: Joi.string().max(100).optional().allow(''),
+      specialtyId: Joi.number().allow(''),
       profileId: Joi.number().required()
     })
   })
@@ -46,7 +46,7 @@ router.put(
       id: Joi.number().required(),
       name: Joi.string().required(),
       phone: Joi.string().allow(null, '').max(20),
-      specialty: Joi.string().max(100).optional().allow(''),
+      specialtyId: Joi.number().allow(''),
       profileId: Joi.number().required()
     })
   })

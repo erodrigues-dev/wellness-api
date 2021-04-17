@@ -6,6 +6,7 @@ export class Customer {
   imageUrl: string;
   squareId?: string;
   privateNotes: string;
+  publicNotes: string;
   phone: string;
   createdAt: Date;
   updatedAt: Date;
@@ -20,6 +21,7 @@ export class Customer {
     entity.imageUrl = db.imageUrl;
     entity.squareId = db.squareId;
     entity.privateNotes = db.privateNotes;
+    entity.publicNotes = db.publicNotes;
     entity.phone = db.phone;
     entity.createdAt = db.createdAt;
     entity.updatedAt = db.updatedAt;
@@ -34,6 +36,7 @@ export class CustomerCreateModel {
   password: string;
   imageUrl: string;
   privateNotes: string;
+  publicNotes: string;
   phone: string;
 }
 
@@ -42,5 +45,6 @@ export class CustomerUpdateModel {
   name: string;
   imageUrl: string;
   privateNotes: string;
+  publicNotes: string;
   phone: string;
 }

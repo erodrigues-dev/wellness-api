@@ -4,7 +4,7 @@ export class UpdateEmployeeModel {
   id: number;
   name: string;
   phone: string;
-  specialty: string;
+  specialtyId: number;
   imageUrl?: string;
   profileId: number;
 
@@ -12,7 +12,7 @@ export class UpdateEmployeeModel {
     this.id = obj.id;
     this.name = obj.name;
     this.phone = obj.phone;
-    this.specialty = obj.specialty;
+    this.specialtyId = obj.specialtyId;
     this.imageUrl = obj.imageUrl;
     this.profileId = obj.profileId;
 

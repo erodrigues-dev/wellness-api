@@ -13,6 +13,7 @@ import packageRouter from './PackageRouter';
 import profileRouter from './ProfileRouter';
 import scheduleRouter from './ScheduleRouter';
 import sessionRouter from './SessionRouter';
+import specialtyRouter from './SpecialtyRouter';
 
 const router = Router();
 
@@ -29,5 +30,6 @@ router.use(orderRouter);
 router.use(checkoutRouter);
 router.use(scheduleRouter);
 router.use(domainRouter);
+router.use(specialtyRouter);
 
 export default router;

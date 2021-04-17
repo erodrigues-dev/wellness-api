@@ -21,7 +21,7 @@ export class UpdateEmployeeUseCase {
 
       employee.name = this.data.name;
       employee.phone = this.data.phone;
-      employee.specialty = this.data.specialty;
+      employee.specialtyId = this.data.specialtyId;
       employee.profileId = this.data.profileId;
 
       if (this.data.imageUrl) {
@@ -32,8 +32,7 @@ export class UpdateEmployeeUseCase {
       await employee.save();
       this.employee = employee;
     } catch (error) {
-      if (error instanceof ForeignKeyConstraintError)
-        throw new CustomError('Profile id is invalid');
+      if (error instanceof ForeignKeyConstraintError) throw new CustomError('Profile id is invalid');
 
       throw error;
     }

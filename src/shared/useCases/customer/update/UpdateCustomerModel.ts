@@ -4,6 +4,7 @@ export class UpdateCustomerModel {
   imageUrl: string;
   phone: string;
   privateNotes: string;
+  publicNotes: string;
 
   parse(data: any) {
     this.id = data.id;
@@ -11,6 +12,7 @@ export class UpdateCustomerModel {
     this.phone = data.phone;
     this.imageUrl = data.imageUrl;
     this.privateNotes = data.privateNotes;
+    this.publicNotes = data.publicNotes;
 
     return this;
   }

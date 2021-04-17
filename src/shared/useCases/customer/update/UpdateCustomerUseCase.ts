@@ -23,6 +23,7 @@ export default class UpdateCustomerUseCase {
       name: this.data.name,
       phone: this.data.phone,
       privateNotes: this.data.privateNotes,
+      publicNotes: this.data.publicNotes,
       imageUrl: this.data.imageUrl
     });
   }
@@ -36,15 +37,11 @@ export default class UpdateCustomerUseCase {
       email_address: this.customer.email
     };
 
-    if (squareCustomerData.id)
-      await squareCustomerService.update(squareCustomerData);
+    if (squareCustomerData.id) await squareCustomerService.update(squareCustomerData);
     else {
       const { id } = await squareCustomerService.create(squareCustomerData);
       this.customer.squareId = id;
-      await customerService.updateSquareId(
-        this.customer.id,
-        this.customer.squareId
-      );
+      await customerService.updateSquareId(this.customer.id, this.customer.squareId);
     }
   }
 }

@@ -15,14 +15,15 @@ export class SigninUseCase {
 
     if (!isValidPassword) return null;
 
-    const token = await this.generateToken(user);
+    const token = this.generateToken(user);
     return {
       token,
       id: user.id,
       name: user.name,
       email: user.email,
       phone: user.phone,
-      image_url: user.imageUrl
+      image_url: user.imageUrl,
+      public_notes: user.publicNotes
     };
   }
 
@@ -43,8 +44,8 @@ export class SigninUseCase {
     });
   }
 
-  private async findByEmail(email: string) {
-    return await Customer.findOne({
+  private findByEmail(email: string) {
+    return Customer.findOne({
       where: { email }
     });
   }

@@ -7,10 +7,10 @@ router.get(
   '/customers',
   celebrate({
     [Segments.QUERY]: Joi.object().keys({
-      name: Joi.string().allow('').optional(),
-      email: Joi.string().allow('').optional(),
-      page: Joi.number().min(1).optional(),
-      limit: Joi.number().min(1).optional()
+      name: Joi.string().allow(''),
+      email: Joi.string().allow(''),
+      page: Joi.number().min(1),
+      limit: Joi.number().min(1)
     })
   })
 );
@@ -30,8 +30,9 @@ router.post(
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().required(),
       email: Joi.string().required().email(),
-      phone: Joi.string().optional().allow(null, ''),
-      privateNotes: Joi.string().optional().allow(null, '')
+      phone: Joi.string().allow(null, ''),
+      privateNotes: Joi.string().allow(null, ''),
+      publicNotes: Joi.string().allow(null, '')
     })
   })
 );
@@ -42,8 +43,9 @@ router.put(
     [Segments.BODY]: Joi.object().keys({
       id: Joi.number().required(),
       name: Joi.string().required(),
-      phone: Joi.string().optional().allow(null, ''),
-      privateNotes: Joi.string().optional().allow(null, '')
+      phone: Joi.string().allow(null, ''),
+      privateNotes: Joi.string().allow(null, ''),
+      publicNotes: Joi.string().allow(null, '')
     })
   })
 );

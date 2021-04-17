@@ -32,6 +32,7 @@ export default class CreateCustomerUseCase {
       imageUrl: this.data.imageUrl,
       password: this.tempPassword,
       privateNotes: this.data.privateNotes,
+      publicNotes: this.data.publicNotes,
       phone: this.data.phone
     });
   }
@@ -47,10 +48,7 @@ export default class CreateCustomerUseCase {
 
   private async updateCustomerWithSquareId() {
     this.customer.squareId = this.squareCustomer.id;
-    await customerService.updateSquareId(
-      this.customer.id,
-      this.squareCustomer.id
-    );
+    await customerService.updateSquareId(this.customer.id, this.squareCustomer.id);
   }
 
   private async sendEmail(): Promise<void> {

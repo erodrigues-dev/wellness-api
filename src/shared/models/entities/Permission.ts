@@ -116,6 +116,13 @@ export class Permission {
     name: 'Create/Update employees'
   };
 
+  static readonly EmployeeDelete: PermissionItem = {
+    id: 1 << 22,
+    group: 'Settings',
+    subgroup: 'Employees',
+    name: 'Delete employees'
+  };
+
   static readonly ProfileList: PermissionItem = {
     id: 1 << 15,
     group: 'Settings',
@@ -156,5 +163,26 @@ export class Permission {
     group: 'Settings',
     subgroup: 'Discount',
     name: 'Create/Update discounts'
+  };
+
+  static readonly SpecialtyList: PermissionItem = {
+    id: 1 << 23,
+    group: 'Settings',
+    subgroup: 'Specialty',
+    name: 'List specialties'
+  };
+
+  static readonly SpecialtyCreateUpdate: PermissionItem = {
+    id: 1 << 24,
+    group: 'Settings',
+    subgroup: 'Specialty',
+    name: 'Create/Update specialties'
+  };
+
+  static readonly SpecialtyDelete: PermissionItem = {
+    id: 1 << 25,
+    group: 'Settings',
+    subgroup: 'Specialty',
+    name: 'Delete specialties'
   };
 }

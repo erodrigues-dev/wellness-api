@@ -4,7 +4,7 @@ export class CreateEmployeeModel {
   name: string;
   email: string;
   phone: string;
-  specialty: string;
+  specialtyId?: number;
   imageUrl?: string;
   profileId: number;
 
@@ -12,7 +12,7 @@ export class CreateEmployeeModel {
     this.name = obj.name;
     this.email = obj.email;
     this.phone = obj.phone;
-    this.specialty = obj.specialty;
+    this.specialtyId = obj.specialtyId;
     this.imageUrl = obj.imageUrl;
     this.profileId = obj.profileId;
 

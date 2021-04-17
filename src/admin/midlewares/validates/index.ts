@@ -12,6 +12,7 @@ import packageValidate from './PackageValidate';
 import profileValidate from './ProfileValidate';
 import scheduleValidate from './ScheduleValidate';
 import sessionValidate from './SessionValidate';
+import specialtyValidate from './SpecialtyValidate';
 
 const router = Router();
 
@@ -27,5 +28,6 @@ router.use(customerDiscountValidate);
 router.use(orderValidate);
 router.use(checkoutValidate);
 router.use(scheduleValidate);
+router.use(specialtyValidate);
 
 export default router;
