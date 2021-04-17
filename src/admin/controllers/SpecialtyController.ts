@@ -9,8 +9,8 @@ export class SpecialtyController {
     try {
       const { count, rows } = await this.service.list({
         name: String(req.query.name || ''),
-        page: Number(req.query.page || 1),
-        limit: Number(req.query.limit || 10)
+        page: Number(req.query.page) || null,
+        limit: Number(req.query.limit) || null
       });
       res.header('x-total-count', String(count));
       return res.json(rows);

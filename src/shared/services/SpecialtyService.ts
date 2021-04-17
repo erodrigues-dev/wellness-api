@@ -17,7 +17,7 @@ export class SpecialtyService {
     const where = name ? { name: { [Op.iLike]: `%${name}%` } } : {};
     return Specialty.findAndCountAll({
       limit,
-      offset: (page - 1) * limit,
+      offset: limit ? (page - 1) * limit : null,
       where,
       order: ['name']
     });
