@@ -7,12 +7,12 @@ router.get(
   '/employees',
   celebrate({
     [Segments.QUERY]: Joi.object().keys({
-      name: Joi.string().allow('').optional(),
-      email: Joi.string().allow('').optional(),
-      profile: Joi.string().allow('').optional(),
-      specialty: Joi.string().allow('').optional(),
-      page: Joi.number().min(1).optional(),
-      limit: Joi.number().min(1).optional()
+      name: Joi.string().allow(''),
+      email: Joi.string().allow(''),
+      profile: Joi.string().allow(''),
+      specialty: Joi.string().allow(''),
+      page: Joi.number().min(1),
+      limit: Joi.number().min(1)
     })
   })
 );

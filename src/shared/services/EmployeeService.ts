@@ -19,7 +19,7 @@ export class EmployeeService {
       where,
       include: [
         {
-          association: Employee.associations.profile,
+          association: 'profile',
           attributes: ['id', 'name']
         },
         {
@@ -47,7 +47,12 @@ export class EmployeeService {
       where,
       include: [
         {
-          association: Employee.associations.profile
+          association: 'profile',
+          attributes: ['id', 'name']
+        },
+        {
+          association: 'specialty',
+          attributes: ['id', 'name']
         }
       ]
     });
@@ -84,7 +89,7 @@ export class EmployeeService {
     }
 
     if (filter.specialty) {
-      where.push({ specialty: { [Op.iLike]: `%${filter.specialty}%` } });
+      where.push({ ['$specialty.name$']: { [Op.iLike]: `%${filter.specialty}%` } });
     }
 
     if (filter.profile) {
