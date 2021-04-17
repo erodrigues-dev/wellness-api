@@ -78,6 +78,7 @@ export class CustomerService {
     customer.name = data.name;
     customer.phone = data.phone;
     customer.privateNotes = data.privateNotes;
+    customer.publicNotes = data.publicNotes;
 
     if (data.imageUrl) {
       // delete old image

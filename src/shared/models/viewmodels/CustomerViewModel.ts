@@ -6,6 +6,7 @@ export class CustomerViewModel {
   email: string;
   imageUrl: string;
   privateNotes: string;
+  publicNotes: string;
   phone: string;
   createdAt: Date;
 
@@ -17,6 +18,7 @@ export class CustomerViewModel {
       phone: entity.phone,
       imageUrl: entity.imageUrl,
       privateNotes: entity.privateNotes,
+      publicNotes: entity.publicNotes,
       createdAt: entity.createdAt
     };
   }

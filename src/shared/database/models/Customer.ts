@@ -7,9 +7,10 @@ export default class Customer extends Model {
   password: string;
   imageUrl: string;
   squareId: string;
-  privateNotes: string;
   phone: string;
   tempPassword: string;
+  privateNotes: string;
+  publicNotes: string;
 
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -24,6 +25,7 @@ export default class Customer extends Model {
         imageUrl: DataTypes.STRING,
         squareId: DataTypes.STRING,
         privateNotes: DataTypes.STRING,
+        publicNotes: DataTypes.STRING,
         phone: DataTypes.STRING
       },
       { sequelize: connection, tableName: 'customers' }

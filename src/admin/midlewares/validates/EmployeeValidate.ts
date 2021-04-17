@@ -33,7 +33,7 @@ router.post(
       name: Joi.string().required(),
       email: Joi.string().required().email(),
       phone: Joi.string().allow(null, '').max(20),
-      specialty: Joi.string().max(100).optional().allow(''),
+      specialtyId: Joi.number().allow(''),
       profileId: Joi.number().required()
     })
   })
@@ -46,7 +46,7 @@ router.put(
       id: Joi.number().required(),
       name: Joi.string().required(),
       phone: Joi.string().allow(null, '').max(20),
-      specialty: Joi.string().max(100).optional().allow(''),
+      specialtyId: Joi.number().allow(''),
       profileId: Joi.number().required()
     })
   })
