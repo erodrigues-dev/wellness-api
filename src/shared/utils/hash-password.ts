@@ -17,3 +17,9 @@ export function generateTempPassword() {
 export function generateConfirmationCode() {
   return randomBytes(4).toString('hex').toUpperCase();
 }
+
+export function generateRandomCode(length = 8) {
+  return randomBytes(Math.round(length / 2))
+    .toString('hex')
+    .toUpperCase();
+}

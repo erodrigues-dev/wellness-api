@@ -12,6 +12,9 @@ export default class Customer extends Model {
   privateNotes: string;
   publicNotes: string;
 
+  referralCode: string;
+  referralId: number;
+
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -26,7 +29,9 @@ export default class Customer extends Model {
         squareId: DataTypes.STRING,
         privateNotes: DataTypes.STRING,
         publicNotes: DataTypes.STRING,
-        phone: DataTypes.STRING
+        phone: DataTypes.STRING,
+        referralCode: DataTypes.STRING,
+        referralId: DataTypes.INTEGER
       },
       { sequelize: connection, tableName: 'customers' }
     );

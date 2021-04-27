@@ -2,6 +2,7 @@ import { Joi } from 'celebrate';
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { AccountUseCase } from '../../use-cases/account/AccountUseCase';
+import { GenerateReferralCodeUseCase } from '../../use-cases/account/GenerateReferralcodeUseCase';
 
 const saveSchema = Joi.object({
   id: Joi.number().required(),
@@ -25,11 +26,11 @@ const createCardSchema = Joi.object({
 });
 
 export class AccountController {
-  constructor(private useCase: AccountUseCase) {}
+  constructor(private accountUseCase: AccountUseCase, private generateReferralUseCase: GenerateReferralCodeUseCase) {}
 
   async get(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await this.useCase.get(req.user.id);
+      const user = await this.accountUseCase.get(req.user.id);
       return res.json(user);
     } catch (error) {
       next(error);
@@ -42,7 +43,7 @@ export class AccountController {
         ...req.body,
         id: req.user.id
       });
-      const user = await this.useCase.save(data);
+      const user = await this.accountUseCase.save(data);
       return res.json(user);
     } catch (error) {
       next(error);
@@ -53,7 +54,7 @@ export class AccountController {
     try {
       const { id } = req.user;
       const image_url = (req.file as any)?.url;
-      await this.useCase.changeImage(id, image_url);
+      await this.accountUseCase.changeImage(id, image_url);
       return res.json({ image_url });
     } catch (error) {
       next(error);
@@ -64,7 +65,7 @@ export class AccountController {
     try {
       console.log('> list cards');
       const { id } = req.user;
-      const cards = await this.useCase.listCards(id);
+      const cards = await this.accountUseCase.listCards(id);
       return res.json(cards);
     } catch (error) {
       next(error);
@@ -75,7 +76,7 @@ export class AccountController {
     try {
       const { id } = req.user;
       const { card_nonce } = await createCardSchema.validateAsync(req.body);
-      const card = await this.useCase.createCard(id, card_nonce);
+      const card = await this.accountUseCase.createCard(id, card_nonce);
       return res.json(card);
     } catch (error) {
       next(error);
@@ -86,8 +87,17 @@ export class AccountController {
     try {
       const { id } = req.user;
       const { card_id } = req.params;
-      await this.useCase.deleteCard(id, card_id);
+      await this.accountUseCase.deleteCard(id, card_id);
       return res.sendStatus(StatusCodes.NO_CONTENT);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async generateReferralCode(req: Request, res: Response, next: NextFunction) {
+    try {
+      const code = await this.generateReferralUseCase.generate(req.user.id);
+      return res.json({ code });
     } catch (error) {
       next(error);
     }
@@ -95,6 +105,7 @@ export class AccountController {
 }
 
 export const makeAccountController = () => {
-  const useCase = new AccountUseCase();
-  return new AccountController(useCase);
+  const accountUseCase = new AccountUseCase();
+  const generetaReferralUseCase = new GenerateReferralCodeUseCase();
+  return new AccountController(accountUseCase, generetaReferralUseCase);
 };
