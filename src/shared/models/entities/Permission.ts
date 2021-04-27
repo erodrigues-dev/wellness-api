@@ -185,4 +185,25 @@ export class Permission {
     subgroup: 'Specialty',
     name: 'Delete specialties'
   };
+
+  static readonly WaiverList: PermissionItem = {
+    id: 1 << 26,
+    group: 'Settings',
+    subgroup: 'Waiver',
+    name: 'List waivers'
+  };
+
+  static readonly WaiverCreateUpdate: PermissionItem = {
+    id: 1 << 27,
+    group: 'Settings',
+    subgroup: 'Waiver',
+    name: 'Create/Update waivers'
+  };
+
+  static readonly WaiverDelete: PermissionItem = {
+    id: 1 << 28,
+    group: 'Settings',
+    subgroup: 'Waiver',
+    name: 'Delete waivers'
+  };
 }
