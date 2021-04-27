@@ -4,6 +4,7 @@ export interface SignupData {
   phone: string;
   code: string;
   password: string;
+  referral_code?: string;
 }
 
 export interface SendCodeData {

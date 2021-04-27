@@ -9,7 +9,8 @@ const schema = Joi.object({
   email: Joi.string().required(),
   phone: Joi.string(),
   code: Joi.string().required(),
-  password: Joi.string().required().min(8).max(16)
+  password: Joi.string().required().min(8).max(16),
+  referral_code: Joi.string()
 });
 
 const codeSchema = Joi.object({

@@ -58,6 +58,8 @@ router.put(
   upload(mimetypes).single('image'),
   accountController.changeImage.bind(accountController)
 );
+router.post('/account/generate-referral-code', accountController.generateReferralCode.bind(accountController));
+
 //- account/cards
 router.get('/account/cards', accountController.cards.bind(accountController));
 router.post('/account/cards', accountController.createCard.bind(accountController));

@@ -6,7 +6,7 @@ import Customer from '../../../shared/database/models/Customer';
 import { sendEmailConfirmation } from '../../../shared/sendingblue';
 import emailConfirmationCodeService from '../../../shared/services/EmailConfirmationCodeService';
 import { squareCustomerService } from '../../../shared/square/services';
-import { hash } from '../../../shared/utils/hash-password';
+import { generateRandomCode, hash } from '../../../shared/utils/hash-password';
 import { SignupData, SendCodeData } from './models';
 
 export class SignupUseCase {
@@ -19,6 +19,7 @@ export class SignupUseCase {
 
       this.transaction = await conn.transaction();
       const customer = await this.createCustomer(data);
+      await this.updateReferral(data.referral_code, customer);
       const squareId = await this.createCustomerSquare(data);
       await this.update(customer, squareId);
       await this.deleteCode(data.email);
@@ -51,7 +52,8 @@ export class SignupUseCase {
         name: data.name,
         email: data.email,
         phone: data.phone,
-        password: await hash(data.password)
+        password: await hash(data.password),
+        referralCode: generateRandomCode(8)
       },
       { transaction: this.transaction }
     );
@@ -75,5 +77,16 @@ export class SignupUseCase {
 
   private async deleteCode(email: string) {
     await emailConfirmationCodeService.deleteByEmail(email);
+  }
+
+  private async updateReferral(referralCode: string, customer: Customer) {
+    if (!referralCode) return;
+
+    const { id: referralId } = await Customer.findOne({ where: { referralCode }, attributes: ['id'] });
+
+    if (referralId) {
+      customer.referralId = referralId;
+      await customer.save({ transaction: this.transaction });
+    }
   }
 }

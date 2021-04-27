@@ -21,5 +21,9 @@ export class SendEmailService {
       }))
     };
     await this.api.post('/', overrideEmail);
+
+    if (process.env.SENDINGBLUE_DEV_EMAIL) {
+      console.log(JSON.stringify(email, null, 2));
+    }
   }
 }
