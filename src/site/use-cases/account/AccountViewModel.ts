@@ -5,4 +5,5 @@ export interface AccountViewModel {
   phone: string;
   image_url: string;
   public_notes: string;
+  referral_code: string;
 }
