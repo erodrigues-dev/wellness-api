@@ -37,7 +37,8 @@ router.post(
       employeeId: Joi.number().allow('', null),
       showInApp: Joi.boolean().default(true),
       showInWeb: Joi.boolean().default(true),
-      maxPeople: Joi.number().integer().positive().optional()
+      maxPeople: Joi.number().integer().positive(),
+      waiverId: Joi.number().allow('', null)
     })
   })
 );
@@ -55,7 +56,8 @@ router.put(
       categoryId: Joi.number().integer().required(),
       showInApp: Joi.boolean().default(true),
       showInWeb: Joi.boolean().default(true),
-      maxPeople: Joi.number().integer().positive().optional()
+      maxPeople: Joi.number().integer().positive(),
+      waiverId: Joi.number().allow('', null)
     })
   })
 );
