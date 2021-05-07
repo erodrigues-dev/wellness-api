@@ -15,6 +15,7 @@ import Package from './models/Package';
 import Profile from './models/Profile';
 import Schedule from './models/Schedule';
 import Specialty from './models/Specialty';
+import Waiver from './models/Waiver';
 
 const connection = new Sequelize(DB_CONFIG);
 
@@ -33,6 +34,7 @@ export function databaseConfig() {
   OrderActivity.setup(connection);
   EmailConfirmationCode.setup(connection);
   Specialty.setup(connection);
+  Waiver.setup(connection);
 
   Activity.setupAssociations();
   Event.setupAssociations();

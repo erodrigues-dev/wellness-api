@@ -14,6 +14,7 @@ import profileRouter from './ProfileRouter';
 import scheduleRouter from './ScheduleRouter';
 import sessionRouter from './SessionRouter';
 import specialtyRouter from './SpecialtyRouter';
+import waiverRouter from './WaiverRouter';
 
 const router = Router();
 
@@ -31,5 +32,6 @@ router.use(checkoutRouter);
 router.use(scheduleRouter);
 router.use(domainRouter);
 router.use(specialtyRouter);
+router.use(waiverRouter);
 
 export default router;

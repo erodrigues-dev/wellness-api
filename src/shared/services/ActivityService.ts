@@ -11,6 +11,24 @@ interface FilterData {
   categoryId?: number;
 }
 
+interface CreateData {
+  name: string;
+  description: string;
+  price: number;
+  duration: number;
+  imageUrl: string;
+  employeeId: number;
+  categoryId: number;
+  maxPeople: number;
+  showInWeb: boolean;
+  showInApp: boolean;
+  waiverId: number;
+}
+
+interface UpdateData extends CreateData {
+  id: number;
+}
+
 export class ActivityService {
   async list(filter: FilterData, page: number = null, limit: number = null): Promise<IActivity[]> {
     const where = this.buildQuery(filter);
@@ -20,12 +38,16 @@ export class ActivityService {
       order: ['name'],
       include: [
         {
-          association: Activity.associations.employee,
+          association: 'employee',
           attributes: ['id', 'name', 'email', 'imageUrl']
         },
         {
-          association: Activity.associations.category,
+          association: 'category',
           attributes: ['id', 'name']
+        },
+        {
+          association: 'waiver',
+          attributes: ['id', 'title']
         }
       ]
     };
@@ -43,30 +65,34 @@ export class ActivityService {
     return Activity.count({ where });
   }
 
-  async get(id: number): Promise<IActivity> {
-    const query: Activity = await Activity.findByPk(id, {
+  async get(id: number) {
+    const model = await Activity.findByPk(id, {
       include: [
         {
-          association: Activity.associations.employee,
+          association: 'employee',
           attributes: ['id', 'name', 'email', 'imageUrl']
         },
         {
-          association: Activity.associations.category,
+          association: 'category',
           attributes: ['id', 'name']
+        },
+        {
+          association: 'waiver',
+          attributes: ['id', 'title']
         }
       ]
     });
-    if (!query) throw new CustomError('Activity not found', 404);
-    return query.toJSON() as IActivity;
+    if (!model) throw new CustomError('Activity not found', 404);
+    return model.toJSON();
   }
 
-  async create(data: IActivity): Promise<IActivity> {
-    const model: Activity = await Activity.create(data);
-    return model.toJSON() as IActivity;
+  async create(data: CreateData) {
+    const model = await Activity.create(data);
+    return model.toJSON();
   }
 
-  async update(data: IActivity): Promise<IActivity> {
-    const model: Activity = await Activity.findByPk(data.id);
+  async update(data: UpdateData) {
+    const model = await Activity.findByPk(data.id);
     if (!model) throw new CustomError('Activity not found', 404);
 
     model.name = data.name;
@@ -78,6 +104,7 @@ export class ActivityService {
     model.showInApp = data.showInApp;
     model.showInWeb = data.showInWeb;
     model.maxPeople = data.maxPeople || null;
+    model.waiverId = data.waiverId || null;
 
     if (data.imageUrl) {
       if (model.imageUrl) await deleteFileFromUrl(model.imageUrl);
@@ -85,7 +112,7 @@ export class ActivityService {
     }
 
     await model.save();
-    return model.toJSON() as IActivity;
+    return model.toJSON();
   }
 
   private buildQuery(filter: FilterData) {

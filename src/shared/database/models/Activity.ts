@@ -1,11 +1,11 @@
-import { Association, DataTypes, Model, Sequelize } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 
-import IActivity from '../../models/entities/IActivity';
 import Category from './Category';
 import Employee from './Employee';
+import Waiver from './Waiver';
 
-export default class Activity extends Model<IActivity> {
-  id?: number;
+export default class Activity extends Model {
+  id: number;
   name: string;
   description: string;
   price: number;
@@ -16,9 +16,11 @@ export default class Activity extends Model<IActivity> {
   maxPeople?: number;
   showInWeb: boolean;
   showInApp: boolean;
+  waiverId: number;
 
   employee?: Employee;
   category?: Category;
+  waiver?: Waiver;
 
   PackageActivity?: {
     quantity: number;
@@ -26,11 +28,6 @@ export default class Activity extends Model<IActivity> {
 
   readonly createdAt: Date;
   readonly updatedAt: Date;
-
-  static associations: {
-    employee: Association<Activity, Employee>;
-    category: Association<Activity, Category>;
-  };
 
   static setup(connection: Sequelize) {
     Activity.init(
@@ -44,7 +41,8 @@ export default class Activity extends Model<IActivity> {
         categoryId: DataTypes.INTEGER,
         maxPeople: DataTypes.INTEGER,
         showInApp: DataTypes.BOOLEAN,
-        showInWeb: DataTypes.BOOLEAN
+        showInWeb: DataTypes.BOOLEAN,
+        waiverId: DataTypes.INTEGER
       },
       { sequelize: connection, tableName: 'activities' }
     );
@@ -59,6 +57,11 @@ export default class Activity extends Model<IActivity> {
     Activity.belongsTo(Category, {
       foreignKey: 'categoryId',
       as: 'category'
+    });
+
+    Activity.belongsTo(Waiver, {
+      foreignKey: 'waiverId',
+      as: 'waiver'
     });
   }
 }
