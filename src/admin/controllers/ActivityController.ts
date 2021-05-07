@@ -1,63 +1,36 @@
-import { Response, NextFunction } from 'express';
-
-import IActivityController, {
-  IGetRequest,
-  IIndexRequest,
-  IStoreRequest,
-  IUpdateRequest
-} from './interfaces/IActivityController';
-
+import { Request, Response, NextFunction } from 'express';
 import activityService, { ActivityService } from '../../shared/services/ActivityService';
 
-export class ActivityController implements IActivityController {
+export class ActivityController {
   constructor(private service: ActivityService) {}
 
-  async index(req: IIndexRequest, res: Response, next: NextFunction): Promise<Response> {
+  async index(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, employeeId, categoryId, page, limit } = req.query;
-      const total = await this.service.count({ name, employeeId, categoryId });
-      const list = await this.service.list({ name, employeeId, categoryId }, page, limit);
+      const { page, limit, ...query } = req.query;
+      const total = await this.service.count(query);
+      const list = await this.service.list(query, Number(page) || null, Number(limit) || null);
       return res.header('X-Total-Count', total.toString()).json(list);
     } catch (error) {
       next(error);
     }
   }
 
-  async get(req: IGetRequest, res: Response, next: NextFunction): Promise<Response> {
+  async get(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const model = await this.service.get(id);
+      const model = await this.service.get(Number(id));
       return res.json(model);
     } catch (error) {
       next(error);
     }
   }
 
-  async store(req: IStoreRequest, res: Response, next: NextFunction): Promise<Response> {
+  async store(req: Request, res: Response, next: NextFunction) {
     try {
-      const {
-        name,
-        description,
-        price,
-        duration,
-        employeeId,
-        categoryId,
-        maxPeople,
-        showInApp = true,
-        showInWeb = true
-      } = req.body;
-      const imageUrl = req.file?.url;
+      const imageUrl = (req.file as any)?.url;
       const model = await this.service.create({
-        name,
-        description,
-        price,
-        duration,
-        employeeId,
-        categoryId,
-        imageUrl,
-        maxPeople,
-        showInApp,
-        showInWeb
+        ...req.body,
+        imageUrl
       });
       return res.json(model);
     } catch (error) {
@@ -65,33 +38,12 @@ export class ActivityController implements IActivityController {
     }
   }
 
-  async update(req: IUpdateRequest, res: Response, next: NextFunction): Promise<Response> {
+  async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const {
-        id,
-        name,
-        description,
-        price,
-        duration,
-        employeeId,
-        categoryId,
-        maxPeople,
-        showInApp,
-        showInWeb
-      } = req.body;
-      const imageUrl = req.file?.url;
+      const imageUrl = (req.file as any)?.url;
       const model = await this.service.update({
-        id,
-        name,
-        description,
-        price,
-        duration,
-        employeeId,
-        categoryId,
-        imageUrl,
-        maxPeople,
-        showInApp,
-        showInWeb
+        ...req.body,
+        imageUrl
       });
       return res.json(model);
     } catch (error) {
@@ -100,6 +52,6 @@ export class ActivityController implements IActivityController {
   }
 }
 
-const controller: IActivityController = new ActivityController(activityService);
+const controller = new ActivityController(activityService);
 
 export default controller;
