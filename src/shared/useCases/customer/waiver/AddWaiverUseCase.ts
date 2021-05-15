@@ -2,26 +2,21 @@ import CustomError from '../../../custom-error/CustomError';
 import CustomerWaiver from '../../../database/models/CustomerWaiver';
 
 export class AddWaiverUseCase {
-  constructor(private customerId: number, private waiverId: number) {}
+  async handle(customerId: number, waiverId: number) {
+    if (await this.hasWaiver(customerId, waiverId)) throw new CustomError('Customer already has this waiver');
 
-  async handle() {
-    if (await this.hasWaiver()) throw new CustomError('Customer already has this waiver');
-
-    await this.addWaiver();
+    await this.addWaiver(customerId, waiverId);
   }
 
-  private async hasWaiver() {
+  private async hasWaiver(customerId: number, waiverId: number) {
     const count = await CustomerWaiver.count({
-      where: { customerId: this.customerId, waiverId: this.waiverId }
+      where: { customerId, waiverId }
     });
 
     return count > 0;
   }
 
-  private async addWaiver() {
-    CustomerWaiver.create({
-      customerId: this.customerId,
-      waiverId: this.waiverId
-    });
+  private async addWaiver(customerId: number, waiverId: number) {
+    CustomerWaiver.create({ customerId, waiverId });
   }
 }

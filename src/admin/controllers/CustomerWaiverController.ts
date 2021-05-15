@@ -1,11 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import Joi from '@hapi/joi';
+
 import { AddWaiverUseCase } from '../../shared/useCases/customer/waiver/AddWaiverUseCase';
 import { DeleteWaiverUseCase } from '../../shared/useCases/customer/waiver/DeleteWaiverUseCase';
 import { ListWaiverUseCase } from '../../shared/useCases/customer/waiver/ListWaiversUseCase';
 import { SignWaiverUserCase } from '../../shared/useCases/customer/waiver/SignWaiverUseCase';
 
-import Joi from '@hapi/joi';
+const AddSchema = Joi.object({
+  waiverId: Joi.number().required()
+});
 
 const SignSchema = Joi.object({
   customerId: Joi.number().required(),
@@ -29,8 +33,9 @@ export class CustomerWaiverController {
     try {
       const { customerId } = req.params;
       const { waiverId } = req.body;
-      const usecase = new AddWaiverUseCase(Number(customerId), Number(waiverId));
-      await usecase.handle();
+      await AddSchema.validateAsync({ waiverId });
+      const usecase = new AddWaiverUseCase();
+      await usecase.handle(Number(customerId), Number(waiverId));
       return res.sendStatus(StatusCodes.CREATED);
     } catch (error) {
       next(error);
