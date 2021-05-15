@@ -21,9 +21,10 @@ export class CustomerWaiverController {
   async list(req: Request, res: Response, next: NextFunction) {
     try {
       const { customerId } = req.params;
+      const { page, limit } = req.query;
       const usecase = new ListWaiverUseCase();
-      const list = await usecase.handle(Number(customerId));
-      return res.json(list);
+      const result = await usecase.handle(Number(customerId), Number(page), Number(limit));
+      return res.header('x-total-count', String(result.count)).json(result.rows);
     } catch (error) {
       next(error);
     }
