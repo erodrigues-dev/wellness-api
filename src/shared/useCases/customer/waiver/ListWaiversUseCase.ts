@@ -1,4 +1,4 @@
-import CustomerWaiver from '../../database/models/CustomerWaiver';
+import CustomerWaiver from '../../../database/models/CustomerWaiver';
 
 export class ListWaiverUseCase {
   async handle(customerId: number) {
@@ -9,8 +9,6 @@ export class ListWaiverUseCase {
         attributes: ['id', 'title']
       }
     });
-
-    console.log(`>> list`, list);
 
     return list;
   }

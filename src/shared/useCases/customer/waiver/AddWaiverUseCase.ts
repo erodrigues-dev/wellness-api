@@ -1,5 +1,5 @@
-import CustomError from '../../custom-error/CustomError';
-import CustomerWaiver from '../../database/models/CustomerWaiver';
+import CustomError from '../../../custom-error/CustomError';
+import CustomerWaiver from '../../../database/models/CustomerWaiver';
 
 export class AddWaiverUseCase {
   constructor(private customerId: number, private waiverId: number) {}
