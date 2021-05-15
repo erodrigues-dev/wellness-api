@@ -5,6 +5,14 @@ import { DeleteWaiverUseCase } from '../../shared/useCases/customer/waiver/Delet
 import { ListWaiverUseCase } from '../../shared/useCases/customer/waiver/ListWaiversUseCase';
 import { SignWaiverUserCase } from '../../shared/useCases/customer/waiver/SignWaiverUseCase';
 
+import Joi from '@hapi/joi';
+
+const SignSchema = Joi.object({
+  customerId: Joi.number().required(),
+  waiverId: Joi.number().required(),
+  signedUrl: Joi.string().required()
+});
+
 export class CustomerWaiverController {
   async list(req: Request, res: Response, next: NextFunction) {
     try {
@@ -42,14 +50,13 @@ export class CustomerWaiverController {
 
   async sign(req: Request, res: Response, next: NextFunction) {
     try {
-      const { customerId } = req.params;
-      const { waiverId, signedUrl } = req.body;
-      const usecase = new SignWaiverUserCase();
-      await usecase.handle({
-        customerId: Number(customerId),
-        waiverId: Number(waiverId),
-        signedUrl
+      const data = await SignSchema.validateAsync({
+        customerId: req.params.customerId,
+        waiverId: req.body.waiverId,
+        signedUrl: (req.file as any)?.url
       });
+      const usecase = new SignWaiverUserCase();
+      await usecase.handle(data);
       return res.sendStatus(200);
     } catch (error) {
       next(error);
