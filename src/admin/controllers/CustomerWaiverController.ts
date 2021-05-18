@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import Joi from '@hapi/joi';
+import Joi, { custom } from '@hapi/joi';
 
 import { AddWaiverUseCase } from '../../shared/useCases/customer/waiver/AddWaiverUseCase';
 import { DeleteWaiverUseCase } from '../../shared/useCases/customer/waiver/DeleteWaiverUseCase';
 import { ListWaiverUseCase } from '../../shared/useCases/customer/waiver/ListWaiversUseCase';
 import { SignWaiverUserCase } from '../../shared/useCases/customer/waiver/SignWaiverUseCase';
+import { GetWaiverDetailUseCase } from '../../shared/useCases/customer/waiver/GetWaiverDetailUseCase';
 
 const AddSchema = Joi.object({
   waiverId: Joi.number().required()
@@ -25,6 +26,17 @@ export class CustomerWaiverController {
       const usecase = new ListWaiverUseCase();
       const result = await usecase.handle(Number(customerId), Number(page), Number(limit));
       return res.header('x-total-count', String(result.count)).json(result.rows);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async detail(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { customerId, waiverId } = req.params;
+      const usecase = new GetWaiverDetailUseCase();
+      const detail = await usecase.handle(Number(customerId), Number(waiverId));
+      return res.json(detail);
     } catch (error) {
       next(error);
     }

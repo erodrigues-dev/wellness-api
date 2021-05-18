@@ -12,6 +12,9 @@ export default class CustomerWaiver extends Model {
   createdAt: Date;
   updatedAt?: Date;
 
+  waiver?: Waiver;
+  customer?: Customer;
+
   static setup(connection: Sequelize) {
     CustomerWaiver.init(
       {
