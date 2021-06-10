@@ -7,6 +7,7 @@ import { DeleteWaiverUseCase } from '../../shared/useCases/customer/waiver/Delet
 import { ListWaiverUseCase } from '../../shared/useCases/customer/waiver/ListWaiversUseCase';
 import { SignWaiverUserCase } from '../../shared/useCases/customer/waiver/SignWaiverUseCase';
 import { GetWaiverDetailUseCase } from '../../shared/useCases/customer/waiver/GetWaiverDetailUseCase';
+import { GetWaiverDetailByActivityUseCase } from '../../shared/useCases/customer/waiver/GetWaiverDetailByActivityUseCase';
 
 const AddSchema = Joi.object({
   waiverId: Joi.number().required()
@@ -36,6 +37,17 @@ export class CustomerWaiverController {
       const { customerId, waiverId } = req.params;
       const usecase = new GetWaiverDetailUseCase();
       const detail = await usecase.handle(Number(customerId), Number(waiverId));
+      return res.json(detail);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async detailByActivity(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { customerId, activityId } = req.params;
+      const usecase = new GetWaiverDetailByActivityUseCase();
+      const detail = await usecase.handle(customerId, activityId);
       return res.json(detail);
     } catch (error) {
       next(error);
