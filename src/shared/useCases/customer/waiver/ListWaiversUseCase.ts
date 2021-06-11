@@ -18,7 +18,10 @@ export class ListWaiverUseCase {
           attributes: ['id', 'title']
         }
       ],
-      order: [['signedAt', 'desc']],
+      order: [
+        ['signedAt', 'desc'],
+        ['waiver', 'title', 'asc']
+      ],
       ...paginateOptions
     });
 
