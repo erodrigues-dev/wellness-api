@@ -3,7 +3,8 @@ import CustomerWaiver from '../../../database/models/CustomerWaiver';
 
 export class AddWaiverUseCase {
   async handle(customerId: number, waiverId: number) {
-    if (await this.hasWaiver(customerId, waiverId)) throw new CustomError('Customer already has this waiver');
+    const hasWaiver = await this.hasWaiver(customerId, waiverId);
+    if (hasWaiver) throw new CustomError('Customer already has this waiver');
 
     await this.addWaiver(customerId, waiverId);
   }
