@@ -1,10 +1,15 @@
 import { Op } from 'sequelize';
+import CustomerWaiver from '../database/models/CustomerWaiver';
 import Waiver from '../database/models/Waiver';
 
-type FilterData = {
+type ListData = {
   page: number;
   limit: number;
   title: string;
+};
+
+type ListAllData = {
+  ignoreOfCustomerId?: number;
 };
 
 type CreateData = {
@@ -19,7 +24,7 @@ type UpdateData = {
 };
 
 export class WaiverService {
-  list(filter: FilterData) {
+  list(filter: ListData) {
     const page = filter.page || 1;
     const limit = filter.limit || 10;
 
@@ -30,6 +35,29 @@ export class WaiverService {
         title: { [Op.iLike]: `%${filter.title}%` }
       },
       order: ['title']
+    });
+  }
+
+  async listAll(data: ListAllData) {
+    console.log('>> listAll', JSON.stringify(data));
+    let ignoreWaivers = [];
+
+    if (data.ignoreOfCustomerId) {
+      const customerWaiverIds = await CustomerWaiver.findAll({
+        raw: true,
+        attributes: ['waiverId'],
+        where: { customerId: data.ignoreOfCustomerId }
+      });
+
+      ignoreWaivers = customerWaiverIds.map(item => item.waiverId);
+    }
+
+    return Waiver.findAll({
+      where: {
+        id: { [Op.notIn]: ignoreWaivers }
+      },
+      order: ['title'],
+      attributes: ['id', 'title']
     });
   }
 

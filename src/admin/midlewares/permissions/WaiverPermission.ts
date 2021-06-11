@@ -6,6 +6,7 @@ import { checkPermission } from '../../../shared/utils/permission';
 const router = Router();
 
 router.get('/waivers', checkPermission(Permission.WaiverList));
+router.get('/waivers/all', checkPermission(Permission.WaiverList));
 router.get('/waivers/:id', checkPermission(Permission.WaiverList));
 router.post('/waivers', checkPermission(Permission.WaiverCreateUpdate));
 router.put('/waivers', checkPermission(Permission.WaiverCreateUpdate));
