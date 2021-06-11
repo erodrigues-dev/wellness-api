@@ -17,7 +17,7 @@ export class AddWaiverUseCase {
     return count > 0;
   }
 
-  private async addWaiver(customerId: number, waiverId: number) {
-    CustomerWaiver.create({ customerId, waiverId });
+  private addWaiver(customerId: number, waiverId: number) {
+    return CustomerWaiver.create({ customerId, waiverId });
   }
 }
