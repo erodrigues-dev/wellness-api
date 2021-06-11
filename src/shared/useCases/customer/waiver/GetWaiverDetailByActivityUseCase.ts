@@ -4,8 +4,8 @@ import CustomerWaiver from '../../../database/models/CustomerWaiver';
 interface Result {
   id: number;
   title: string;
-  signedAt?: Date;
-  signedUrl?: string;
+  customerHasSign: boolean;
+  customerHasWaiver: boolean;
 }
 
 export class GetWaiverDetailByActivityUseCase {
@@ -18,14 +18,15 @@ export class GetWaiverDetailByActivityUseCase {
     if (!waiver) return null;
 
     const customerWaiver = await CustomerWaiver.findOne({
+      attributes: ['id', 'signedAt'],
       where: { customerId, waiverId: waiver.id }
     });
 
     return {
       id: waiver.id,
       title: waiver.title,
-      signedAt: customerWaiver?.signedAt,
-      signedUrl: customerWaiver?.signedUrl
+      customerHasWaiver: Boolean(customerWaiver),
+      customerHasSign: Boolean(customerWaiver?.signedAt)
     };
   }
 }
