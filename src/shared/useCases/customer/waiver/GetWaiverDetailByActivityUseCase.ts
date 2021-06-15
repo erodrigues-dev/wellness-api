@@ -6,6 +6,7 @@ interface Result {
   title: string;
   customerHasSign: boolean;
   customerHasWaiver: boolean;
+  signedAt: Date;
 }
 
 export class GetWaiverDetailByActivityUseCase {
@@ -26,7 +27,8 @@ export class GetWaiverDetailByActivityUseCase {
       id: waiver.id,
       title: waiver.title,
       customerHasWaiver: Boolean(customerWaiver),
-      customerHasSign: Boolean(customerWaiver?.signedAt)
+      customerHasSign: Boolean(customerWaiver?.signedAt),
+      signedAt: customerWaiver?.signedAt
     };
   }
 }
