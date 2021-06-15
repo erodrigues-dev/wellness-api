@@ -17,6 +17,7 @@ import {
   makeSignupController,
   makeProductListController,
   makeProductDetailController,
+  makeWaiverController
 } from '../controllers';
 
 const mimetypes = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -38,6 +39,7 @@ const appointmentsListController = makeAppointmetnsListController();
 const listDaysController = makeListDaysController();
 const listSlotsController = makeListSlotsController();
 const bookController = makeBookController();
+const waiverController = makeWaiverController();
 
 //- sessions
 router.post('/sessions/signin', bindRoute(signinController, 'signin'));
@@ -85,5 +87,9 @@ router.get('/book/days', bindRoute(listDaysController, 'handle'));
 router.get('/book/slots', bindRoute(listSlotsController, 'handle'));
 router.post('/book', bindRoute(bookController, 'handle'));
 
+// - waiver
+router.get('/waivers/:waiverId', bindRoute(waiverController, 'getById'));
+router.get('/waivers/by-activity/:activityId', bindRoute(waiverController, 'getWaiverByActivity'));
+router.post('/waivers/add-customer/:waiverId', bindRoute(waiverController, 'addWaiverIsCustomerAccount'));
 
 export default router;
