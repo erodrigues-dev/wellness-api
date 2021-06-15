@@ -44,3 +44,5 @@ export class SignupController {
     }
   }
 }
+
+export const makeSignupController = () => new SignupController();

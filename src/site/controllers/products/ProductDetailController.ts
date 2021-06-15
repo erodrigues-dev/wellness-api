@@ -20,3 +20,5 @@ export class ProductDetailController {
     }
   }
 }
+
+export const makeProductDetailController = () => new ProductDetailController();
