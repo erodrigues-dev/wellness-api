@@ -3,10 +3,6 @@ import { Router } from 'express';
 import upload from '../../shared/utils/multer-google-cloud-storage';
 import { bindRoute } from '../../shared/utils/bindRoute';
 import {
-  ProductDetailController,
-  ProductListController,
-  SigninController,
-  SignupController,
   makeAccountController,
   makeOrdersController,
   makeProductSearchController,
@@ -16,7 +12,11 @@ import {
   makeAppointmetnsListController,
   makeListDaysController,
   makeListSlotsController,
-  makeBookController
+  makeBookController,
+  makeSigninController,
+  makeSignupController,
+  makeProductListController,
+  makeProductDetailController,
 } from '../controllers';
 
 const mimetypes = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -24,10 +24,10 @@ const mimetypes = ['image/png', 'image/jpg', 'image/jpeg'];
 const router = Router();
 
 //- controllers
-const signinController = new SigninController();
-const signupController = new SignupController();
-const productListController = new ProductListController();
-const productDetailController = new ProductDetailController();
+const signinController = makeSigninController();
+const signupController = makeSignupController();
+const productListController = makeProductListController();
+const productDetailController = makeProductDetailController();
 const productSearchController = makeProductSearchController();
 const accountController = makeAccountController();
 const ordersController = makeOrdersController();
