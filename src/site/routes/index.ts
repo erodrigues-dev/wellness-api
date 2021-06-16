@@ -91,5 +91,6 @@ router.post('/book', bindRoute(bookController, 'handle'));
 router.get('/waivers/:waiverId', bindRoute(waiverController, 'getById'));
 router.get('/waivers/by-activity/:activityId', bindRoute(waiverController, 'getWaiverByActivity'));
 router.post('/waivers/add-customer/:waiverId', bindRoute(waiverController, 'addWaiverIsCustomerAccount'));
+router.post('/waivers/sign', upload(mimetypes).single('signImage'), bindRoute(waiverController, 'sign'));
 
 export default router;
