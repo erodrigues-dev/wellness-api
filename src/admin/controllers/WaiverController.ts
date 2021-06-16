@@ -32,6 +32,18 @@ export class WaiverController {
     }
   }
 
+  async listAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { ignoreOfCustomerId } = req.query;
+      const result = await this.service.listAll({
+        ignoreOfCustomerId: Number(ignoreOfCustomerId) || null
+      });
+      return res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async get(req: Request, res: Response, next: NextFunction) {
     try {
       const model = await this.service.get(Number(req.params.id));

@@ -25,3 +25,5 @@ export class ProductListController {
     }
   }
 }
+
+export const makeProductListController = () => new ProductListController();

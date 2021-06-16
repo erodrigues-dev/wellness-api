@@ -41,3 +41,5 @@ export class SigninController {
     }
   }
 }
+
+export const makeSigninController = () => new SigninController();

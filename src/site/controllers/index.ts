@@ -12,3 +12,4 @@ export * from './appointments/AppointmentsListController';
 export * from './book/ListDaysController';
 export * from './book/ListSlotsController';
 export * from './book/BookController';
+export * from './waiver/WaiverController';

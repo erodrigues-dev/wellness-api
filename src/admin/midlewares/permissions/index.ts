@@ -14,6 +14,7 @@ import profile from './ProfilePermission';
 import schedule from './SchedulePermission';
 import specialty from './SpecialtyPermission';
 import waiver from './WaiverPermission';
+import customerWaiver from './CustomerWaiverPermission';
 
 const router = Router();
 
@@ -31,5 +32,6 @@ router.use(schedule);
 router.use(domain);
 router.use(specialty);
 router.use(waiver);
+router.use(customerWaiver);
 
 export default router;

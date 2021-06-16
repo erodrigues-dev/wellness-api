@@ -1,11 +1,8 @@
 import { Router } from 'express';
 
 import upload from '../../shared/utils/multer-google-cloud-storage';
+import { bindRoute } from '../../shared/utils/bindRoute';
 import {
-  ProductDetailController,
-  ProductListController,
-  SigninController,
-  SignupController,
   makeAccountController,
   makeOrdersController,
   makeProductSearchController,
@@ -15,7 +12,12 @@ import {
   makeAppointmetnsListController,
   makeListDaysController,
   makeListSlotsController,
-  makeBookController
+  makeBookController,
+  makeSigninController,
+  makeSignupController,
+  makeProductListController,
+  makeProductDetailController,
+  makeWaiverController
 } from '../controllers';
 
 const mimetypes = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -23,10 +25,10 @@ const mimetypes = ['image/png', 'image/jpg', 'image/jpeg'];
 const router = Router();
 
 //- controllers
-const signinController = new SigninController();
-const signupController = new SignupController();
-const productListController = new ProductListController();
-const productDetailController = new ProductDetailController();
+const signinController = makeSigninController();
+const signupController = makeSignupController();
+const productListController = makeProductListController();
+const productDetailController = makeProductDetailController();
 const productSearchController = makeProductSearchController();
 const accountController = makeAccountController();
 const ordersController = makeOrdersController();
@@ -37,51 +39,58 @@ const appointmentsListController = makeAppointmetnsListController();
 const listDaysController = makeListDaysController();
 const listSlotsController = makeListSlotsController();
 const bookController = makeBookController();
+const waiverController = makeWaiverController();
 
 //- sessions
-router.post('/sessions/signin', signinController.signin.bind(signinController));
-router.post('/sessions/recover-password', signinController.recoverPassword.bind(signinController));
-router.post('/sessions/signup', signupController.signup.bind(signupController));
-router.post('/sessions/send-confirmation-code', signupController.sendCode.bind(signupController));
+router.post('/sessions/signin', bindRoute(signinController, 'signin'));
+router.post('/sessions/recover-password', bindRoute(signinController, 'recoverPassword'));
+router.post('/sessions/signup', bindRoute(signupController, 'signup'));
+router.post('/sessions/send-confirmation-code', bindRoute(signupController, 'sendCode'));
 
 //- producs
-router.get('/products', productListController.handle.bind(productListController));
-router.get('/products/search', productSearchController.search.bind(productSearchController));
-router.get('/products/categories', productSearchController.listCategories.bind(productSearchController));
-router.get('/products/:id/:type', productDetailController.handle.bind(productDetailController));
+router.get('/products', bindRoute(productListController, 'handle'));
+router.get('/products/search', bindRoute(productSearchController, 'search'));
+router.get('/products/categories', bindRoute(productSearchController, 'listCategories'));
+router.get('/products/:id/:type', bindRoute(productDetailController, 'handle'));
 
 //- account
-router.get('/account', accountController.get.bind(accountController));
-router.put('/account', accountController.save.bind(accountController));
+router.get('/account', bindRoute(accountController, 'get'));
+router.put('/account', bindRoute(accountController, 'save'));
 router.put(
   '/account/change-image',
   upload(mimetypes).single('image'),
   accountController.changeImage.bind(accountController)
 );
-router.post('/account/generate-referral-code', accountController.generateReferralCode.bind(accountController));
+router.post('/account/generate-referral-code', bindRoute(accountController, 'generateReferralCode'));
 
 //- account/cards
-router.get('/account/cards', accountController.cards.bind(accountController));
-router.post('/account/cards', accountController.createCard.bind(accountController));
-router.delete('/account/cards/:card_id', accountController.deleteCard.bind(accountController));
+router.get('/account/cards', bindRoute(accountController, 'cards'));
+router.post('/account/cards', bindRoute(accountController, 'createCard'));
+router.delete('/account/cards/:card_id', bindRoute(accountController, 'deleteCard'));
 
 //- orders
-router.get('/orders', ordersController.list.bind(ordersController));
-router.get('/orders/:id', ordersController.get.bind(ordersController));
+router.get('/orders', bindRoute(ordersController, 'list'));
+router.get('/orders/:id', bindRoute(ordersController, 'get'));
 
 //- checkout
-router.post('/checkout', checkoutController.handle.bind(checkoutController));
-router.get('/checkout/discounts', getDiscountController.handle.bind(getDiscountController));
+router.post('/checkout', bindRoute(checkoutController, 'handle'));
+router.get('/checkout/discounts', bindRoute(getDiscountController, 'handle'));
 
 //- services
-router.get('/services', servicesListController.handle.bind(servicesListController));
+router.get('/services', bindRoute(servicesListController, 'handle'));
 
 // - appointments
-router.get('/appointments', appointmentsListController.handle.bind(appointmentsListController));
+router.get('/appointments', bindRoute(appointmentsListController, 'handle'));
 
 //- book
-router.get('/book/days', listDaysController.handle.bind(listDaysController));
-router.get('/book/slots', listSlotsController.handle.bind(listSlotsController));
-router.post('/book', bookController.handle.bind(bookController));
+router.get('/book/days', bindRoute(listDaysController, 'handle'));
+router.get('/book/slots', bindRoute(listSlotsController, 'handle'));
+router.post('/book', bindRoute(bookController, 'handle'));
+
+// - waiver
+router.get('/waivers/:waiverId', bindRoute(waiverController, 'getById'));
+router.get('/waivers/by-activity/:activityId', bindRoute(waiverController, 'getWaiverByActivity'));
+router.post('/waivers/add-customer/:waiverId', bindRoute(waiverController, 'addWaiverIsCustomerAccount'));
+router.post('/waivers/sign', upload(mimetypes).single('signImage'), bindRoute(waiverController, 'sign'));
 
 export default router;

@@ -14,14 +14,19 @@ import { RecurrencyPayEnum } from '../../models/enums/RecurrencyPayEnum';
 import { ScheduleStatusEnum } from '../../models/enums/ScheduleStatusEnum';
 import { sendEmailSchedule } from '../../sendingblue';
 import { formatDateToDisplay, formatTime24To12 } from '../../utils/date-utils';
+import { CheckWaiverSignatureUseCase } from '../customer/waiver/CheckWaiverSignatureUseCase';
 
 export class ScheduleCreateUseCase {
+  private checkwaiver: CheckWaiverSignatureUseCase;
+
   constructor(
     private customerId: number,
     private orderActivityId: number,
     private eventId: number,
     private date: Date
-  ) {}
+  ) {
+    this.checkwaiver = new CheckWaiverSignatureUseCase();
+  }
 
   get formatedDate() {
     return format(this.date, 'yyyy-MM-dd');
@@ -31,6 +36,7 @@ export class ScheduleCreateUseCase {
     const event = await this.getEvent(this.eventId);
     await this.checkAvailableTime(event);
     await this.checkOrderAvailable(this.orderActivityId);
+    await this.checkwaiver.check(this.customerId, event.activityId);
     const schedule = await this.createSchedule(event);
     await this.sendEmail(schedule);
   }
