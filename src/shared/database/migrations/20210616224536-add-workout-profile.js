@@ -29,7 +29,7 @@ module.exports = {
         type: DataTypes.STRING(10),
         allowNull: false
       },
-      height: {
+      weight: {
         type: DataTypes.INTEGER,
         allowNull: false
       },
