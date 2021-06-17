@@ -17,6 +17,9 @@ import Schedule from './models/Schedule';
 import Specialty from './models/Specialty';
 import Waiver from './models/Waiver';
 import CustomerWaiver from './models/CustomerWaiver';
+import WorkoutProfile from './models/WorkoutProfile';
+import WorkoutLog from './models/WorkoutLog';
+import WorkoutExerciseLog from './models/WorkoutExerciseLog';
 
 const connection = new Sequelize(DB_CONFIG);
 
@@ -37,6 +40,9 @@ export function databaseConfig() {
   Specialty.setup(connection);
   Waiver.setup(connection);
   CustomerWaiver.setup(connection);
+  WorkoutProfile.setup(connection);
+  WorkoutLog.setup(connection);
+  WorkoutExerciseLog.setup(connection);
 
   Activity.setupAssociations();
   Event.setupAssociations();
@@ -52,6 +58,9 @@ export function databaseConfig() {
   Schedule.setupAssociations();
   EmailConfirmationCode.setupAssociations();
   CustomerWaiver.setupAssociations();
+  WorkoutProfile.setupAssociations();
+  WorkoutLog.setupAssociations();
+  WorkoutExerciseLog.setupAssociations();
 }
 
 export default connection;
