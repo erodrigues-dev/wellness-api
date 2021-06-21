@@ -22,6 +22,7 @@ export default class WorkoutProfile extends Model {
   static setup(connection: Sequelize) {
     WorkoutProfile.init(
       {
+        customerId: DataTypes.INTEGER,
         age: DataTypes.INTEGER,
         height: DataTypes.STRING,
         weight: DataTypes.INTEGER,

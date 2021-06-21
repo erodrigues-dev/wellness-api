@@ -16,6 +16,7 @@ import sessionRouter from './SessionRouter';
 import specialtyRouter from './SpecialtyRouter';
 import waiverRouter from './WaiverRouter';
 import customerWaiverRouter from './CustomerWaiverRouter';
+import workoutRouter from './WorkoutRouter';
 
 const router = Router();
 
@@ -35,5 +36,6 @@ router.use(domainRouter);
 router.use(specialtyRouter);
 router.use(waiverRouter);
 router.use(customerWaiverRouter);
+router.use(workoutRouter);
 
 export default router;

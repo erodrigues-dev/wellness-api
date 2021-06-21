@@ -23,35 +23,35 @@ module.exports = {
       },
       age: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       height: {
         type: DataTypes.STRING(10),
-        allowNull: false
+        allowNull: true
       },
       weight: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       goal: {
         type: DataTypes.STRING(60),
-        allowNull: false
+        allowNull: true
       },
       test1: {
         type: DataTypes.STRING(60),
-        allowNull: false
+        allowNull: true
       },
       test2: {
         type: DataTypes.STRING(60),
-        allowNull: false
+        allowNull: true
       },
       injuries_limitations: {
         type: DataTypes.STRING(60),
-        allowNull: false
+        allowNull: true
       },
       experience_level: {
         type: DataTypes.STRING(60),
-        allowNull: false
+        allowNull: true
       },
       notes: {
         type: DataTypes.TEXT,
