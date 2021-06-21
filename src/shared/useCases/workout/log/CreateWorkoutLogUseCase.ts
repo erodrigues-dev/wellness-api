@@ -9,7 +9,7 @@ export interface CreateWorkoutLogData {
   date: string;
 }
 
-export class CreateWorkoutLog {
+export class CreateWorkoutLogUseCase {
   async handle(data: CreateWorkoutLogData): Promise<any> {
     await this.checkWorkoutProfileExists(data.workoutProfileId);
     const model = await this.create(data);
