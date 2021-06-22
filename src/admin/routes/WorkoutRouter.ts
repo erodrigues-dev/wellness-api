@@ -20,5 +20,9 @@ router.post(
   '/workout-profiles/:workoutProfileId/logs/:workoutLogId/exercises',
   bindRoute(workoutExerciseController, 'store')
 );
+router.put(
+  '/workout-profiles/:workoutProfileId/logs/:workoutLogId/exercises/:id',
+  bindRoute(workoutExerciseController, 'update')
+);
 
 export default router;

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { Joi } from 'celebrate';
 
 import { CreateWorkoutExerciseUseCase } from '../../shared/useCases/workout/exercise/CreateWorkoutExerciseUseCase';
+import { UpdateWorkoutExerciseUseCase } from '../../shared/useCases/workout/exercise/UpdateWorkoutExerciseUseCase';
 
 const createSchema = Joi.object({
   workoutProfileId: Joi.number().required(),
@@ -18,6 +19,10 @@ const createSchema = Joi.object({
   set4Weight: Joi.number()
 });
 
+const updateSchema = createSchema.keys({
+  id: Joi.number().required()
+});
+
 export class WorkoutExerciseController {
   async store(req: Request, res: Response, next: NextFunction) {
     try {
@@ -26,6 +31,20 @@ export class WorkoutExerciseController {
         ...req.body
       });
       const usecase = new CreateWorkoutExerciseUseCase();
+      const model = await usecase.handle(data);
+      return res.json(model);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await updateSchema.validateAsync({
+        ...req.params,
+        ...req.body
+      });
+      const usecase = new UpdateWorkoutExerciseUseCase();
       const model = await usecase.handle(data);
       return res.json(model);
     } catch (error) {
