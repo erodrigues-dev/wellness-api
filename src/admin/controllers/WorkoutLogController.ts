@@ -8,7 +8,8 @@ import {
   GetWorkoutLogUseCase,
   indexSchema,
   createSchema,
-  updateSchema
+  updateSchema,
+  DestroyWorkoutLogUseCase
 } from '../../shared/useCases/workout/log';
 
 export class WorkoutLogController {
@@ -56,6 +57,17 @@ export class WorkoutLogController {
       });
       const usecase = new UpdateWorkoutLogUseCase();
       await usecase.handle(data);
+      return res.sendStatus(StatusCodes.NO_CONTENT);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async destroy(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params as any;
+      const usecase = new DestroyWorkoutLogUseCase();
+      await usecase.handle(id);
       return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (error) {
       next(error);

@@ -20,6 +20,7 @@ router.get('/workout-logs', bindRoute(workoutLogController, 'index'));
 router.get('/workout-logs/:id', bindRoute(workoutLogController, 'get'));
 router.post('/workout-logs', bindRoute(workoutLogController, 'store'));
 router.put('/workout-logs/:id', bindRoute(workoutLogController, 'update'));
+router.delete('/workout-logs/:id', bindRoute(workoutLogController, 'destroy'));
 
 router.get('/workout-exercises', (req, res) => res.json([]));
 router.post('/workout-exercises', bindRoute(workoutExerciseController, 'store'));
