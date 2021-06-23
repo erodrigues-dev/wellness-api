@@ -4,11 +4,24 @@ import { StatusCodes } from 'http-status-codes';
 import {
   CreateWorkoutLogUseCase,
   UpdateWorkoutLogUseCase,
+  ListWorkoutLogUseCase,
+  indexSchema,
   createSchema,
   updateSchema
 } from '../../shared/useCases/workout/log';
 
 export class WorkoutLogController {
+  async index(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await indexSchema.validateAsync(req.query);
+      const usecase = new ListWorkoutLogUseCase(data);
+      const list = await usecase.handle();
+      return res.header('x-total-count', String(list.count)).json(list.rows);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async store(req: Request, res: Response, next: NextFunction) {
     try {
       const data = await createSchema.validateAsync({
