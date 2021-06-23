@@ -1,12 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 
 import {
+  ListWorkoutExerciseUseCase,
+  GetWorkoutExerciseUseCase,
   CreateWorkoutExerciseUseCase,
   UpdateWorkoutExerciseUseCase,
   createSchema,
   updateSchema,
-  indexSchema,
-  ListWorkoutExerciseUseCase
+  indexSchema
 } from '../../shared/useCases/workout/exercise';
 
 export class WorkoutExerciseController {
@@ -16,6 +17,17 @@ export class WorkoutExerciseController {
       const usecase = new ListWorkoutExerciseUseCase();
       const list = await usecase.handle(data);
       return res.header('x-total-count', String(list.count)).json(list.rows);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async get(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params as any;
+      const usecase = new GetWorkoutExerciseUseCase();
+      const model = await usecase.handle(id);
+      return res.json(model);
     } catch (error) {
       next(error);
     }
