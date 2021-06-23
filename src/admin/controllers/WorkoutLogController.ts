@@ -5,6 +5,7 @@ import {
   CreateWorkoutLogUseCase,
   UpdateWorkoutLogUseCase,
   ListWorkoutLogUseCase,
+  GetWorkoutLogUseCase,
   indexSchema,
   createSchema,
   updateSchema
@@ -17,6 +18,17 @@ export class WorkoutLogController {
       const usecase = new ListWorkoutLogUseCase(data);
       const list = await usecase.handle();
       return res.header('x-total-count', String(list.count)).json(list.rows);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async get(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params as any;
+      const usecase = new GetWorkoutLogUseCase();
+      const result = await usecase.handle(id);
+      return res.json(result);
     } catch (error) {
       next(error);
     }

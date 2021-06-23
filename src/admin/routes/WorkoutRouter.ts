@@ -17,6 +17,7 @@ router.put('/workout-profiles/:id', bindRoute(workoutProfileController, 'update'
 router.delete('/workout-profiles/:id', bindRoute(workoutProfileController, 'destroy'));
 
 router.get('/workout-logs', bindRoute(workoutLogController, 'index'));
+router.get('/workout-logs/:id', bindRoute(workoutLogController, 'get'));
 router.post('/workout-logs', bindRoute(workoutLogController, 'store'));
 router.put('/workout-logs/:id', bindRoute(workoutLogController, 'update'));
 
