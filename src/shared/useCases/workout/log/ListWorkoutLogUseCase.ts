@@ -22,7 +22,8 @@ export class ListWorkoutLogUseCase {
     const { workoutProfileId, page, limit } = this.data;
     return WorkoutLog.findAndCountAll({
       where: { workoutProfileId },
-      ...getPaginateOptions(page, limit)
+      ...getPaginateOptions(page, limit),
+      order: [['date', 'desc']]
     });
   }
 
