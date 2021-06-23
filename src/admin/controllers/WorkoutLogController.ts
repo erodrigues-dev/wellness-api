@@ -1,23 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import { Joi } from 'celebrate';
-import { CreateWorkoutLogUseCase } from '../../shared/useCases/workout/log/CreateWorkoutLogUseCase';
-import { UpdateWorkoutLogUseCase } from '../../shared/useCases/workout/log/UpdateWorkoutLogUseCase';
 import { StatusCodes } from 'http-status-codes';
 
-const createSchema = Joi.object({
-  workoutProfileId: Joi.number().required(),
-  resume: Joi.string().required(),
-  date: Joi.string().isoDate().required(),
-  notes: Joi.string().allow(null, '')
-});
-
-const updateSchema = Joi.object({
-  id: Joi.number().required(),
-  workoutProfileId: Joi.number().required(),
-  resume: Joi.string().required(),
-  date: Joi.string().isoDate().required(),
-  notes: Joi.string().allow(null, '')
-});
+import {
+  CreateWorkoutLogUseCase,
+  UpdateWorkoutLogUseCase,
+  createSchema,
+  updateSchema
+} from '../../shared/useCases/workout/log';
 
 export class WorkoutLogController {
   async store(req: Request, res: Response, next: NextFunction) {

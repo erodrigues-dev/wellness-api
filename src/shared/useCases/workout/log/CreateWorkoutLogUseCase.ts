@@ -2,7 +2,7 @@ import CustomError from '../../../custom-error/CustomError';
 import WorkoutLog from '../../../database/models/WorkoutLog';
 import WorkoutProfile from '../../../database/models/WorkoutProfile';
 
-export interface CreateWorkoutLogData {
+interface CreateWorkoutLogData {
   workoutProfileId: number;
   resume: string;
   notes: string;

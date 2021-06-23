@@ -1,7 +1,7 @@
 import CustomError from '../../../custom-error/CustomError';
 import WorkoutLog from '../../../database/models/WorkoutLog';
 
-export interface UpdateWorkoutLogData {
+interface UpdateWorkoutLogData {
   id: number;
   workoutProfileId: number;
   resume: string;
