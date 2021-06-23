@@ -1,7 +1,6 @@
 import { Joi } from 'celebrate';
 
 export const createSchema = Joi.object({
-  workoutProfileId: Joi.number().required(),
   workoutLogId: Joi.number().required(),
   name: Joi.string().required(),
   notes: Joi.string().allow(null, ''),
@@ -17,4 +16,10 @@ export const createSchema = Joi.object({
 
 export const updateSchema = createSchema.keys({
   id: Joi.number().required()
+});
+
+export const indexSchema = Joi.object({
+  page: Joi.number().min(1),
+  limit: Joi.number().min(1),
+  workoutLogId: Joi.number().required()
 });
