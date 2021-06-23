@@ -1,7 +1,7 @@
 import CustomError from '../../../custom-error/CustomError';
 import WorkoutProfile from '../../../database/models/WorkoutProfile';
 
-export interface CreateWorkoutProfileData {
+interface CreateWorkoutProfileData {
   customerId: number;
   age: number;
   height: string;

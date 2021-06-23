@@ -1,7 +1,7 @@
 import CustomError from '../../../custom-error/CustomError';
 import WorkoutProfile from '../../../database/models/WorkoutProfile';
 
-export interface UpdateWorkoutProfileData {
+interface UpdateWorkoutProfileData {
   id: number;
   age: number;
   height: string;

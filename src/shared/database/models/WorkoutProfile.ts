@@ -22,7 +22,6 @@ export default class WorkoutProfile extends Model {
   static setup(connection: Sequelize) {
     WorkoutProfile.init(
       {
-        customerId: DataTypes.INTEGER,
         age: DataTypes.INTEGER,
         height: DataTypes.STRING,
         weight: DataTypes.INTEGER,
@@ -39,7 +38,7 @@ export default class WorkoutProfile extends Model {
 
   static setupAssociations() {
     WorkoutProfile.belongsTo(Customer, {
-      foreignKey: 'customer_id',
+      foreignKey: 'customerId',
       as: 'customer'
     });
   }
