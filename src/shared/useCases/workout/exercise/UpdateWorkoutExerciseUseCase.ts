@@ -1,11 +1,8 @@
 import CustomError from '../../../custom-error/CustomError';
 import WorkoutExerciseLog from '../../../database/models/WorkoutExerciseLog';
-import WorkoutLog from '../../../database/models/WorkoutLog';
 
-export interface UpdateWorkoutExerciseData {
+interface Data {
   id: number;
-  workoutProfileId: number;
-  workoutLogId: number;
   name: string;
   notes: string;
   set1Reps: number;
@@ -19,24 +16,17 @@ export interface UpdateWorkoutExerciseData {
 }
 
 export class UpdateWorkoutExerciseUseCase {
-  async handle(data: UpdateWorkoutExerciseData) {
-    await this.checkIfExist(data.id);
-    await this.checkIfWorkoutLogExistAndValidateProfileId(data);
+  async handle(data: Data) {
+    await this.checkIfExist(data);
     await this.update(data);
   }
 
-  private async checkIfWorkoutLogExistAndValidateProfileId({ workoutLogId, workoutProfileId }) {
-    const workoutLog = await WorkoutLog.findByPk(workoutLogId, { attributes: ['id', 'workoutProfileId'] });
-    if (!workoutLog) throw new CustomError('Workout Log not found');
-    if (workoutLog.workoutProfileId !== workoutProfileId) throw new CustomError('Workout profile id is invalid');
-  }
-
-  private async checkIfExist(id: number) {
+  private async checkIfExist({ id }) {
     const exerciseLog = await WorkoutExerciseLog.findByPk(id, { attributes: ['id'] });
     if (!exerciseLog) throw new CustomError('Exercise Log not found', 404);
   }
 
-  private update({ id, ...data }: UpdateWorkoutExerciseData) {
+  private update({ id, ...data }: Data) {
     return WorkoutExerciseLog.update(data, {
       where: { id },
       fields: [
