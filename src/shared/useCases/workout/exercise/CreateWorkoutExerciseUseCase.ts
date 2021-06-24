@@ -19,8 +19,7 @@ export interface CreateWorkoutExerciseData {
 export class CreateWorkoutExerciseUseCase {
   async handle(data: CreateWorkoutExerciseData) {
     await this.checkIfWorkoutLog(data);
-    const model = await this.create(data);
-    return this.parse(model);
+    await this.create(data);
   }
 
   private async checkIfWorkoutLog({ workoutLogId }) {
@@ -30,9 +29,5 @@ export class CreateWorkoutExerciseUseCase {
 
   private create(data: CreateWorkoutExerciseData) {
     return WorkoutExerciseLog.create(data);
-  }
-
-  private parse(model: WorkoutExerciseLog) {
-    return model.toJSON();
   }
 }
