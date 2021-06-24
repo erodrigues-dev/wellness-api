@@ -4,18 +4,28 @@ export const createSchema = Joi.object({
   workoutLogId: Joi.number().required(),
   name: Joi.string().required(),
   notes: Joi.string().allow(null, ''),
-  set1Reps: Joi.number(),
-  set1Weight: Joi.number(),
-  set2Reps: Joi.number(),
-  set2Weight: Joi.number(),
-  set3Reps: Joi.number(),
-  set3Weight: Joi.number(),
-  set4Reps: Joi.number(),
-  set4Weight: Joi.number()
+  set1Reps: Joi.number().allow(null),
+  set1Weight: Joi.number().allow(null),
+  set2Reps: Joi.number().allow(null),
+  set2Weight: Joi.number().allow(null),
+  set3Reps: Joi.number().allow(null),
+  set3Weight: Joi.number().allow(null),
+  set4Reps: Joi.number().allow(null),
+  set4Weight: Joi.number().allow(null)
 });
 
-export const updateSchema = createSchema.keys({
-  id: Joi.number().required()
+export const updateSchema = Joi.object({
+  id: Joi.number().required(),
+  name: Joi.string().required(),
+  notes: Joi.string().allow(null),
+  set1Reps: Joi.number().allow(null),
+  set1Weight: Joi.number().allow(null),
+  set2Reps: Joi.number().allow(null),
+  set2Weight: Joi.number().allow(null),
+  set3Reps: Joi.number().allow(null),
+  set3Weight: Joi.number().allow(null),
+  set4Reps: Joi.number().allow(null),
+  set4Weight: Joi.number().allow(null)
 });
 
 export const indexSchema = Joi.object({
