@@ -8,7 +8,8 @@ import {
   UpdateWorkoutExerciseUseCase,
   createSchema,
   updateSchema,
-  indexSchema
+  indexSchema,
+  DestroyWorkoutExerciseUseCase
 } from '../../shared/useCases/workout/exercise';
 
 export class WorkoutExerciseController {
@@ -56,6 +57,17 @@ export class WorkoutExerciseController {
       });
       const usecase = new UpdateWorkoutExerciseUseCase();
       await usecase.handle(data);
+      return res.sendStatus(StatusCodes.NO_CONTENT);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async destroy(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params as any;
+      const usecase = new DestroyWorkoutExerciseUseCase();
+      await usecase.handle(id);
       return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (error) {
       next(error);

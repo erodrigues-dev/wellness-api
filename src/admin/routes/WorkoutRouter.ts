@@ -26,5 +26,6 @@ router.get('/workout-exercises', bindRoute(workoutExerciseController, 'index'));
 router.get('/workout-exercises/:id', bindRoute(workoutExerciseController, 'get'));
 router.post('/workout-exercises', bindRoute(workoutExerciseController, 'store'));
 router.put('/workout-exercises/:id', bindRoute(workoutExerciseController, 'update'));
+router.delete('/workout-exercises/:id', bindRoute(workoutExerciseController, 'destroy'));
 
 export default router;
