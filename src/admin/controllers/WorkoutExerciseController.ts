@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 import {
   ListWorkoutExerciseUseCase,
@@ -40,8 +41,8 @@ export class WorkoutExerciseController {
         ...req.body
       });
       const usecase = new CreateWorkoutExerciseUseCase();
-      const model = await usecase.handle(data);
-      return res.json(model);
+      await usecase.handle(data);
+      return res.sendStatus(StatusCodes.CREATED);
     } catch (error) {
       next(error);
     }
@@ -54,8 +55,8 @@ export class WorkoutExerciseController {
         ...req.body
       });
       const usecase = new UpdateWorkoutExerciseUseCase();
-      const model = await usecase.handle(data);
-      return res.json(model);
+      await usecase.handle(data);
+      return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (error) {
       next(error);
     }
