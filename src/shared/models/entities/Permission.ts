@@ -211,22 +211,19 @@ export class Permission {
 
   static readonly WorkoutProfileList: PermissionItem = {
     id: 2 ** 29,
-    group: 'Settings',
-    subgroup: 'Workout',
+    group: 'Workout',
     name: 'List workout profiles'
   };
 
   static readonly WorkoutProfileCreateUpdate: PermissionItem = {
     id: 2 ** 30,
-    group: 'Settings',
-    subgroup: 'Workout',
+    group: 'Workout',
     name: 'Create/Update workout profiles'
   };
 
   static readonly WorkoutProfileDelete: PermissionItem = {
     id: 2 ** 31,
-    group: 'Settings',
-    subgroup: 'Workout',
+    group: 'Workout',
     name: 'Delete workout profiles'
   };
 }
