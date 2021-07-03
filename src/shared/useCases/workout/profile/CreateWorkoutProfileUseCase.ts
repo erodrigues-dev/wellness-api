@@ -15,9 +15,18 @@ interface CreateWorkoutProfileData {
 }
 
 export class CreateWorkoutProfileUseCase {
-  async handle(data: CreateWorkoutProfileData): Promise<void> {
+  async handle(data: CreateWorkoutProfileData): Promise<any> {
     await this.checkIfExistProfileForCustomer(data.customerId);
-    await WorkoutProfile.create(data);
+    const { id } = await WorkoutProfile.create(data)
+
+    const created = await WorkoutProfile.findByPk(id, {
+      include: {
+        association: 'customer',
+        attributes: ['id', 'name']
+      }
+    });
+
+    return created.toJSON();
   }
 
   private async checkIfExistProfileForCustomer(customerId: number) {
