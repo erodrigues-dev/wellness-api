@@ -37,8 +37,8 @@ export class WorkoutProfileController {
     try {
       const data = await createSchema.validateAsync(req.body);
       const usecase = new CreateWorkoutProfileUseCase();
-      await usecase.handle(data);
-      return res.sendStatus(StatusCodes.CREATED);
+      const created = await usecase.handle(data);
+      return res.json(created);
     } catch (error) {
       next(error);
     }
