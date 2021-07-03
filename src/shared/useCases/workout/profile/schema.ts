@@ -2,9 +2,9 @@ import { Joi } from 'celebrate';
 
 export const createSchema = Joi.object({
   customerId: Joi.number().required(),
-  age: Joi.number(),
+  age: Joi.number().allow(null),
   height: Joi.string().allow(null, ''),
-  weight: Joi.number(),
+  weight: Joi.number().allow(null),
   goal: Joi.string().allow(null, ''),
   test1: Joi.string().allow(null, ''),
   test2: Joi.string().allow(null, ''),
