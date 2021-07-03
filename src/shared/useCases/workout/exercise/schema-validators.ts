@@ -16,7 +16,7 @@ export const createSchema = Joi.object({
 
 export const updateSchema = Joi.object({
   id: Joi.number().required(),
-  name: Joi.string().required(),
+  name: Joi.string().min(1).trim(),
   notes: Joi.string().allow(null),
   set1Reps: Joi.number().allow(null),
   set1Weight: Joi.number().allow(null),
