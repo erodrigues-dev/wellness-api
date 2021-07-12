@@ -17,7 +17,10 @@ import {
   makeSignupController,
   makeProductListController,
   makeProductDetailController,
-  makeWaiverController
+  makeWaiverController,
+  makeWorkoutProfileController,
+  makeWorkoutLogController,
+  makeWorkoutExerciseController
 } from '../controllers';
 
 const mimetypes = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -40,6 +43,9 @@ const listDaysController = makeListDaysController();
 const listSlotsController = makeListSlotsController();
 const bookController = makeBookController();
 const waiverController = makeWaiverController();
+const workoutProfileController = makeWorkoutProfileController();
+const workoutLogController = makeWorkoutLogController();
+const workoutExerciseController = makeWorkoutExerciseController();
 
 //- sessions
 router.post('/sessions/signin', bindRoute(signinController, 'signin'));
@@ -92,5 +98,22 @@ router.get('/waivers/:waiverId', bindRoute(waiverController, 'getById'));
 router.get('/waivers/by-activity/:activityId', bindRoute(waiverController, 'getWaiverByActivity'));
 router.post('/waivers/add-customer/:waiverId', bindRoute(waiverController, 'addWaiverIsCustomerAccount'));
 router.post('/waivers/sign', upload(mimetypes).single('signImage'), bindRoute(waiverController, 'sign'));
+
+// - workout
+router.get('/workout/profile', bindRoute(workoutProfileController, 'get'));
+router.post('/workout/profile', bindRoute(workoutProfileController, 'store'));
+router.put('/workout/profile', bindRoute(workoutProfileController, 'update'));
+
+router.get('/workout/logs', bindRoute(workoutLogController, 'index'));
+router.get('/workout/logs/:id', bindRoute(workoutLogController, 'get'));
+router.post('/workout/logs', bindRoute(workoutLogController, 'store'));
+router.put('/workout/logs/:id', bindRoute(workoutLogController, 'update'));
+router.delete('/workout/logs/:id', bindRoute(workoutLogController, 'destroy'));
+
+router.get('/workout/exercises', bindRoute(workoutExerciseController, 'index'));
+router.get('/workout/exercises/:id', bindRoute(workoutExerciseController, 'get'));
+router.post('/workout/exercises', bindRoute(workoutExerciseController, 'store'));
+router.put('/workout/exercises/:id', bindRoute(workoutExerciseController, 'update'));
+router.delete('/workout/exercises/:id', bindRoute(workoutExerciseController, 'destroy'));
 
 export default router;
