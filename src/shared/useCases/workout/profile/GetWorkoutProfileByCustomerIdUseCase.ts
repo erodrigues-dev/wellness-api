@@ -19,7 +19,7 @@ export class GetWorkoutProfileByCustomerIdUseCase {
   }
 
   private parse(model: WorkoutProfile) {
-    if (!model) return {};
+    if (!model) return null;
 
     return model.toJSON();
   }
