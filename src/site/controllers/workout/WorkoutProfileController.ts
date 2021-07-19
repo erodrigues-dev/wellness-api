@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import {
   GetWorkoutProfileByCustomerIdUseCase,
+  GetWorkoutProfileUseCase,
   CreateWorkoutProfileUseCase,
   UpdateWorkoutProfileUseCase,
   createSchema,
@@ -36,9 +37,15 @@ export class WorkoutProfileController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await updateSchema.validateAsync(req.body);
+      const { id } = req.params as any;
+      const data = await updateSchema.validateAsync({
+        id,
+        ...req.body
+      });
       const usecase = new UpdateWorkoutProfileUseCase();
-      const profile = await usecase.handle(data);
+      await usecase.handle(data);
+      const getUseCase = new GetWorkoutProfileUseCase();
+      const profile = await getUseCase.handle(id);
       return res.json(profile);
     } catch (error) {
       next(error);

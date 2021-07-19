@@ -102,7 +102,7 @@ router.post('/waivers/sign', upload(mimetypes).single('signImage'), bindRoute(wa
 // - workout
 router.get('/workout/profile', bindRoute(workoutProfileController, 'get'));
 router.post('/workout/profile', bindRoute(workoutProfileController, 'store'));
-router.put('/workout/profile', bindRoute(workoutProfileController, 'update'));
+router.put('/workout/profile/:id', bindRoute(workoutProfileController, 'update'));
 
 router.get('/workout/logs', bindRoute(workoutLogController, 'index'));
 router.get('/workout/logs/:id', bindRoute(workoutLogController, 'get'));
