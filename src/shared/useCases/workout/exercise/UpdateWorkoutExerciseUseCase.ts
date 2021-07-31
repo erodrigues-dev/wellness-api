@@ -15,6 +15,19 @@ interface Data {
   set4Weight: number;
 }
 
+const fields = [
+  'name',
+  'notes',
+  'set1Reps',
+  'set1Weight',
+  'set2Reps',
+  'set2Weight',
+  'set3Reps',
+  'set3Weight',
+  'set4Reps',
+  'set4Weight'
+];
+
 export class UpdateWorkoutExerciseUseCase {
   async handle(data: Data) {
     await this.checkIfExist(data);
@@ -26,21 +39,13 @@ export class UpdateWorkoutExerciseUseCase {
     if (!exerciseLog) throw new CustomError('Exercise Log not found', 404);
   }
 
-  private update({ id, ...data }: Data) {
-    return WorkoutExerciseLog.update(data, {
-      where: { id },
-      fields: [
-        'name',
-        'notes',
-        'set1Reps',
-        'set1Weight',
-        'set2Reps',
-        'set2Weight',
-        'set3Reps',
-        'set3Weight',
-        'set4Reps',
-        'set4Weight'
-      ]
+  private async update({ id, ...data }: Data) {
+    const exercise = await WorkoutExerciseLog.findByPk(id);
+
+    fields.forEach(field => {
+      exercise[field] = data[field] || null;
     });
+
+    await exercise.save();
   }
 }
