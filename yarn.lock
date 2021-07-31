@@ -469,6 +469,11 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.1.0.tgz#30fa40c9e7fe07dbc895678cd287024dea241dd9"
   integrity sha512-1Yj8h9Q+QDF5FzhMs/c9+6UntbD5MkRfRwac8DoEm9ZfUBZ7tZ55YcGVAzEe4bXsdQHEk+s9S5wsOKVdZrw0tQ==
 
+bitwise-operator@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/bitwise-operator/-/bitwise-operator-1.0.0.tgz#20680386fd9426e4aec269d6dc3d066d556edfb5"
+  integrity sha1-IGgDhv2UJuSuwmnW3D0GbVVu37U=
+
 bluebird@^3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
