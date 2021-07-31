@@ -16,8 +16,19 @@ interface UpdateWorkoutProfileData {
 
 export class UpdateWorkoutProfileUseCase {
   async handle({ id, ...data }: UpdateWorkoutProfileData): Promise<void> {
-    const profile = await WorkoutProfile.findByPk(id, { attributes: ['id'] });
+    const profile = await WorkoutProfile.findByPk(id);
     if (!profile) throw new CustomError('Workout profile not found', 404);
-    await WorkoutProfile.update(data, { where: { id } });
+
+    profile.age = data.age || null;
+    profile.height = data.height || null;
+    profile.weight = data.weight || null;
+    profile.goal = data.goal || null;
+    profile.test1 = data.test1 || null;
+    profile.test2 = data.test2 || null;
+    profile.injuriesLimitations = data.injuriesLimitations || null;
+    profile.experienceLevel = data.experienceLevel || null;
+    profile.notes = data.notes || null;
+
+    await profile.save();
   }
 }
