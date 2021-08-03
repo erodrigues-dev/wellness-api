@@ -4,10 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import { ScheduleStatusEnum } from '../../shared/models/enums/ScheduleStatusEnum';
 
 import service, { FilterDto } from '../../shared/services/ScheduleService';
-import {
-  ScheduleChangeStatusUseCase,
-  ScheduleCreateUseCase
-} from '../../shared/useCases/schedule';
+import { ScheduleChangeStatusUseCase, ScheduleCreateChooseBetterOrderUseCase } from '../../shared/useCases/schedule';
 
 export class ScheduleController {
   async index(req: Request, res: Response, next: NextFunction) {
@@ -17,9 +14,7 @@ export class ScheduleController {
       const filter = FilterDto.parse(req.query);
       const result = await service.list(filter);
 
-      return res
-        .header('x-total-count', result.total.toString())
-        .json(result.list);
+      return res.header('x-total-count', result.total.toString()).json(result.list);
     } catch (error) {
       next(error);
     }
@@ -27,21 +22,16 @@ export class ScheduleController {
 
   async store(req: Request, res: Response, next: NextFunction) {
     try {
-      const {
-        customerId,
-        orderActivityId,
-        activityScheduleId,
-        date
-      } = req.body;
+      const { customerId, activityId, activityScheduleId, date } = req.body;
 
-      const useCase = new ScheduleCreateUseCase(
+      const useCase = new ScheduleCreateChooseBetterOrderUseCase(
         customerId,
-        orderActivityId,
+        activityId,
         activityScheduleId,
         parseISO(date)
       );
 
-      await useCase.create();
+      await useCase.handle();
 
       return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (error) {
