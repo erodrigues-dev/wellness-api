@@ -1,6 +1,6 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import ActivityEmployee from './ActivityEmployee';
 
+import ActivityEmployee from './ActivityEmployee';
 import Category from './Category';
 import Employee from './Employee';
 import Waiver from './Waiver';
@@ -18,7 +18,7 @@ export default class Activity extends Model {
   showInApp: boolean;
   waiverId: number;
 
-  employee?: Employee;
+  employees?: Employee[];
   category?: Category;
   waiver?: Waiver;
 

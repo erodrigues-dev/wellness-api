@@ -69,8 +69,7 @@ export default class CreateOrderUseCase {
   }
 
   private async load() {
-    if (this.data.itemType === OrderItemTypeEnum.Activity)
-      this.activity = await Activity.findByPk(this.data.itemId);
+    if (this.data.itemType === OrderItemTypeEnum.Activity) this.activity = await Activity.findByPk(this.data.itemId);
 
     if (this.data.itemType === OrderItemTypeEnum.Package) {
       this.package = await Package.findByPk(this.data.itemId, {
@@ -97,10 +96,7 @@ export default class CreateOrderUseCase {
   }
 
   private setPrice() {
-    this.price =
-      this.data.itemType === OrderItemTypeEnum.Activity
-        ? this.activity.price
-        : this.package.price;
+    this.price = this.data.itemType === OrderItemTypeEnum.Activity ? this.activity.price : this.package.price;
   }
 
   private calculateDiscount() {
@@ -141,8 +137,7 @@ export default class CreateOrderUseCase {
   }
 
   private async createItems() {
-    if (this.data.itemType === OrderItemTypeEnum.Activity)
-      await this.createOrderActivity();
+    if (this.data.itemType === OrderItemTypeEnum.Activity) await this.createOrderActivity();
     else await this.createOrderPackage();
   }
 
@@ -154,7 +149,6 @@ export default class CreateOrderUseCase {
       price: this.activity.price,
       description: this.activity.description,
       duration: this.activity.duration,
-      employeeId: this.activity.employeeId,
       categoryId: this.activity.categoryId,
       maxPeople: this.activity.maxPeople
     };
@@ -193,7 +187,6 @@ export default class CreateOrderUseCase {
             price: activity.price,
             description: activity.description,
             duration: activity.duration,
-            employeeId: activity.employeeId,
             categoryId: activity.categoryId,
             maxPeople: activity.maxPeople,
             packageQuantity: activity.PackageActivity?.quantity || 1
@@ -214,10 +207,7 @@ export default class CreateOrderUseCase {
       },
       params: {
         type: this.order.type,
-        name:
-          this.order.type === OrderItemTypeEnum.Activity
-            ? this.activity.name
-            : this.package.name,
+        name: this.order.type === OrderItemTypeEnum.Activity ? this.activity.name : this.package.name,
         discount: this.order.discount,
         total: this.order.amount,
         quantity: this.order.quantity,

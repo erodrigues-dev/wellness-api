@@ -2,7 +2,6 @@ import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Activity from '../database/models/Activity';
-import IActivity from '../models/entities/IActivity';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 
 interface FilterData {
@@ -30,17 +29,17 @@ interface UpdateData extends CreateData {
 }
 
 export class ActivityService {
-  async list(filter: FilterData, page: number = null, limit: number = null): Promise<IActivity[]> {
+  async list(filter: FilterData, page: number = null, limit: number = null): Promise<Activity[]> {
     const where = this.buildQuery(filter);
 
     const findOptions: FindOptions = {
       where,
       order: ['name'],
       include: [
-        {
-          association: 'employee',
-          attributes: ['id', 'name', 'email', 'imageUrl']
-        },
+        // {
+        //   association: 'employee',
+        //   attributes: ['id', 'name', 'email', 'imageUrl']
+        // },
         {
           association: 'category',
           attributes: ['id', 'name']
@@ -68,10 +67,10 @@ export class ActivityService {
   async get(id: number) {
     const model = await Activity.findByPk(id, {
       include: [
-        {
-          association: 'employee',
-          attributes: ['id', 'name', 'email', 'imageUrl']
-        },
+        // {
+        //   association: 'employee',
+        //   attributes: ['id', 'name', 'email', 'imageUrl']
+        // },
         {
           association: 'category',
           attributes: ['id', 'name']
@@ -99,7 +98,6 @@ export class ActivityService {
     model.description = data.description;
     model.price = data.price;
     model.duration = data.duration;
-    model.employeeId = data.employeeId || null;
     model.categoryId = data.categoryId;
     model.showInApp = data.showInApp;
     model.showInWeb = data.showInWeb;
