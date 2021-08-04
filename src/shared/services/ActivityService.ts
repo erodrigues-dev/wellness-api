@@ -29,17 +29,17 @@ interface UpdateData extends CreateData {
 }
 
 export class ActivityService {
-  async list(filter: FilterData, page: number = null, limit: number = null): Promise<Activity[]> {
+  async list(filter: FilterData, page: number = null, limit: number = null): Promise<any[]> {
     const where = this.buildQuery(filter);
 
     const findOptions: FindOptions = {
       where,
       order: ['name'],
       include: [
-        // {
-        //   association: 'employee',
-        //   attributes: ['id', 'name', 'email', 'imageUrl']
-        // },
+        {
+          association: 'employees',
+          attributes: ['id', 'name', 'email', 'imageUrl']
+        },
         {
           association: 'category',
           attributes: ['id', 'name']
@@ -56,7 +56,8 @@ export class ActivityService {
       findOptions.offset = (page - 1) * limit;
     }
 
-    return await Activity.findAll(findOptions);
+    const list = await Activity.findAll(findOptions);
+    return list.map(this.parseActivity);
   }
 
   count(filter: FilterData): Promise<number> {
@@ -67,10 +68,10 @@ export class ActivityService {
   async get(id: number) {
     const model = await Activity.findByPk(id, {
       include: [
-        // {
-        //   association: 'employee',
-        //   attributes: ['id', 'name', 'email', 'imageUrl']
-        // },
+        {
+          association: 'employees',
+          attributes: ['id', 'name', 'email', 'imageUrl']
+        },
         {
           association: 'category',
           attributes: ['id', 'name']
@@ -82,7 +83,7 @@ export class ActivityService {
       ]
     });
     if (!model) throw new CustomError('Activity not found', 404);
-    return model.toJSON();
+    return this.parseActivity(model);
   }
 
   async create(data: CreateData) {
@@ -133,6 +134,17 @@ export class ActivityService {
     }
 
     return where;
+  }
+
+  private parseActivity(model: Activity) {
+    const item = model.toJSON() as any;
+
+    item.employees = item.employees.map(employee => {
+      delete employee.ActivityEmployee;
+      return employee;
+    });
+
+    return item;
   }
 }
 

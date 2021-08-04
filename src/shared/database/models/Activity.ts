@@ -59,7 +59,8 @@ export default class Activity extends Model {
     });
 
     Activity.belongsToMany(Employee, {
-      through: ActivityEmployee
+      through: ActivityEmployee,
+      as: 'employees'
     });
   }
 }
