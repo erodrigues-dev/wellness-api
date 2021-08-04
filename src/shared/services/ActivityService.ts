@@ -2,6 +2,7 @@ import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Activity from '../database/models/Activity';
+import { getPaginateOptions } from '../utils/getPaginateOptions';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 
 interface FilterData {
@@ -33,12 +34,11 @@ export class ActivityService {
     const where = this.buildQuery(filter);
 
     const findOptions: FindOptions = {
-      where,
-      order: ['name'],
       include: [
         {
           association: 'employees',
-          attributes: ['id', 'name', 'email', 'imageUrl']
+          attributes: ['id', 'name', 'email', 'imageUrl'],
+          where: filter.employeeId ? { id: filter.employeeId } : {}
         },
         {
           association: 'category',
@@ -48,13 +48,11 @@ export class ActivityService {
           association: 'waiver',
           attributes: ['id', 'title']
         }
-      ]
+      ],
+      where,
+      order: ['name'],
+      ...getPaginateOptions(page, limit)
     };
-
-    if (!!page && !!limit) {
-      findOptions.limit = limit;
-      findOptions.offset = (page - 1) * limit;
-    }
 
     const list = await Activity.findAll(findOptions);
     return list.map(this.parseActivity);
@@ -62,7 +60,14 @@ export class ActivityService {
 
   count(filter: FilterData): Promise<number> {
     const where = this.buildQuery(filter);
-    return Activity.count({ where });
+    return Activity.count({
+      include: {
+        association: 'employees',
+        attributes: ['id', 'name', 'email', 'imageUrl'],
+        where: filter.employeeId ? { id: filter.employeeId } : {}
+      },
+      where
+    });
   }
 
   async get(id: number) {
@@ -117,16 +122,11 @@ export class ActivityService {
   private buildQuery(filter: FilterData) {
     const where = {
       name: { [Op.iLike]: `%${filter.name}%` },
-      employeeId: filter.employeeId,
       categoryId: filter.categoryId
     };
 
     if (!filter.name) {
       delete where.name;
-    }
-
-    if (!filter.employeeId) {
-      delete where.employeeId;
     }
 
     if (!filter.categoryId) {
