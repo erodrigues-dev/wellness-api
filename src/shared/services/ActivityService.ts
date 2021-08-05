@@ -2,6 +2,7 @@ import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Activity from '../database/models/Activity';
+import ActivityEmployee from '../database/models/ActivityEmployee';
 import { getPaginateOptions } from '../utils/getPaginateOptions';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 
@@ -17,7 +18,7 @@ interface CreateData {
   price: number;
   duration: number;
   imageUrl: string;
-  employeeId: number;
+  employees: number[];
   categoryId: number;
   maxPeople: number;
   showInWeb: boolean;
@@ -91,9 +92,28 @@ export class ActivityService {
     return this.parseActivity(model);
   }
 
-  async create(data: CreateData) {
-    const model = await Activity.create(data);
-    return model.toJSON();
+  async create({ employees, ...data }: CreateData) {
+    const transaction = await Activity.sequelize.transaction();
+
+    try {
+      const model = await Activity.create(data, { transaction });
+
+      if (employees.length > 0) {
+        await ActivityEmployee.bulkCreate(
+          employees.map(employeeId => ({
+            employeeId,
+            activityId: model.id
+          })),
+          { transaction }
+        );
+      }
+
+      await transaction.commit();
+      return model.toJSON();
+    } catch (error) {
+      transaction.rollback();
+      throw error;
+    }
   }
 
   async update(data: UpdateData) {

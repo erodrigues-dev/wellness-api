@@ -60,6 +60,8 @@ export default class Activity extends Model {
 
     Activity.belongsToMany(Employee, {
       through: ActivityEmployee,
+      foreignKey: 'activityId',
+      otherKey: 'employeeId',
       as: 'employees'
     });
   }

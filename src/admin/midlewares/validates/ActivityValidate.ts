@@ -34,7 +34,7 @@ router.post(
       price: Joi.number().precision(2).required(),
       duration: Joi.number().integer().required(),
       categoryId: Joi.number().integer().required(),
-      employeeId: Joi.number().allow('', null),
+      employees: Joi.array().items(Joi.number()).default([]),
       showInApp: Joi.boolean().default(true),
       showInWeb: Joi.boolean().default(true),
       maxPeople: Joi.number().integer().positive(),
