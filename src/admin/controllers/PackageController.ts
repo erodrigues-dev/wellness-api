@@ -2,22 +2,20 @@ import { NextFunction, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import { PackageDTO } from '../../shared/models/dto/PackageDTO';
-import IActivity from '../../shared/models/entities/IActivity';
 import IPackageService from '../../shared/services/interfaces/IPackageService';
 import packageService from '../../shared/services/PackageService';
 import { PackageUseCase } from '../../shared/useCases/package/PackageUseCase';
 import IPackageController, {
-    IGetRequest, IIndexRequest, IStoreRequest, IUpdateRequest
+  IGetRequest,
+  IIndexRequest,
+  IStoreRequest,
+  IUpdateRequest
 } from './interfaces/IPackageController';
 
 export class PackageController implements IPackageController {
   constructor(private service: IPackageService) {}
 
-  async index(
-    req: IIndexRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> {
+  async index(req: IIndexRequest, res: Response, next: NextFunction): Promise<Response> {
     try {
       const { name, activityName, categoryId, page, limit } = req.query;
       const count = await this.service.count({
@@ -25,22 +23,14 @@ export class PackageController implements IPackageController {
         activityName,
         categoryId
       });
-      const list = await this.service.list(
-        { name, activityName, categoryId },
-        page,
-        limit
-      );
+      const list = await this.service.list({ name, activityName, categoryId }, page, limit);
       return res.header('X-Total-count', count.toString()).json(list);
     } catch (error) {
       next(error);
     }
   }
 
-  async get(
-    req: IGetRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> {
+  async get(req: IGetRequest, res: Response, next: NextFunction): Promise<Response> {
     try {
       const { id } = req.params;
       const model = await this.service.get(id);
@@ -50,15 +40,9 @@ export class PackageController implements IPackageController {
     }
   }
 
-  async store(
-    req: IStoreRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> {
+  async store(req: IStoreRequest, res: Response, next: NextFunction): Promise<Response> {
     try {
-      const dto = new PackageDTO()
-        .parseFromBody(req.body)
-        .withImageUrl(req.file?.url);
+      const dto = new PackageDTO().parseFromBody(req.body).withImageUrl(req.file?.url);
       await new PackageUseCase(dto).create();
 
       return res.status(StatusCodes.CREATED).json();
@@ -67,15 +51,9 @@ export class PackageController implements IPackageController {
     }
   }
 
-  async update(
-    req: IUpdateRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> {
+  async update(req: IUpdateRequest, res: Response, next: NextFunction): Promise<Response> {
     try {
-      const dto = new PackageDTO()
-        .parseFromBody(req.body)
-        .withImageUrl(req.file?.url);
+      const dto = new PackageDTO().parseFromBody(req.body).withImageUrl(req.file?.url);
       await new PackageUseCase(dto).update();
 
       return res.status(StatusCodes.NO_CONTENT).json();

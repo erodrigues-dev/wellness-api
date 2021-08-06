@@ -2,7 +2,8 @@ import { FindOptions, Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Activity from '../database/models/Activity';
-import IActivity from '../models/entities/IActivity';
+import ActivityEmployee from '../database/models/ActivityEmployee';
+import { getPaginateOptions } from '../utils/getPaginateOptions';
 import { deleteFileFromUrl } from '../utils/google-cloud-storage';
 
 interface FilterData {
@@ -17,7 +18,7 @@ interface CreateData {
   price: number;
   duration: number;
   imageUrl: string;
-  employeeId: number;
+  employees: number[];
   categoryId: number;
   maxPeople: number;
   showInWeb: boolean;
@@ -30,17 +31,12 @@ interface UpdateData extends CreateData {
 }
 
 export class ActivityService {
-  async list(filter: FilterData, page: number = null, limit: number = null): Promise<IActivity[]> {
+  async list(filter: FilterData, page: number = null, limit: number = null): Promise<any[]> {
     const where = this.buildQuery(filter);
 
     const findOptions: FindOptions = {
-      where,
-      order: ['name'],
       include: [
-        {
-          association: 'employee',
-          attributes: ['id', 'name', 'email', 'imageUrl']
-        },
+        this.buildEmployeeInclude(filter.employeeId, ['id', 'name', 'email', 'imageUrl']),
         {
           association: 'category',
           attributes: ['id', 'name']
@@ -49,27 +45,30 @@ export class ActivityService {
           association: 'waiver',
           attributes: ['id', 'title']
         }
-      ]
+      ],
+      where,
+      order: ['name'],
+      ...getPaginateOptions(page, limit)
     };
 
-    if (!!page && !!limit) {
-      findOptions.limit = limit;
-      findOptions.offset = (page - 1) * limit;
-    }
-
-    return await Activity.findAll(findOptions);
+    const list = await Activity.findAll(findOptions);
+    return list.map(this.parseActivity);
   }
 
   count(filter: FilterData): Promise<number> {
     const where = this.buildQuery(filter);
-    return Activity.count({ where });
+    return Activity.count({
+      include: this.buildEmployeeInclude(filter.employeeId),
+      where,
+      distinct: true
+    });
   }
 
   async get(id: number) {
     const model = await Activity.findByPk(id, {
       include: [
         {
-          association: 'employee',
+          association: 'employees',
           attributes: ['id', 'name', 'email', 'imageUrl']
         },
         {
@@ -83,23 +82,43 @@ export class ActivityService {
       ]
     });
     if (!model) throw new CustomError('Activity not found', 404);
-    return model.toJSON();
+    return this.parseActivity(model);
   }
 
-  async create(data: CreateData) {
-    const model = await Activity.create(data);
-    return model.toJSON();
+  async create({ employees, ...data }: CreateData) {
+    const transaction = await Activity.sequelize.transaction();
+
+    try {
+      const model = await Activity.create(data, { transaction });
+
+      if (employees.length > 0) {
+        await ActivityEmployee.bulkCreate(
+          employees.map(employeeId => ({
+            employeeId,
+            activityId: model.id
+          })),
+          { transaction }
+        );
+      }
+
+      await transaction.commit();
+      return model.toJSON();
+    } catch (error) {
+      transaction.rollback();
+      throw error;
+    }
   }
 
   async update(data: UpdateData) {
     const model = await Activity.findByPk(data.id);
     if (!model) throw new CustomError('Activity not found', 404);
 
+    const transaction = await Activity.sequelize.transaction();
+
     model.name = data.name;
     model.description = data.description;
     model.price = data.price;
     model.duration = data.duration;
-    model.employeeId = data.employeeId || null;
     model.categoryId = data.categoryId;
     model.showInApp = data.showInApp;
     model.showInWeb = data.showInWeb;
@@ -107,18 +126,38 @@ export class ActivityService {
     model.waiverId = data.waiverId || null;
 
     if (data.imageUrl) {
-      if (model.imageUrl) await deleteFileFromUrl(model.imageUrl);
+      const oldImageUrl = model.imageUrl;
       model.imageUrl = data.imageUrl;
+      if (oldImageUrl) {
+        transaction.afterCommit(async () => {
+          await deleteFileFromUrl(oldImageUrl).catch(() => {});
+        });
+      }
     }
 
-    await model.save();
-    return model.toJSON();
+    try {
+      await ActivityEmployee.destroy({ where: { activityId: data.id }, transaction });
+      if (data.employees.length > 0) {
+        await ActivityEmployee.bulkCreate(
+          data.employees.map(employeeId => ({
+            employeeId,
+            activityId: data.id
+          })),
+          { transaction }
+        );
+      }
+      await model.save({ transaction });
+      await transaction.commit();
+      return model.toJSON();
+    } catch (error) {
+      transaction.rollback();
+      throw error;
+    }
   }
 
   private buildQuery(filter: FilterData) {
     const where = {
       name: { [Op.iLike]: `%${filter.name}%` },
-      employeeId: filter.employeeId,
       categoryId: filter.categoryId
     };
 
@@ -126,15 +165,31 @@ export class ActivityService {
       delete where.name;
     }
 
-    if (!filter.employeeId) {
-      delete where.employeeId;
-    }
-
     if (!filter.categoryId) {
       delete where.categoryId;
     }
 
     return where;
+  }
+
+  private parseActivity(model: Activity) {
+    const item = model.toJSON() as any;
+
+    item.employees = item.employees.map(employee => {
+      delete employee.ActivityEmployee;
+      return employee;
+    });
+
+    return item;
+  }
+
+  private buildEmployeeInclude(id = null, attributes = []) {
+    return {
+      association: 'employees',
+      attributes,
+      where: id ? { id } : {},
+      required: Boolean(id)
+    };
   }
 }
 
