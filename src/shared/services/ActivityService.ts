@@ -36,11 +36,7 @@ export class ActivityService {
 
     const findOptions: FindOptions = {
       include: [
-        {
-          association: 'employees',
-          attributes: ['id', 'name', 'email', 'imageUrl'],
-          where: filter.employeeId ? { id: filter.employeeId } : {}
-        },
+        this.buildEmployeeInclude(filter.employeeId, ['id', 'name', 'email', 'imageUrl']),
         {
           association: 'category',
           attributes: ['id', 'name']
@@ -62,12 +58,9 @@ export class ActivityService {
   count(filter: FilterData): Promise<number> {
     const where = this.buildQuery(filter);
     return Activity.count({
-      include: {
-        association: 'employees',
-        attributes: ['id', 'name', 'email', 'imageUrl'],
-        where: filter.employeeId ? { id: filter.employeeId } : {}
-      },
-      where
+      include: this.buildEmployeeInclude(filter.employeeId),
+      where,
+      distinct: true
     });
   }
 
@@ -188,6 +181,15 @@ export class ActivityService {
     });
 
     return item;
+  }
+
+  private buildEmployeeInclude(id = null, attributes = []) {
+    return {
+      association: 'employees',
+      attributes,
+      where: id ? { id } : {},
+      required: Boolean(id)
+    };
   }
 }
 
