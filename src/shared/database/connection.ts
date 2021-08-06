@@ -20,6 +20,7 @@ import CustomerWaiver from './models/CustomerWaiver';
 import WorkoutProfile from './models/WorkoutProfile';
 import WorkoutLog from './models/WorkoutLog';
 import WorkoutExerciseLog from './models/WorkoutExerciseLog';
+import ActivityEmployee from './models/ActivityEmployee';
 
 const connection = new Sequelize(DB_CONFIG);
 
@@ -43,6 +44,7 @@ export function databaseConfig() {
   WorkoutProfile.setup(connection);
   WorkoutLog.setup(connection);
   WorkoutExerciseLog.setup(connection);
+  ActivityEmployee.setup(connection);
 
   Activity.setupAssociations();
   Event.setupAssociations();

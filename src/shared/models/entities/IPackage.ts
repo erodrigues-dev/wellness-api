@@ -1,6 +1,5 @@
 import { PackageTypeEnum } from '../enums/PackageTypeEnum';
 import { RecurrencyPayEnum } from '../enums/RecurrencyPayEnum';
-import { IActivityWithPackageActivity } from './IActivity';
 import ICategory from './ICategory';
 
 export default interface IPackage {
@@ -24,5 +23,5 @@ export default interface IPackage {
 
 export interface IPackageWithIncludes extends IPackage {
   category?: ICategory;
-  activities?: IActivityWithPackageActivity[];
+  activities?: any[];
 }

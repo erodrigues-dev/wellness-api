@@ -1,5 +1,6 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
+import ActivityEmployee from './ActivityEmployee';
 import Category from './Category';
 import Employee from './Employee';
 import Waiver from './Waiver';
@@ -11,14 +12,13 @@ export default class Activity extends Model {
   price: number;
   duration: number;
   imageUrl: string;
-  employeeId: number;
   categoryId: number;
   maxPeople?: number;
   showInWeb: boolean;
   showInApp: boolean;
   waiverId: number;
 
-  employee?: Employee;
+  employees?: Employee[];
   category?: Category;
   waiver?: Waiver;
 
@@ -37,7 +37,6 @@ export default class Activity extends Model {
         price: DataTypes.DECIMAL,
         duration: DataTypes.INTEGER,
         imageUrl: DataTypes.STRING,
-        employeeId: DataTypes.INTEGER,
         categoryId: DataTypes.INTEGER,
         maxPeople: DataTypes.INTEGER,
         showInApp: DataTypes.BOOLEAN,
@@ -49,11 +48,6 @@ export default class Activity extends Model {
   }
 
   static setupAssociations() {
-    Activity.belongsTo(Employee, {
-      foreignKey: 'employeeId',
-      as: 'employee'
-    });
-
     Activity.belongsTo(Category, {
       foreignKey: 'categoryId',
       as: 'category'
@@ -62,6 +56,13 @@ export default class Activity extends Model {
     Activity.belongsTo(Waiver, {
       foreignKey: 'waiverId',
       as: 'waiver'
+    });
+
+    Activity.belongsToMany(Employee, {
+      through: ActivityEmployee,
+      foreignKey: 'activityId',
+      otherKey: 'employeeId',
+      as: 'employees'
     });
   }
 }
