@@ -120,6 +120,8 @@ export class ActivityService {
     const model = await Activity.findByPk(data.id);
     if (!model) throw new CustomError('Activity not found', 404);
 
+    const transaction = await Activity.sequelize.transaction();
+
     model.name = data.name;
     model.description = data.description;
     model.price = data.price;
@@ -131,12 +133,33 @@ export class ActivityService {
     model.waiverId = data.waiverId || null;
 
     if (data.imageUrl) {
-      if (model.imageUrl) await deleteFileFromUrl(model.imageUrl);
+      const oldImageUrl = model.imageUrl;
       model.imageUrl = data.imageUrl;
+      if (oldImageUrl) {
+        transaction.afterCommit(async () => {
+          await deleteFileFromUrl(oldImageUrl).catch(() => {});
+        });
+      }
     }
 
-    await model.save();
-    return model.toJSON();
+    try {
+      await ActivityEmployee.destroy({ where: { activityId: data.id }, transaction });
+      if (data.employees.length > 0) {
+        await ActivityEmployee.bulkCreate(
+          data.employees.map(employeeId => ({
+            employeeId,
+            activityId: data.id
+          })),
+          { transaction }
+        );
+      }
+      await model.save({ transaction });
+      await transaction.commit();
+      return model.toJSON();
+    } catch (error) {
+      transaction.rollback();
+      throw error;
+    }
   }
 
   private buildQuery(filter: FilterData) {
