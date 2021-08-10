@@ -1,4 +1,10 @@
-import { BelongsToManySetAssociationsMixin, DataTypes, Model, Sequelize } from 'sequelize';
+import {
+  BelongsToManyAddAssociationsMixin,
+  BelongsToManySetAssociationsMixin,
+  DataTypes,
+  Model,
+  Sequelize
+} from 'sequelize';
 import Employee from './Employee';
 
 export default class Notification extends Model {
@@ -14,6 +20,7 @@ export default class Notification extends Model {
   updatedAt: Date;
 
   setReadBy: BelongsToManySetAssociationsMixin<Employee, number>;
+  addReadBy: BelongsToManyAddAssociationsMixin<Employee, number>;
 
   static setup(connection: Sequelize) {
     Notification.init(
