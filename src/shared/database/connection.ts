@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize';
 
 import { DB_CONFIG } from '../config/database';
+
 import Activity from './models/Activity';
 import Category from './models/Category';
 import Customer from './models/Customer';
@@ -21,6 +22,7 @@ import WorkoutProfile from './models/WorkoutProfile';
 import WorkoutLog from './models/WorkoutLog';
 import WorkoutExerciseLog from './models/WorkoutExerciseLog';
 import ActivityEmployee from './models/ActivityEmployee';
+import Notification from './models/Notification';
 
 const connection = new Sequelize(DB_CONFIG);
 
@@ -45,6 +47,7 @@ export function databaseConfig() {
   WorkoutLog.setup(connection);
   WorkoutExerciseLog.setup(connection);
   ActivityEmployee.setup(connection);
+  Notification.setup(connection);
 
   Activity.setupAssociations();
   Event.setupAssociations();
@@ -63,6 +66,7 @@ export function databaseConfig() {
   WorkoutProfile.setupAssociations();
   WorkoutLog.setupAssociations();
   WorkoutExerciseLog.setupAssociations();
+  Notification.setupAssociations();
 }
 
 export default connection;
