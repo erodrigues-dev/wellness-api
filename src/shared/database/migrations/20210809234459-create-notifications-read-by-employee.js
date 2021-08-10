@@ -17,12 +17,14 @@ module.exports = {
       notification_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: { model: 'notifications' }
+        references: { model: 'notifications' },
+        onDelete: 'CASCADE'
       },
       employee_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: { model: 'employees' }
+        references: { model: 'employees' },
+        onDelete: 'CASCADE'
       },
       created_at: DataTypes.DATE,
       updated_at: DataTypes.DATE
