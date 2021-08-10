@@ -21,7 +21,7 @@ export default class Notification extends Model {
         title: DataTypes.STRING,
         text: DataTypes.STRING
       },
-      { sequelize: connection }
+      { sequelize: connection, tableName: 'notifications' }
     );
   }
 
