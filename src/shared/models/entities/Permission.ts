@@ -244,4 +244,6 @@ export class Permission {
     group: 'Notification',
     name: 'Delete notifications'
   };
+
+  //! MAX_VALUE <52> Ex. 2 ** 52
 }
