@@ -17,7 +17,8 @@ export class NotificationService {
       ],
       where: {
         [Op.and]: this.buildWhere(title)
-      }
+      },
+      order: [['createdAt', 'desc']]
     });
 
     return {
