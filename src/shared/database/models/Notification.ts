@@ -1,5 +1,6 @@
 import {
   BelongsToManyAddAssociationsMixin,
+  BelongsToManyRemoveAssociationMixin,
   BelongsToManySetAssociationsMixin,
   DataTypes,
   Model,
@@ -21,6 +22,7 @@ export default class Notification extends Model {
 
   setReadBy: BelongsToManySetAssociationsMixin<Employee, number>;
   addReadBy: BelongsToManyAddAssociationsMixin<Employee, number>;
+  removeReadBy: BelongsToManyRemoveAssociationMixin<Employee, number>;
 
   static setup(connection: Sequelize) {
     Notification.init(

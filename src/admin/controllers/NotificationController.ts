@@ -52,10 +52,36 @@ export class NotificationController {
     }
   }
 
+  async listUnread(req: Request, res: Response, next: NextFunction) {
+    try {
+      const list = await this.service.listUnread({
+        page: Number(req.query.page) || null,
+        limit: Number(req.query.limit) || null,
+        employeeId: req.user.id
+      });
+      return res.header('x-total-count', String(list.count)).json(list.rows);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async markAsRead(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params as any;
       await this.service.markAsRead({
+        notificationId: id,
+        employeeId: req.user.id
+      });
+      return res.sendStatus(StatusCodes.OK);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async markAsUnread(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params as any;
+      await this.service.markAsUnread({
         notificationId: id,
         employeeId: req.user.id
       });

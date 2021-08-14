@@ -1,13 +1,17 @@
 import { Router } from 'express';
+import { bindRoute } from '../../shared/utils/bindRoute';
 import controller from '../controllers/NotificationController';
 
 const router = Router();
 
-router.get('/notifications', controller.index.bind(controller));
-router.get('/notifications/:id', controller.get.bind(controller));
-router.post('/notifications', controller.store.bind(controller));
-router.delete('/notifications/:id', controller.destroy.bind(controller));
-router.put('/notifications/mark-all-as-read', controller.markAllAsRead.bind(controller));
-router.put('/notifications/:id/mark-as-read', controller.markAsRead.bind(controller));
+router.get('/notifications/unreads', bindRoute(controller, 'listUnread'));
+router.put('/notifications/:id/mark-as-read', bindRoute(controller, 'markAsRead'));
+router.put('/notifications/:id/mark-as-unread', bindRoute(controller, 'markAsUnread'));
+router.put('/notifications/mark-all-as-read', bindRoute(controller, 'markAllAsRead'));
+
+router.get('/notifications', bindRoute(controller, 'index'));
+router.get('/notifications/:id', bindRoute(controller, 'get'));
+router.post('/notifications', bindRoute(controller, 'store'));
+router.delete('/notifications/:id', bindRoute(controller, 'destroy'));
 
 export default router;

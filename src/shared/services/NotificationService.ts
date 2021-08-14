@@ -52,9 +52,40 @@ export class NotificationService {
     });
   }
 
+  async listUnread({ page, limit, employeeId }) {
+    const query = await Notification.findAndCountAll({
+      ...getPaginateOptions(page, limit),
+      include: [
+        {
+          association: 'createdBy',
+          attributes: ['id', 'name']
+        }
+      ],
+      where: {
+        id: {
+          [Op.notIn]: literal(
+            `(select notification_id from notification_read_by_employees where employee_id = ${employeeId})`
+          )
+        },
+        createdById: { [Op.ne]: employeeId }
+      },
+      order: [['createdAt', 'desc']]
+    });
+
+    return {
+      count: query.count,
+      rows: this.parseToListViewModel(query.rows)
+    };
+  }
+
   async markAsRead({ notificationId, employeeId }) {
     const model = await Notification.findByPk(notificationId, { attributes: ['id'] });
     await model.addReadBy(employeeId);
+  }
+
+  async markAsUnread({ notificationId, employeeId }) {
+    const model = await Notification.findByPk(notificationId, { attributes: ['id'] });
+    await model.removeReadBy(employeeId);
   }
 
   async markAllAsRead({ employeeId }) {
@@ -65,7 +96,8 @@ export class NotificationService {
           [Op.notIn]: literal(
             `(select notification_id from notification_read_by_employees where employee_id = ${employeeId})`
           )
-        }
+        },
+        createdById: { [Op.ne]: employeeId }
       }
     });
 
