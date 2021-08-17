@@ -3,6 +3,7 @@ import { Op } from 'sequelize';
 
 import CustomError from '../custom-error/CustomError';
 import Notification from '../database/models/Notification';
+import NotificationEmployee from '../database/models/NotificationEmployee';
 import { getPaginateOptions } from '../utils/getPaginateOptions';
 
 export class NotificationService {
@@ -52,29 +53,38 @@ export class NotificationService {
     });
   }
 
-  async listUnread({ page, limit, employeeId }) {
-    const query = await Notification.findAndCountAll({
+  async listByEmployee({ page, limit, employeeId }) {
+    const notificationEmployees = await NotificationEmployee.findAll({
+      attributes: ['notificationId'],
+      where: { employeeId }
+    });
+
+    const reads = notificationEmployees.map(item => item.notificationId);
+
+    const notifications = await Notification.findAndCountAll({
       ...getPaginateOptions(page, limit),
-      include: [
-        {
-          association: 'createdBy',
-          attributes: ['id', 'name']
-        }
-      ],
-      where: {
-        id: {
-          [Op.notIn]: literal(
-            `(select notification_id from notification_read_by_employees where employee_id = ${employeeId})`
-          )
-        },
-        createdById: { [Op.ne]: employeeId }
+      include: {
+        association: 'createdBy',
+        attributes: ['id', 'name', 'imageUrl']
       },
-      order: [['createdAt', 'desc']]
+      where: { createdById: { [Op.ne]: employeeId } },
+      order: [
+        [literal(`("Notification"."id" in (${reads.join(',') || -1}))`), 'ASC'],
+        ['createdAt', 'DESC']
+      ]
     });
 
     return {
-      count: query.count,
-      rows: this.parseToListViewModel(query.rows)
+      unreads: notifications.count - reads.length,
+      total: notifications.count,
+      rows: notifications.rows.map(item => ({
+        id: item.id,
+        title: item.title,
+        text: item.text,
+        createdBy: item.createdBy,
+        createdAt: item.createdAt,
+        read: reads.some(readId => readId === item.id)
+      }))
     };
   }
 
@@ -91,21 +101,32 @@ export class NotificationService {
   async markAllAsRead({ employeeId }) {
     const list = await Notification.findAll({
       attributes: ['id'],
+      include: {
+        association: 'readBy',
+        attributes: ['id'],
+        where: { id: employeeId },
+        required: false
+      },
       where: {
-        id: {
-          [Op.notIn]: literal(
-            `(select notification_id from notification_read_by_employees where employee_id = ${employeeId})`
-          )
-        },
+        '$readBy.id$': { [Op.is]: null },
         createdById: { [Op.ne]: employeeId }
       }
     });
 
-    const query =
-      'insert into notification_read_by_employees (notification_id, employee_id, created_at, updated_at) values';
-    const values = list.map(notification => `(${notification.id}, ${employeeId}, now(), now())`);
+    if (list.length > 0) {
+      await NotificationEmployee.bulkCreate(
+        list.map(({ id: notificationId }) => ({
+          notificationId,
+          employeeId
+        }))
+      );
+    }
+  }
 
-    if (values.length > 0) await Notification.sequelize.query(`${query} ${values.join(', ')};`);
+  async markAllAsUnread({ employeeId }) {
+    await NotificationEmployee.destroy({
+      where: { employeeId }
+    });
   }
 
   private parseToListViewModel(models: Notification[]) {

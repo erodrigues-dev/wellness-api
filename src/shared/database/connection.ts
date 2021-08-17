@@ -23,6 +23,7 @@ import WorkoutLog from './models/WorkoutLog';
 import WorkoutExerciseLog from './models/WorkoutExerciseLog';
 import ActivityEmployee from './models/ActivityEmployee';
 import Notification from './models/Notification';
+import NotificationEmployee from './models/NotificationEmployee';
 
 const connection = new Sequelize(DB_CONFIG);
 
@@ -48,6 +49,7 @@ export function databaseConfig() {
   WorkoutExerciseLog.setup(connection);
   ActivityEmployee.setup(connection);
   Notification.setup(connection);
+  NotificationEmployee.setup(connection);
 
   Activity.setupAssociations();
   Event.setupAssociations();

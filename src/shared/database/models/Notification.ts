@@ -7,6 +7,7 @@ import {
   Sequelize
 } from 'sequelize';
 import Employee from './Employee';
+import NotificationEmployee from './NotificationEmployee';
 
 export default class Notification extends Model {
   id: number;
@@ -41,7 +42,9 @@ export default class Notification extends Model {
     });
 
     Notification.belongsToMany(Employee, {
-      through: 'notification_read_by_employees',
+      through: NotificationEmployee,
+      foreignKey: 'notificationId',
+      otherKey: 'employeeId',
       as: 'readBy'
     });
   }

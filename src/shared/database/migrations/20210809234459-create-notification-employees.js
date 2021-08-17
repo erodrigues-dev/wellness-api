@@ -7,7 +7,7 @@ module.exports = {
    * @param {QueryInterface} queryInterface
    */
   up: async queryInterface =>
-    queryInterface.createTable('notification_read_by_employees', {
+    queryInterface.createTable('notification_employees', {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -30,5 +30,5 @@ module.exports = {
       updated_at: DataTypes.DATE
     }),
 
-  down: async queryInterface => queryInterface.dropTable('notification_read_by_employees')
+  down: async queryInterface => queryInterface.dropTable('notification_employees')
 };

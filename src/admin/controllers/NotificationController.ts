@@ -52,14 +52,15 @@ export class NotificationController {
     }
   }
 
-  async listUnread(req: Request, res: Response, next: NextFunction) {
+  async listByEmployee(req: Request, res: Response, next: NextFunction) {
     try {
-      const list = await this.service.listUnread({
+      const list = await this.service.listByEmployee({
         page: Number(req.query.page) || null,
         limit: Number(req.query.limit) || null,
         employeeId: req.user.id
       });
-      return res.header('x-total-count', String(list.count)).json(list.rows);
+      return res.json(list);
+      // return res.header('x-total-count', String(list.count)).json(list.rows);
     } catch (error) {
       next(error);
     }
@@ -94,6 +95,17 @@ export class NotificationController {
   async markAllAsRead(req: Request, res: Response, next: NextFunction) {
     try {
       await this.service.markAllAsRead({
+        employeeId: req.user.id
+      });
+      return res.sendStatus(StatusCodes.OK);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async markAllAsUnread(req: Request, res: Response, next: NextFunction) {
+    try {
+      await this.service.markAllAsUnread({
         employeeId: req.user.id
       });
       return res.sendStatus(StatusCodes.OK);
