@@ -69,8 +69,8 @@ export class NotificationService {
       },
       where: { createdById: { [Op.ne]: employeeId } },
       order: [
-        [literal(`("Notification"."id" in (${reads.join(',') || -1}))`), 'ASC'],
-        ['createdAt', 'DESC']
+        ['createdAt', 'DESC'],
+        ['title', 'ASC']
       ]
     });
 
