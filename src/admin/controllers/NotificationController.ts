@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import socket from '../../socket';
 
 import { NotificationService } from '../../shared/services/NotificationService';
 
@@ -36,6 +37,7 @@ export class NotificationController {
         ...req.body,
         createdById: req.user.id
       });
+      socket.getInstance().emit('notification:created', { notification: req.body, createdBy: req.user.id });
       return res.sendStatus(StatusCodes.CREATED);
     } catch (error) {
       next(error);
@@ -60,7 +62,6 @@ export class NotificationController {
         employeeId: req.user.id
       });
       return res.json(list);
-      // return res.header('x-total-count', String(list.count)).json(list.rows);
     } catch (error) {
       next(error);
     }
