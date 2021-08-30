@@ -90,12 +90,12 @@ export class NotificationService {
 
   async markAsRead({ notificationId, employeeId }) {
     const model = await Notification.findByPk(notificationId, { attributes: ['id'] });
-    await model.addReadBy(employeeId);
+    if (model) await model.addReadBy(employeeId);
   }
 
   async markAsUnread({ notificationId, employeeId }) {
     const model = await Notification.findByPk(notificationId, { attributes: ['id'] });
-    await model.removeReadBy(employeeId);
+    if (model) await model.removeReadBy(employeeId);
   }
 
   async markAllAsRead({ employeeId }) {
