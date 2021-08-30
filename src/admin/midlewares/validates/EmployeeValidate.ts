@@ -17,15 +17,6 @@ router.get(
   })
 );
 
-router.get(
-  '/employees/:id',
-  celebrate({
-    [Segments.PARAMS]: Joi.object().keys({
-      id: Joi.number().required()
-    })
-  })
-);
-
 router.post(
   '/employees',
   celebrate({

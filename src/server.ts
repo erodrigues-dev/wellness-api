@@ -1,12 +1,15 @@
+import http from 'http';
+
 import app from './app';
+import socket from './socket';
 
-const server = app.listen(process.env.PORT || 3333);
+const port = process.env.PORT || 3333;
+const server = http.createServer(app);
+server.listen(port, () => console.log(`>> listen on port ${port}`));
 
-server.on('error', (err: Error) => {
-  console.log('>>> uncaught error');
-  console.log(err);
+socket.initialize(server);
+
+process.on('uncaughtException', function (err) {
+  console.log('uncaughtException');
+  console.error(err.stack);
 });
-
-server.on('listening', () =>
-  console.log('>> listening on port ' + process.env.PORT || 3333)
-);

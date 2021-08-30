@@ -226,4 +226,24 @@ export class Permission {
     group: 'Workout',
     name: 'Delete workout profiles'
   };
+
+  static readonly NotificationList: PermissionItem = {
+    id: 2 ** 32,
+    group: 'Notification',
+    name: 'List notifications'
+  };
+
+  static readonly NotificationCreateUpdate: PermissionItem = {
+    id: 2 ** 33,
+    group: 'Notification',
+    name: 'Create/Update notifications'
+  };
+
+  static readonly NotificationDelete: PermissionItem = {
+    id: 2 ** 34,
+    group: 'Notification',
+    name: 'Delete notifications'
+  };
+
+  //! MAX_VALUE <52> Ex. 2 ** 52
 }
