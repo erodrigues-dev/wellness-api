@@ -9,9 +9,8 @@ export class OrderController {
 
   async index(req: Request, res: Response, next: NextFunction) {
     try {
-      const { page, limit, customerId } = this.parseIndexParams(req);
-
-      const data = await this.service.list(page, limit, customerId);
+      const params = this.parseIndexParams(req);
+      const data = await this.service.list(params);
       return res.header('x-total-count', data.count.toString()).json(data.rows);
     } catch (error) {
       next(error);
@@ -43,7 +42,8 @@ export class OrderController {
     return {
       page: Number(req.query.page),
       limit: Number(req.query.limit),
-      customerId: Number(req.query.customerId) ?? undefined
+      customerId: Number(req.query.customerId) || null,
+      customerName: (req.query.customerName as string) || null
     };
   }
 }

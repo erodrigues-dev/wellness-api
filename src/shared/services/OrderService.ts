@@ -1,21 +1,20 @@
-import { FindOptions } from 'sequelize/types';
+import { FindOptions, Op, literal } from 'sequelize';
 import CustomError from '../custom-error/CustomError';
-import Customer from '../database/models/Customer';
 import Order from '../database/models/Order';
 import { PaginateList } from '../models/base/PaginateList';
 import { OrderDetailViewModel } from '../models/viewmodels/OrderDetailViewModel';
 import { OrderListViewModel } from '../models/viewmodels/OrderListViewModel';
+import { getPaginateOptions } from '../utils/getPaginateOptions';
 
 export class OrderService {
-  async list(
-    page: number = null,
-    limit: number = null,
-    customerId: number = null
-  ): Promise<PaginateList<OrderListViewModel>> {
-    const filter = {};
-    if (customerId) filter['customerId'] = customerId;
+  async list({ page, limit, customerName, customerId }): Promise<PaginateList<OrderListViewModel>> {
+    const filterByCustomer = {};
+
+    if (customerId) filterByCustomer['id'] = customerId;
+    if (customerName && !customerId) filterByCustomer['name'] = { [Op.iLike]: `%${customerName}%` };
 
     const findOptions: FindOptions = {
+      ...getPaginateOptions(page, limit),
       include: [
         {
           association: 'orderActivities',
@@ -31,17 +30,12 @@ export class OrderService {
         },
         {
           association: 'customer',
-          attributes: ['id', 'name']
+          attributes: ['id', 'name'],
+          where: filterByCustomer
         }
       ],
-      where: filter,
       order: [['createdAt', 'DESC']]
     };
-
-    if (!!page && !!limit) {
-      findOptions.limit = limit;
-      findOptions.offset = (page - 1) * limit;
-    }
 
     const { count, rows } = await Order.findAndCountAll(findOptions);
 
