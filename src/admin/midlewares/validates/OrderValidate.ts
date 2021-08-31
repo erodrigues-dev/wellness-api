@@ -7,6 +7,7 @@ router.get(
   '/orders',
   celebrate({
     [Segments.QUERY]: Joi.object().keys({
+      customerName: Joi.string().optional().allow(''),
       customerId: Joi.number().optional().allow(''),
       page: Joi.number().min(1).optional(),
       limit: Joi.number().min(1).optional()
