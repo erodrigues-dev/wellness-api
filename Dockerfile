@@ -2,7 +2,7 @@ FROM node:14-alpine AS builder
 
 WORKDIR /usr/build
 COPY package.json ./
-RUN npm i
+RUN npm i --save-exact
 
 COPY . .
 
