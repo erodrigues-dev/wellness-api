@@ -10,7 +10,7 @@ import Package from './Package';
 export default class OrderPackage extends Model {
   id: number;
   orderId: number;
-  packageId: number;
+  packageId?: number;
   name: string;
   price: number;
   description: string;
