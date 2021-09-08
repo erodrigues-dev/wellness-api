@@ -245,5 +245,11 @@ export class Permission {
     name: 'Delete notifications'
   };
 
+  static readonly PackageDelete: PermissionItem = {
+    id: 2 ** 35,
+    group: 'Packages',
+    name: 'Delete packages'
+  };
+
   //! MAX_VALUE <52> Ex. 2 ** 52
 }
