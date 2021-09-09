@@ -43,7 +43,8 @@ export class PackageService implements IPackageService {
           association: Package.associations.activities,
           where: { ...whereActivity }
         }
-      ]
+      ],
+      distinct: true
     });
   }
 
