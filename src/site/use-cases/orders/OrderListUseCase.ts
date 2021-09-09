@@ -34,7 +34,7 @@ export class OrderListUseCase {
     const values = isPackage ? order.orderPackages[0] : order.orderActivities[0];
     const name = values.name;
     const description = values.description;
-    const image_url = isPackage ? values['package'].imageUrl : values['activity'].imageUrl;
+    const image_url = (isPackage ? values['package']?.imageUrl : values['activity']?.imageUrl) || null;
     const recurrency = values['recurrencyPay'];
     const package_type = values['type'];
     const package_total = values['total'];
@@ -121,7 +121,9 @@ export class OrderListUseCase {
 
       const title = order.type === OrderItemTypeEnum.Package ? orderPackage.name : orderActivity.name;
       const image_url =
-        order.type === OrderItemTypeEnum.Package ? orderPackage.package.imageUrl : orderActivity.activity.imageUrl;
+        (order.type === OrderItemTypeEnum.Package
+          ? orderPackage.package?.imageUrl
+          : orderActivity.activity?.imageUrl) || null;
       const category =
         order.type === OrderItemTypeEnum.Package ? orderPackage.category.name : orderActivity.category.name;
 
