@@ -1,9 +1,9 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Response, Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import { PackageDTO } from '../../shared/models/dto/PackageDTO';
 import IPackageService from '../../shared/services/interfaces/IPackageService';
-import packageService from '../../shared/services/PackageService';
+import packageService, { PackageService } from '../../shared/services/PackageService';
 import { PackageUseCase } from '../../shared/useCases/package/PackageUseCase';
 import IPackageController, {
   IGetRequest,
@@ -12,8 +12,8 @@ import IPackageController, {
   IUpdateRequest
 } from './interfaces/IPackageController';
 
-export class PackageController implements IPackageController {
-  constructor(private service: IPackageService) {}
+export class PackageController {
+  constructor(private service: PackageService) {}
 
   async index(req: IIndexRequest, res: Response, next: NextFunction): Promise<Response> {
     try {
@@ -57,6 +57,16 @@ export class PackageController implements IPackageController {
       await new PackageUseCase(dto).update();
 
       return res.status(StatusCodes.NO_CONTENT).json();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async destroy(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      await this.service.destroy(Number(id));
+      return res.sendStatus(204);
     } catch (error) {
       next(error);
     }

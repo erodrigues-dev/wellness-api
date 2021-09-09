@@ -6,11 +6,7 @@ import IPackage, { IPackageWithIncludes } from '../models/entities/IPackage';
 import IPackageService, { IFilter } from './interfaces/IPackageService';
 
 export class PackageService implements IPackageService {
-  async list(
-    filter: IFilter,
-    page: number = null,
-    limit: number = null
-  ): Promise<IPackage[]> {
+  async list(filter: IFilter, page: number = null, limit: number = null): Promise<IPackage[]> {
     const [where, whereActivity] = this.buildQuery(filter);
 
     const findOptions: FindOptions = {
@@ -47,7 +43,8 @@ export class PackageService implements IPackageService {
           association: Package.associations.activities,
           where: { ...whereActivity }
         }
-      ]
+      ],
+      distinct: true
     });
   }
 
@@ -68,24 +65,23 @@ export class PackageService implements IPackageService {
     return this.serialize(model);
   }
 
+  async destroy(id: number): Promise<void> {
+    await Package.destroy({
+      where: { id }
+    });
+  }
+
   private serialize(item: Package) {
-    const {
-      activities,
-      price,
-      total,
-      ...restPackage
-    } = item.toJSON() as IPackageWithIncludes;
+    const { activities, price, total, ...restPackage } = item.toJSON() as IPackageWithIncludes;
     return <IPackageWithIncludes>{
       ...restPackage,
       price: Number(price),
       total: Number(total) || null,
-      activities: activities.map(
-        ({ PackageActivity, price, ...restActivity }) => ({
-          ...restActivity,
-          price: Number(price) || null,
-          quantity: PackageActivity?.quantity
-        })
-      )
+      activities: activities.map(({ PackageActivity, price, ...restActivity }) => ({
+        ...restActivity,
+        price: Number(price) || null,
+        quantity: PackageActivity?.quantity
+      }))
     };
   }
 
@@ -95,8 +91,7 @@ export class PackageService implements IPackageService {
 
     if (filter.name) where['name'] = { [Op.iLike]: `%${filter.name}%` };
 
-    if (filter.activityName)
-      whereActivity['name'] = { [Op.iLike]: `%${filter.activityName}%` };
+    if (filter.activityName) whereActivity['name'] = { [Op.iLike]: `%${filter.activityName}%` };
 
     if (filter.categoryId) where['categoryId'] = filter.categoryId;
 

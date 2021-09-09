@@ -28,7 +28,7 @@ export class ProductListUseCase {
       hasNextPage: result.length > limit,
       rows: result
         .slice(0, limit)
-        .map(item => ({ ...item, price: Number(item.price) }))
+        .map(item => ({ ...item, price: Number(item.price), image_url: item.image_url || null }))
     };
   }
 }

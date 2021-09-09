@@ -46,7 +46,10 @@ export class ProductSearchUseCase {
 
     return {
       hasNextPage: result.length > limit,
-      rows: result.slice(0, limit)
+      rows: result.slice(0, limit).map(item => ({
+        ...item,
+        image_url: item.image_url || null
+      }))
     };
   }
 
