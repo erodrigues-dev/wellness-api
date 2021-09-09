@@ -102,6 +102,12 @@ export class Permission {
     name: 'Create/Update packages'
   };
 
+  static readonly PackageDelete: PermissionItem = {
+    id: 2 ** 35,
+    group: 'Packages',
+    name: 'Delete packages'
+  };
+
   // - settings
 
   static readonly EmployeeList: PermissionItem = {
@@ -245,11 +251,7 @@ export class Permission {
     name: 'Delete notifications'
   };
 
-  static readonly PackageDelete: PermissionItem = {
-    id: 2 ** 35,
-    group: 'Packages',
-    name: 'Delete packages'
-  };
+  //! last-value 2 ** 35
 
   //! MAX_VALUE <52> Ex. 2 ** 52
 }
