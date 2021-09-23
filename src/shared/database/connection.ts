@@ -24,6 +24,8 @@ import WorkoutExerciseLog from './models/WorkoutExerciseLog';
 import ActivityEmployee from './models/ActivityEmployee';
 import Notification from './models/Notification';
 import NotificationEmployee from './models/NotificationEmployee';
+import Calendar from './models/Calendar';
+import CalendarAvailability from './models/CalendarAvailability';
 
 const connection = new Sequelize(DB_CONFIG);
 
@@ -50,6 +52,8 @@ export function databaseConfig() {
   ActivityEmployee.setup(connection);
   Notification.setup(connection);
   NotificationEmployee.setup(connection);
+  Calendar.setup(connection);
+  CalendarAvailability.setup(connection);
 
   Activity.setupAssociations();
   Event.setupAssociations();
@@ -69,6 +73,8 @@ export function databaseConfig() {
   WorkoutLog.setupAssociations();
   WorkoutExerciseLog.setupAssociations();
   Notification.setupAssociations();
+  Calendar.setupAssociations();
+  CalendarAvailability.setupAssociations();
 }
 
 export default connection;
