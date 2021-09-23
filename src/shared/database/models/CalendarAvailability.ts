@@ -1,7 +1,7 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { Calendar } from './Calendar';
+import Calendar from './Calendar';
 
-export class CalendarAvailability extends Model {
+export default class CalendarAvailability extends Model {
   id: number;
   calendarId: number;
   startDate: Date;
