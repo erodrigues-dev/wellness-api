@@ -24,7 +24,7 @@ module.exports = {
         type: DataTypes.DATE,
         allowNull: false
       },
-      recurrency: {
+      recurrence: {
         type: DataTypes.STRING(255),
         allowNull: true
       },
