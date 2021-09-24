@@ -18,6 +18,7 @@ import waiverRouter from './WaiverRouter';
 import customerWaiverRouter from './CustomerWaiverRouter';
 import workoutRouter from './WorkoutRouter';
 import notificationRouter from './NotificationRouter';
+import calendarRouter from './CalendarRouter';
 
 const router = Router();
 
@@ -39,5 +40,6 @@ router.use(waiverRouter);
 router.use(customerWaiverRouter);
 router.use(workoutRouter);
 router.use(notificationRouter);
+router.use(calendarRouter);
 
 export default router;
