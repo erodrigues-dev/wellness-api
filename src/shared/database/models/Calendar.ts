@@ -24,7 +24,7 @@ export default class Calendar extends Model {
         maxDaysInFuture: DataTypes.INTEGER,
         maxEntryPerSlot: DataTypes.INTEGER
       },
-      { sequelize: connection, tableName: 'calendars' }
+      { sequelize: connection, tableName: 'calendars', paranoid: true }
     );
   }
 
