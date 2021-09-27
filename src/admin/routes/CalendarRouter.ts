@@ -9,7 +9,7 @@ const router = Router();
 router.get('/calendars', bindRoute(controller, 'index'));
 router.get('/calendars/:id', bindRoute(controller, 'get'));
 router.post('/calendars', bindRoute(controller, 'store'));
-router.put('/calendars', bindRoute(controller, 'update'));
+router.put('/calendars/:id', bindRoute(controller, 'update'));
 router.delete('/calendars/:id', bindRoute(controller, 'destroy'));
 
 export default router;
