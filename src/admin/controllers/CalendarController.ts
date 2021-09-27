@@ -1,6 +1,7 @@
 import { Joi } from 'celebrate';
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import CustomError from '../../shared/custom-error/CustomError';
 import { CalendarService } from '../../shared/services/CalendarService';
 
 const storeSchema = Joi.object({
@@ -32,6 +33,7 @@ export class CalendarController {
     try {
       const { id } = req.params;
       const model = await this.service.get(id);
+      if (!model) throw new CustomError('Calendar not found', 404);
       return res.json(model);
     } catch (error) {
       next(error);
