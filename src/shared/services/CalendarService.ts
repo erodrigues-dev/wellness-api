@@ -1,9 +1,29 @@
 import Calendar from '../database/models/Calendar';
 import CustomError from '../custom-error/CustomError';
+import { getPaginateOptions } from '../utils/getPaginateOptions';
+import { Op } from 'sequelize';
 
 export class CalendarService {
-  async list() {
-    return await Calendar.findAll();
+  async list({ name, categoryName, page, limit }) {
+    const where = {};
+    if (name) where['name'] = { [Op.iLike]: `%${name}%` };
+
+    const categoryWhere = {};
+    if (categoryName) categoryWhere['name'] = { [Op.iLike]: `%${categoryName}%` };
+
+    return await Calendar.findAndCountAll({
+      ...getPaginateOptions(page, limit),
+      attributes: {
+        exclude: ['categoryId', 'deletedAt']
+      },
+      where,
+      include: {
+        association: 'category',
+        attributes: ['id', 'name'],
+        where: categoryWhere
+      },
+      order: ['name']
+    });
   }
 
   async get(id) {
@@ -12,7 +32,6 @@ export class CalendarService {
 
   async create(data) {
     const model = await Calendar.create(data);
-
     return model.id;
   }
 

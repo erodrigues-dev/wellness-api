@@ -22,8 +22,9 @@ export class CalendarController {
 
   async index(req: Request, res: Response, next: NextFunction) {
     try {
-      const list = await this.service.list();
-      return res.json(list);
+      const { name, categoryName, page, limit } = req.query;
+      const { count, rows } = await this.service.list({ name, categoryName, page, limit });
+      return res.header('x-total-count', String(count)).json(rows);
     } catch (error) {
       next(error);
     }
