@@ -29,7 +29,7 @@ router.post(
   celebrate({
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().required(),
-      type: Joi.string().required().valid('activity', 'package')
+      type: Joi.string().required().valid('activity', 'package', 'calendar')
     })
   })
 );
@@ -38,7 +38,7 @@ router.put(
   '/categories',
   celebrate({
     [Segments.BODY]: Joi.object().keys({
-      id: Joi.number().min(1).required(),
+      id: Joi.number().required(),
       name: Joi.string().required()
     })
   })

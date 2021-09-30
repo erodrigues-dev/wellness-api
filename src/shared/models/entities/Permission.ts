@@ -215,6 +215,27 @@ export class Permission {
     name: 'Delete waivers'
   };
 
+  static readonly CalendarList: PermissionItem = {
+    id: 2 ** 36,
+    group: 'Settings',
+    subgroup: 'Calendar',
+    name: 'List Calendars'
+  };
+
+  static readonly CalendarCreateUpdate: PermissionItem = {
+    id: 2 ** 37,
+    group: 'Settings',
+    subgroup: 'Calendar',
+    name: 'Create/Update Calendars'
+  };
+
+  static readonly CalendarDelete: PermissionItem = {
+    id: 2 ** 38,
+    group: 'Settings',
+    subgroup: 'Calendar',
+    name: 'Delete Calendars'
+  };
+
   static readonly WorkoutProfileList: PermissionItem = {
     id: 2 ** 29,
     group: 'Workout',
@@ -251,7 +272,7 @@ export class Permission {
     name: 'Delete notifications'
   };
 
-  //! last-value 2 ** 35
+  //! last-value 2 ** 38
 
   //! MAX_VALUE <52> Ex. 2 ** 52
 }
