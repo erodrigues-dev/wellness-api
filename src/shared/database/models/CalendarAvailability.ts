@@ -6,7 +6,8 @@ export default class CalendarAvailability extends Model {
   calendarId: number;
   startDate: Date;
   endDate: Date;
-  recurrence: string;
+  recurrenceRule: string;
+  recurrenceExceptions: string;
   status: string;
 
   createdAt: Date;
@@ -19,7 +20,8 @@ export default class CalendarAvailability extends Model {
       {
         startDate: DataTypes.DATE,
         endDate: DataTypes.DATE,
-        recurrence: DataTypes.STRING,
+        recurrenceRule: DataTypes.STRING,
+        recurrenceExceptions: DataTypes.STRING,
         status: DataTypes.STRING
       },
       { sequelize: connection, tableName: 'calendar_availabilities' }

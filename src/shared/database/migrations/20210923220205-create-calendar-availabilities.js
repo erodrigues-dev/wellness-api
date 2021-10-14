@@ -24,12 +24,16 @@ module.exports = {
         type: DataTypes.DATE,
         allowNull: false
       },
-      recurrence: {
-        type: DataTypes.STRING(255),
+      recurrenceRule: {
+        type: DataTypes.STRING(1024),
+        allowNull: true
+      },
+      recurrenceExceptions: {
+        type: DataTypes.STRING(1024),
         allowNull: true
       },
       status: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(128),
         allowNull: false
       },
       created_at: DataTypes.DATE,
