@@ -6,10 +6,10 @@ import { makeCalendarAvailabilityController } from '../controllers/CalendaAvaila
 const controller = makeCalendarAvailabilityController();
 const router = Router();
 
-router.get('/calendars/:calendarId/availabilities', bindRoute(controller, 'index'));
-router.get('/calendars/:calendarId/availabilities/:id', bindRoute(controller, 'get'));
-router.post('/calendars/:calendarId/availabilities', bindRoute(controller, 'store'));
-router.put('/calendars/:calendarId/availabilities/:id', bindRoute(controller, 'update'));
-router.delete('/calendars/:calendarId/availabilities/:id', bindRoute(controller, 'destroy'));
+// router.get('/calendars/:calendarId/availabilities', bindRoute(controller, 'index'));
+// router.get('/calendars/:calendarId/availabilities/:id', bindRoute(controller, 'get'));
+router.post('/calendars/:calendarId/slots', bindRoute(controller, 'store'));
+// router.put('/calendars/:calendarId/availabilities/:id', bindRoute(controller, 'update'));
+// router.delete('/calendars/:calendarId/availabilities/:id', bindRoute(controller, 'destroy'));
 
 export default router;
