@@ -2,10 +2,10 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import Calendar from './Calendar';
 
 export default class CalendarAvailability extends Model {
-  id: number;
+  id: string;
   calendarId: number;
-  startDate: Date;
-  endDate: Date;
+  start: Date;
+  end: Date;
   recurrenceRule: string;
   recurrenceExceptions: string;
   status: string;
@@ -18,8 +18,8 @@ export default class CalendarAvailability extends Model {
   static setup(connection: Sequelize) {
     CalendarAvailability.init(
       {
-        startDate: DataTypes.DATE,
-        endDate: DataTypes.DATE,
+        start: DataTypes.DATE,
+        end: DataTypes.DATE,
         recurrenceRule: DataTypes.STRING,
         recurrenceExceptions: DataTypes.STRING,
         status: DataTypes.STRING

@@ -1,14 +1,14 @@
-const { QueryInterface, DataTypes } = require('sequelize');
+const { QueryInterface, DataTypes, fn } = require('sequelize');
 
 module.exports = {
   /** @param {QueryInterface} queryInterface */
   up: async queryInterface => {
     await queryInterface.createTable('calendar_availabilities', {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
-        autoIncrement: true
+        defaultValue: fn('uuid_generate_v4')
       },
       calendar_id: {
         type: DataTypes.INTEGER,
@@ -16,19 +16,19 @@ module.exports = {
         references: { model: 'calendars' },
         onDelete: 'CASCADE'
       },
-      start_date: {
+      start: {
         type: DataTypes.DATE,
         allowNull: false
       },
-      end_date: {
+      end: {
         type: DataTypes.DATE,
         allowNull: false
       },
-      recurrenceRule: {
+      recurrence_rule: {
         type: DataTypes.STRING(1024),
         allowNull: true
       },
-      recurrenceExceptions: {
+      recurrence_exceptions: {
         type: DataTypes.STRING(1024),
         allowNull: true
       },
