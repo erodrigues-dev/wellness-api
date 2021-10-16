@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
-import { CalendarAvailabilityAdminUseCase } from '../../shared/useCases/calendar/availability/CalendarAvailabilityAdminUseCase';
+import { CalendarSlotListUseCase } from '../../shared/useCases/calendar/slots/CalendarSlotListUseCase';
+import { CalendarSlotStoreUseCase } from '../../shared/useCases/calendar/slots/CalendarSlotStoreUseCase';
 
 const itemSchema = Joi.object({
   id: Joi.string().uuid().required(),
@@ -18,12 +19,23 @@ const schema = Joi.object({
   deleted: Joi.array().items(itemSchema)
 });
 
-export class CalendarAvailabilityController {
+export class CalendarSlotController {
+  async index(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { calendarId } = req.params;
+      const useCase = new CalendarSlotListUseCase();
+      const list = await useCase.list(calendarId);
+      return res.json(list);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async store(req: Request, res: Response, next: NextFunction) {
     try {
       const { calendarId } = req.params;
       const data = await schema.validateAsync({ calendarId, ...req.body });
-      const useCase = new CalendarAvailabilityAdminUseCase();
+      const useCase = new CalendarSlotStoreUseCase();
       await useCase.handle(data);
       return res.sendStatus(204);
     } catch (error) {
@@ -32,4 +44,4 @@ export class CalendarAvailabilityController {
   }
 }
 
-export const makeCalendarAvailabilityController = () => new CalendarAvailabilityController();
+export const makeCalendarSlotController = () => new CalendarSlotController();

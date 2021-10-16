@@ -3,7 +3,7 @@ const { QueryInterface, DataTypes, fn } = require('sequelize');
 module.exports = {
   /** @param {QueryInterface} queryInterface */
   up: async queryInterface => {
-    await queryInterface.createTable('calendar_availabilities', {
+    await queryInterface.createTable('calendars_slots', {
       id: {
         type: DataTypes.UUID,
         allowNull: false,
@@ -43,6 +43,6 @@ module.exports = {
 
   /** @param {QueryInterface} queryInterface */
   down: async queryInterface => {
-    await queryInterface.dropTable('calendar_availabilities');
+    await queryInterface.dropTable('calendars_slots');
   }
 };

@@ -1,7 +1,7 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import Calendar from './Calendar';
 
-export default class CalendarAvailability extends Model {
+export default class CalendarSlot extends Model {
   id: string;
   calendarId: number;
   start: Date;
@@ -16,7 +16,7 @@ export default class CalendarAvailability extends Model {
   calendar?: Calendar;
 
   static setup(connection: Sequelize) {
-    CalendarAvailability.init(
+    CalendarSlot.init(
       {
         start: DataTypes.DATE,
         end: DataTypes.DATE,
@@ -24,12 +24,12 @@ export default class CalendarAvailability extends Model {
         recurrenceExceptions: DataTypes.STRING,
         status: DataTypes.STRING
       },
-      { sequelize: connection, tableName: 'calendar_availabilities' }
+      { sequelize: connection, tableName: 'calendars_slots' }
     );
   }
 
   static setupAssociations() {
-    CalendarAvailability.belongsTo(Calendar, {
+    CalendarSlot.belongsTo(Calendar, {
       as: 'calendar',
       foreignKey: 'calendarId'
     });

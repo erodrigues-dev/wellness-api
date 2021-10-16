@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { bindRoute } from '../../shared/utils/bindRoute';
 
-import { makeCalendarAvailabilityController } from '../controllers/CalendaAvailabilityController';
+import { makeCalendarSlotController } from '../controllers/CalendaSlotController';
 
-const controller = makeCalendarAvailabilityController();
+const controller = makeCalendarSlotController();
 const router = Router();
 
-// router.get('/calendars/:calendarId/availabilities', bindRoute(controller, 'index'));
+router.get('/calendars/:calendarId/slots', bindRoute(controller, 'index'));
 // router.get('/calendars/:calendarId/availabilities/:id', bindRoute(controller, 'get'));
 router.post('/calendars/:calendarId/slots', bindRoute(controller, 'store'));
 // router.put('/calendars/:calendarId/availabilities/:id', bindRoute(controller, 'update'));
