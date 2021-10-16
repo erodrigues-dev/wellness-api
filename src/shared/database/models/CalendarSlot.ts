@@ -3,7 +3,7 @@ import Calendar from './Calendar';
 
 export default class CalendarSlot extends Model {
   id: string;
-  calendarId: number;
+  calendarId: string;
   start: Date;
   end: Date;
   recurrenceRule: string;

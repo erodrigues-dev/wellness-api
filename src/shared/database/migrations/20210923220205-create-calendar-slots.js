@@ -11,7 +11,7 @@ module.exports = {
         defaultValue: fn('uuid_generate_v4')
       },
       calendar_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         allowNull: false,
         references: { model: 'calendars' },
         onDelete: 'CASCADE'
