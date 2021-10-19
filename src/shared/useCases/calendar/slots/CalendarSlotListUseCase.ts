@@ -15,7 +15,8 @@ export class CalendarSlotListUseCase {
       start: item.start,
       end: item.end,
       recurrenceRule: item.recurrenceRule,
-      recurrenceExceptions: JSON.parse(item.recurrenceExceptions || '[]')
+      recurrenceExceptions: JSON.parse(item.recurrenceExceptions || '[]'),
+      status: item.status
     };
   }
 }
