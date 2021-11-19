@@ -60,7 +60,7 @@ export class ProductSearchUseCase {
       raw: true
     });
 
-    console.log(JSON.stringify(result));
+    // TODO filtrar por type in [ activity, package ]
 
     return result.map(item => item.lname).sort();
   }

@@ -8,12 +8,7 @@ import ICategoryService from './interfaces/ICategoryService';
 export class CategoryService implements ICategoryService {
   private db = Category;
 
-  list(
-    name: string,
-    type: string,
-    page: number = null,
-    limit: number = null
-  ): Promise<ICategory[]> {
+  list(name: string, type: string, page: number = null, limit: number = null): Promise<ICategory[]> {
     const where = this.buildQuery(name, type);
 
     const findOptions: FindOptions = {
@@ -48,7 +43,7 @@ export class CategoryService implements ICategoryService {
 
   async update(category: ICategory): Promise<void> {
     const model: Category = await this.db.findByPk(category.id);
-    if (!model) throw new CustomError('Category nto found', 404);
+    if (!model) throw new CustomError('Category not found', 404);
 
     model.name = category.name;
 
