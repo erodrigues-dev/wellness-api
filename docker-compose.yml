@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  api:
+    restart: always
+    build: .
+    ports:
+      - 3333:3333
+    volumes:
+      - ./.env:/usr/app/.env
+      - ./google-cloud-key.json:/usr/app/google-cloud-key.json
+    command: sh -c "npm run migration:up && npm start"

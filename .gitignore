@@ -1,3 +1,7 @@
 node_modules
 .env
-.package-lock.json
+.env.local
+package-lock.json
+google-cloud-key.json
+dist/
+*.log
