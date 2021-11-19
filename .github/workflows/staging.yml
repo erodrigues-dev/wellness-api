@@ -39,7 +39,7 @@ jobs:
           scp wellness_api.tar.gz $USER@$SERVER:/www/wellness/api
       - name: Load image in server
         run: >
-          ssh $USER@SERVER -t
+          ssh $USER@$SERVER -t
           "cd /www/wellness/api;
           ls -la;"
           # docker load -i wellness_api.tar.gz;
