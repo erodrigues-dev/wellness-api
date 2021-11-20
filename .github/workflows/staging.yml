@@ -49,8 +49,8 @@ jobs:
           docker stop wellness_api;
           docker rm wellness_api;
           docker run -dit
-          -v $(pwd)/.env:/usr/app/.env
-          -v $(pwd)/google-cloud-key.json:/usr/app/google-cloud-key.json
+          -v /www/wellness/api/.env:/usr/app/.env
+          -v /www/wellness/api/google-cloud-key.json:/usr/app/google-cloud-key.json
           -p 3333:3333
           --restart unless-stopped
           --name wellness_api
