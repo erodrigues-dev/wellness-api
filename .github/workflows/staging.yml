@@ -46,6 +46,8 @@ jobs:
         run: >
           ssh $USER@$SERVER -t "
           cd /www/wellness/api;
+          docker stop wellness_api;
+          docker rm wellness_api;
           docker run -dit
           -v $(pwd)/.env:/usr/app/.env
           -v $(pwd)/google-cloud-key.json:/usr/app/google-cloud-key.json
