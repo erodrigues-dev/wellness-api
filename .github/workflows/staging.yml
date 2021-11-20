@@ -37,10 +37,19 @@ jobs:
         run: |
           ls -la
           scp wellness_api.tar.gz $USER@$SERVER:/www/wellness/api
-      - name: Load image in server
+      - name: Load docker image in server
         run: >
-          ssh $USER@$SERVER -t
-          "cd /www/wellness/api;
-          ls -la;
-          docker load -i wellness_api.tar.gz;
-          docker run -dit --name wellness_api -p 3333:3333 --restart always wellness/api"
+          ssh $USER@$SERVER -t "
+          cd /www/wellness/api;
+          docker load -i wellness_api.tar.gz;"
+      - name: Start docker container
+        run: >
+          ssh $USER@$SERVER -t "
+          cd /www/wellness/api;
+          docker run -d
+          --name wellness_api
+          -p 3333:3333
+          -v $(pwd)/.env:/usr/app/.env
+          -v $(pwd)/google-cloud-key.json:/usr/app/google-cloud-key.json
+          --restart unless-stopped
+          wellness/api;"
