@@ -46,10 +46,10 @@ jobs:
         run: >
           ssh $USER@$SERVER -t "
           cd /www/wellness/api;
-          docker run -d
-          --name wellness_api
-          -p 3333:3333
+          docker run -dit
           -v $(pwd)/.env:/usr/app/.env
           -v $(pwd)/google-cloud-key.json:/usr/app/google-cloud-key.json
+          -p 3333:3333
           --restart unless-stopped
-          wellness/api;"
+          --name wellness_api
+          wellness/api"
