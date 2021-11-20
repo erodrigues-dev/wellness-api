@@ -41,6 +41,6 @@ jobs:
         run: >
           ssh $USER@$SERVER -t
           "cd /www/wellness/api;
-          ls -la;"
-          # docker load -i wellness_api.tar.gz;
-          # docker run -dit --name wellness_api -p 3333:3333 --restart always wellness/api"
+          ls -la;
+          docker load -i wellness_api.tar.gz;
+          docker run -dit --name wellness_api -p 3333:3333 --restart always wellness/api"
