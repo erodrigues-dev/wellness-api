@@ -9,7 +9,6 @@ env:
 
 jobs:
   build:
-    needs: generate_config_files
     name: Build docker image
     runs-on: ubuntu-latest
     steps:
