@@ -14,11 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Generate config files
+        env:
+          ENV_FILE: ${{ secrets.STG_ENV_FILE }}
+          GC_KEY: ${{ secrets.STG_GOOGLE_CLOUD_KEY }}
         run: |
-          echo ${{secrets.STG_ENV_FILE}} >> .env
-          echo ${{secrets.STG_GOOGLE_CLOUD_KEY}} >> google-cloud-key.json
+          echo $ENV_FILE > .env
+          echo $GC_KEY > google-cloud-key.json
       - name: Build docker image
-        run: docker build -t wellness/api -f ./Dockerfile
+        run: docker build -t wellness/api .
       - name: Export docker image
         run: docker save wellness/api | gzip > wellness_api.tar.gz
       - uses: actions/upload-artifact@v2
