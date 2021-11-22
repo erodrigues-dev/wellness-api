@@ -18,6 +18,9 @@ COPY --from=builder /usr/build/package*.json ./
 COPY --from=builder /usr/build/.sequelize* ./
 COPY --from=builder /usr/build/dist ./src
 
+COPY .env .
+COPY google-cloud-key.json .
+
 EXPOSE 3333
 
 CMD ["npm", "start"]
