@@ -7,6 +7,8 @@ import { squareCustomerService } from '../../../square/services/index';
 import { generateTempPassword } from '../../../utils/hash-password';
 import { CreateCustomerModel } from './CreateCustomerModel';
 
+import { ENV } from '../../../config/env';
+
 export default class CreateCustomerUseCase {
   private customer: Customer;
   private squareCustomer: SquareCustomer;
@@ -52,6 +54,8 @@ export default class CreateCustomerUseCase {
   }
 
   private async sendEmail(): Promise<void> {
+    if (!ENV.SEND_EMAIL_SIGNUP_CUSTOMER) return Promise.resolve();
+
     await sendEmailSignUp.send({
       name: this.customer.name,
       email: this.customer.email,
