@@ -48,4 +48,4 @@ jobs:
         run: >
           ssh $USER@$SERVER -t "
           cd /var/www/api.wellness.com;
-          docker-compose -p wellness up -d;"
+          docker-compose up -d;"
