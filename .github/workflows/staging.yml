@@ -13,13 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Generate config files
-        env:
-          ENV_FILE: ${{ secrets.STG_ENV_FILE }}
-          GC_KEY: ${{ secrets.STG_GOOGLE_CLOUD_KEY }}
-        run: |
-          echo $ENV_FILE > .env
-          echo $GC_KEY > google-cloud-key.json
       - name: Build docker image
         run: docker build -t wellness/api .
       - name: Export docker image
