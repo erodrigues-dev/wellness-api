@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { DestroyTeamGroupUseCase } from '../../shared/useCases/team-group/DestroyTeamGroupUseCase';
 import { TeamGroupCreateUseCase } from '../../shared/useCases/team-group/TeamGroupCreateUseCase';
 import { TeamGroupListUseCase } from '../../shared/useCases/team-group/TeamGroupListUseCase';
 import { TeamGroupUpdateUseCase } from '../../shared/useCases/team-group/TeamGroupUpdateUseCase';
@@ -19,7 +20,7 @@ export class TeamGroupController {
     try {
       const usecase = new TeamGroupCreateUseCase();
       const data = await usecase.handle(req.body);
-      return res.json(data);
+      return res.status(201).json(data);
     } catch (error) {
       next(error);
     }
@@ -40,7 +41,9 @@ export class TeamGroupController {
 
   async destroy(req: Request, res: Response, next: NextFunction) {
     try {
-      return res.sendStatus(200);
+      const usecase = new DestroyTeamGroupUseCase();
+      await usecase.handle(req.params.id);
+      return res.sendStatus(204);
     } catch (error) {
       next(error);
     }
