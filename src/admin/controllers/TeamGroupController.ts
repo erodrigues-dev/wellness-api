@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { DestroyTeamGroupUseCase } from '../../shared/useCases/team-group/DestroyTeamGroupUseCase';
+import { GetTeamGroupUseCase } from '../../shared/useCases/team-group/GetTeamGroupUseCase';
 import { TeamGroupCreateUseCase } from '../../shared/useCases/team-group/TeamGroupCreateUseCase';
 import { TeamGroupListUseCase } from '../../shared/useCases/team-group/TeamGroupListUseCase';
 import { TeamGroupUpdateUseCase } from '../../shared/useCases/team-group/TeamGroupUpdateUseCase';
@@ -11,6 +12,16 @@ export class TeamGroupController {
       const usecase = new TeamGroupListUseCase();
       const data = await usecase.list({ page, limit, name, memberName });
       return res.header('x-total-count', String(data.count)).json(data.rows);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async get(req: Request, res: Response, next: NextFunction) {
+    try {
+      const usecase = new GetTeamGroupUseCase();
+      const model = await usecase.handle(req.params.id);
+      return res.json(model);
     } catch (error) {
       next(error);
     }
