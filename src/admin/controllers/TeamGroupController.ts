@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { TeamGroupCreateUseCase } from '../../shared/useCases/team-group/TeamGroupCreateUseCase';
 import { TeamGroupListUseCase } from '../../shared/useCases/team-group/TeamGroupListUseCase';
 
 export class TeamGroupController {
@@ -15,7 +16,11 @@ export class TeamGroupController {
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      return res.sendStatus(200);
+      const usecase = new TeamGroupCreateUseCase();
+
+      const data = await usecase.handle(req.body);
+
+      return res.json(data);
     } catch (error) {
       next(error);
     }
