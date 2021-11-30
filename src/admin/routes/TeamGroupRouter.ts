@@ -1,32 +1,14 @@
 import { Router } from 'express';
+import { bindRoute } from '../../shared/utils/bindRoute';
 
-import TeamGroup from '../../shared/database/models/TeamGroup';
+import { makeTeamGroupController } from '../controllers/TeamGroupController';
 
 const router = Router();
+const controller = makeTeamGroupController();
 
-router.get('/team-groups', async (req, res) => {
-  const all = await TeamGroup.findAll({
-    include: 'members'
-  });
-
-  return res.json(all);
-});
-
-router.post('/team-groups', async (req, res) => {
-  const created = await TeamGroup.create({
-    name: req.body.name
-  });
-
-  return res.json(created);
-});
-
-router.post('/team-groups/:id/members', async (req, res) => {
-  const { id } = req.params;
-  const { members } = req.body;
-  const model = await TeamGroup.findByPk(id);
-  await model.setMembers(members);
-
-  return res.sendStatus(200);
-});
+router.get('/team-groups', bindRoute(controller, 'index'));
+router.post('/team-groups', bindRoute(controller, 'create'));
+router.put('/team-groups/:id', bindRoute(controller, 'update'));
+router.delete('/team-groups/:id', bindRoute(controller, 'destroy'));
 
 export default router;
