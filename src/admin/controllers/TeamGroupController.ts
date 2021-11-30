@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { TeamGroupCreateUseCase } from '../../shared/useCases/team-group/TeamGroupCreateUseCase';
 import { TeamGroupListUseCase } from '../../shared/useCases/team-group/TeamGroupListUseCase';
+import { TeamGroupUpdateUseCase } from '../../shared/useCases/team-group/TeamGroupUpdateUseCase';
 
 export class TeamGroupController {
   async index(req: Request, res: Response, next: NextFunction) {
@@ -17,9 +18,7 @@ export class TeamGroupController {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const usecase = new TeamGroupCreateUseCase();
-
       const data = await usecase.handle(req.body);
-
       return res.json(data);
     } catch (error) {
       next(error);
@@ -28,7 +27,12 @@ export class TeamGroupController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      return res.sendStatus(200);
+      const usecase = new TeamGroupUpdateUseCase();
+      const data = await usecase.handle({
+        ...req.params,
+        ...req.body
+      });
+      return res.json(data);
     } catch (error) {
       next(error);
     }
