@@ -3,7 +3,8 @@ import Customer from './Customer';
 
 export default class WorkoutProfile extends Model {
   id: number;
-  customerId: number;
+  customerId?: number;
+  teamGroupId?: string;
   age: number;
   height: string;
   weight: number;
