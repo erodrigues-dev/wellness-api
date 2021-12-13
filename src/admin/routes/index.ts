@@ -20,6 +20,8 @@ import workoutRouter from './WorkoutRouter';
 import notificationRouter from './NotificationRouter';
 import calendarRouter from './CalendarRouter';
 import calendarAvailabilityRouter from './CalendarAvailabilityRouter';
+import teamGroupRouter from './TeamGroupRouter';
+import autoCompleteRouter from './AutoCompleteRouter';
 
 const router = Router();
 
@@ -43,5 +45,7 @@ router.use(workoutRouter);
 router.use(notificationRouter);
 router.use(calendarRouter);
 router.use(calendarAvailabilityRouter);
+router.use(teamGroupRouter);
+router.use(autoCompleteRouter);
 
 export default router;
