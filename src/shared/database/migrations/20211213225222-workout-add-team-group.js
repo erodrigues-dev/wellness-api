@@ -1,6 +1,6 @@
 'use strict';
 
-const { QueryInterface, DataTypes, fn } = require('sequelize');
+const { QueryInterface, DataTypes } = require('sequelize');
 
 module.exports = {
   /** @param {QueryInterface} queryInterface */
@@ -13,14 +13,16 @@ module.exports = {
     });
     await queryInterface.changeColumn('workout_profiles', 'customer_id', {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: { model: 'customers' },
-      onDelete: 'CASCADE'
+      allowNull: true
     });
   },
 
   /** @param {QueryInterface} queryInterface */
   down: async queryInterface => {
     await queryInterface.removeColumn('workout_profiles', 'team_group_id');
+    await queryInterface.changeColumn('workout_profiles', 'customer_id', {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    });
   }
 };
