@@ -1,5 +1,6 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import Customer from './Customer';
+import TeamGroup from './TeamGroup';
 
 export default class WorkoutProfile extends Model {
   id: number;
@@ -19,6 +20,7 @@ export default class WorkoutProfile extends Model {
   updatedAt: Date;
 
   customer?: Customer;
+  teamGroup?: TeamGroup;
 
   static setup(connection: Sequelize) {
     WorkoutProfile.init(
@@ -41,6 +43,11 @@ export default class WorkoutProfile extends Model {
     WorkoutProfile.belongsTo(Customer, {
       foreignKey: 'customerId',
       as: 'customer'
+    });
+
+    WorkoutProfile.belongsTo(TeamGroup, {
+      foreignKey: 'teamGroupId',
+      as: 'teamGroup'
     });
   }
 }
