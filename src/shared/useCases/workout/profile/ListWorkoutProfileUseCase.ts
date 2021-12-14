@@ -23,11 +23,25 @@ export class ListWorkoutProfileUseCase {
     return WorkoutProfile.findAndCountAll({
       ...this.getPaginateOptions(),
       ...this.getWhereOptions(),
-      include: {
-        association: 'customer',
-        attributes: ['id', 'name']
+      include: [
+        {
+          association: 'customer',
+          attributes: ['id', 'name']
+        },
+        {
+          association: 'teamGroup',
+          attributes: ['id', 'name']
+        }
+      ],
+      attributes: {
+        include: [
+          literal(`CASE WHEN "customer_id" IS NOT NULL THEN "customer"."name"
+            ELSE "teamGroup".name
+            END as "name"
+          `) as any
+        ]
       },
-      order: [literal('customer.name')]
+      order: [literal('"name"')]
     });
   }
 
