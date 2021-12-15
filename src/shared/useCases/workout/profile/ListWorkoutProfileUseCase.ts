@@ -5,7 +5,8 @@ import WorkoutProfile from '../../../database/models/WorkoutProfile';
 interface ListWorkoutProfileData {
   page: number;
   limit: number;
-  customer: string;
+  name: string;
+  type: 'customer' | 'team-group';
 }
 
 export class ListWorkoutProfileUseCase {
@@ -63,14 +64,26 @@ export class ListWorkoutProfileUseCase {
   }
 
   private getWhereOptions() {
-    const { customer } = this.data;
-    if (customer) {
-      return {
-        where: {
-          ['$customer.name$']: { [Op.iLike]: `%${customer}%` }
-        }
-      };
+    const { name, type } = this.data;
+    const criterias = [];
+    if (name) {
+      criterias.push({
+        [Op.or]: [
+          { ['$customer.name$']: { [Op.iLike]: `%${name}%` } },
+          { ['$teamGroup.name$']: { [Op.iLike]: `%${name}%` } }
+        ]
+      });
     }
+
+    if (type === 'customer') {
+      criterias.push({ customerId: { [Op.not]: null } });
+    }
+
+    if (type === 'team-group') {
+      criterias.push({ teamGroupId: { [Op.not]: null } });
+    }
+
+    if (criterias.length > 0) return { where: { [Op.and]: criterias } };
 
     return {};
   }
