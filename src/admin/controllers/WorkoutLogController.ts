@@ -7,8 +7,6 @@ import {
   ListWorkoutLogUseCase,
   GetWorkoutLogUseCase,
   indexSchema,
-  createSchema,
-  updateSchema,
   DestroyWorkoutLogUseCase
 } from '../../shared/useCases/workout/log';
 
@@ -37,10 +35,7 @@ export class WorkoutLogController {
 
   async store(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await createSchema.validateAsync({
-        ...req.params,
-        ...req.body
-      });
+      const data = { ...req.body };
       const usecase = new CreateWorkoutLogUseCase();
       const model = await usecase.handle(data);
       return res.json(model);
@@ -51,10 +46,10 @@ export class WorkoutLogController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await updateSchema.validateAsync({
+      const data = {
         ...req.params,
         ...req.body
-      });
+      };
       const usecase = new UpdateWorkoutLogUseCase();
       await usecase.handle(data);
       return res.sendStatus(StatusCodes.NO_CONTENT);
