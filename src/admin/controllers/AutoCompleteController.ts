@@ -42,7 +42,7 @@ export class AutoCompleteControlller {
 
   async employees(req: Request, res: Response, next: NextFunction) {
     try {
-      const { q, specialty } = req.query as any;
+      const { q, specialties } = req.query as any;
 
       const query: any[] = [];
 
@@ -50,8 +50,9 @@ export class AutoCompleteControlller {
         query.push({ name: { [Op.iLike]: `%${q}%` } });
       }
 
-      if (specialty) {
-        query.push({ '$specialty.name$': specialty });
+      if (specialties) {
+        const names = Array.isArray(specialties) ? specialties : [specialties];
+        query.push({ '$specialty.name$': { [Op.in]: names } });
       }
 
       const list = await Employee.findAll({
