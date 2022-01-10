@@ -8,8 +8,8 @@ env:
   USER: ${{ secrets.STG_SERVER_USER }}
 
 jobs:
-  build:
-    name: Build docker image
+  build_and_deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,19 +17,6 @@ jobs:
         run: docker build -t wellness/api .
       - name: Export docker image
         run: docker save wellness/api | gzip > wellness_api.tar.gz
-      - uses: actions/upload-artifact@v2
-        with:
-          name: wellness_api_image
-          path: wellness_api.tar.gz
-  deploy:
-    name: Deploy to server
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-        with:
-          name: wellness_api_image
       - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
