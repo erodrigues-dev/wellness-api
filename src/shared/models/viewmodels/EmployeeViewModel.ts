@@ -1,4 +1,5 @@
 import Employee from '../../database/models/Employee';
+import Specialty from '../../database/models/Specialty';
 
 type Profile = {
   id: number;
@@ -9,10 +10,10 @@ export class EmployeeViewModel {
   id: number;
   name: string;
   email: string;
-  specialty: {
+  specialties: {
     id: number;
     name: string;
-  };
+  }[];
   imageUrl?: string;
   profile: Profile;
   phone: string;
@@ -24,7 +25,7 @@ export class EmployeeViewModel {
     viewModel.id = employee.id;
     viewModel.name = employee.name;
     viewModel.email = employee.email;
-    viewModel.specialty = employee.specialty;
+    viewModel.specialties = this.mapSpecialties(employee.specialties);
     viewModel.phone = employee.phone;
     viewModel.imageUrl = employee.imageUrl;
     viewModel.createdAt = employee.createdAt;
@@ -35,6 +36,15 @@ export class EmployeeViewModel {
     };
 
     return viewModel;
+  }
+
+  static mapSpecialties(specialties: Specialty[]) {
+    return (
+      specialties?.map(item => ({
+        id: item.id,
+        name: item.name
+      })) || []
+    );
   }
 
   static mapCollection(list: Employee[]): EmployeeViewModel[] {
