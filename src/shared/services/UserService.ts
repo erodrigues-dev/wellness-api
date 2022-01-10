@@ -25,7 +25,7 @@ export class UserService {
 
   async update(data: EmployeeSelfUpdateDto) {
     const model = await Employee.findByPk(data.id, {
-      include: ['profile', 'specialty']
+      include: ['profile', 'specialties']
     });
     if (!model) throw new CustomError('Employee not found', 404);
 
@@ -33,7 +33,6 @@ export class UserService {
 
     model.name = data.name;
     model.email = data.email;
-    model.specialtyId = data.specialtyId || null;
 
     if (data.password) model.password = await hash(data.password);
 
@@ -43,6 +42,7 @@ export class UserService {
       model.imageUrl = data.imageUrl;
     }
 
+    if (data.specialties) await model.setSpecialties(data.specialties);
     await model.save();
     await model.reload();
 
@@ -64,7 +64,7 @@ export class UserService {
   private getUserByEmail(email: string): Promise<Employee> {
     return Employee.findOne({
       where: { email },
-      include: ['profile', 'specialty']
+      include: ['profile', 'specialties']
     });
   }
 
