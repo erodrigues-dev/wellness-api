@@ -48,6 +48,6 @@ export class EmployeeViewModel {
   }
 
   static mapCollection(list: Employee[]): EmployeeViewModel[] {
-    return list.map(EmployeeViewModel.map);
+    return list.map(employee => EmployeeViewModel.map(employee));
   }
 }
