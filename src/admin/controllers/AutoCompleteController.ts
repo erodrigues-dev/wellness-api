@@ -4,6 +4,7 @@ import { Op } from 'sequelize';
 import Customer from '../../shared/database/models/Customer';
 import TeamGroup from '../../shared/database/models/TeamGroup';
 import Employee from '../../shared/database/models/Employee';
+import Specialty from '../../shared/database/models/Specialty';
 
 const LIMIT = 20;
 
@@ -72,6 +73,25 @@ export class AutoCompleteControlller {
       }));
 
       return res.json(parsed);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async specialties(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { q } = req.query as any;
+
+      const list = await Specialty.findAll({
+        where: {
+          name: { [Op.iLike]: `%${q}%` }
+        },
+        attributes: ['id', 'name'],
+        order: ['name'],
+        limit: LIMIT
+      });
+
+      return res.json(list);
     } catch (error) {
       next(error);
     }
