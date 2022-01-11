@@ -5,6 +5,7 @@ import Employee from '../../../database/models/Employee';
 import { EmployeeViewModel } from '../../../models/viewmodels/EmployeeViewModel';
 import { sendEmailSignUp } from '../../../sendingblue';
 import employeeService from '../../../services/EmployeeService';
+import { deleteFileFromUrl } from '../../../utils/google-cloud-storage';
 import { generateTempPassword, hash } from '../../../utils/hash-password';
 import { CreateEmployeeModel } from './CreateEmployeeModel';
 
@@ -12,6 +13,7 @@ export class CreateEmployeeUseCase {
   private employee: Employee;
   private tempPassword: string;
   constructor(private data: CreateEmployeeModel) {}
+
   async create(): Promise<EmployeeViewModel> {
     this.generateTempPassword();
     await this.checkEmail();
@@ -35,21 +37,36 @@ export class CreateEmployeeUseCase {
   }
 
   private async createOnDB(): Promise<void> {
+    const transaction = await Employee.sequelize.transaction();
     try {
-      this.employee = await Employee.create({
-        name: this.data.name,
-        email: this.data.email,
-        phone: this.data.phone,
-        specialtyId: this.data.specialtyId,
-        imageUrl: this.data.imageUrl,
-        profileId: this.data.profileId,
-        password: await hash(this.tempPassword)
-      });
+      this.employee = await Employee.create(
+        {
+          name: this.data.name,
+          email: this.data.email,
+          phone: this.data.phone,
+          imageUrl: this.data.imageUrl,
+          profileId: this.data.profileId,
+          password: await hash(this.tempPassword)
+        },
+        { transaction }
+      );
+
+      await this.employee.setSpecialties(this.data.specialties, { transaction });
+      await transaction.commit();
     } catch (error) {
-      if (error instanceof ForeignKeyConstraintError) throw new CustomError('Profile id is invalid');
+      console.error('Error on CreateEmployeeUseCase:createOnDB', error);
+      await transaction.rollback();
+      await deleteFileFromUrl(this.data.imageUrl);
+      if (error instanceof ForeignKeyConstraintError) this.catchForeignKeyConstraintError(error);
 
       throw error;
     }
+  }
+
+  private catchForeignKeyConstraintError(error) {
+    if (error.message.includes('specialties')) throw new CustomError('The specialty informed is invalid');
+
+    if (error.message.includes('profile')) throw new CustomError('The profile informed is invalid');
   }
 
   private async sendEmail(): Promise<void> {
