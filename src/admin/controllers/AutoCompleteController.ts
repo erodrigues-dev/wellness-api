@@ -45,24 +45,31 @@ export class AutoCompleteControlller {
     try {
       const { q, specialties } = req.query as any;
 
-      const query: any[] = [];
+      let nameQuery = {};
+      let specialtiesQuery = {};
 
       if (q) {
-        query.push({ name: { [Op.iLike]: `%${q}%` } });
+        nameQuery = { where: { name: { [Op.iLike]: `%${q}%` } } };
       }
 
       if (specialties) {
         const names = Array.isArray(specialties) ? specialties : [specialties];
-        query.push({ '$specialty.name$': { [Op.in]: names } });
+
+        specialtiesQuery = {
+          include: {
+            association: 'specialties',
+            attributes: ['name'],
+            where: {
+              name: { [Op.in]: names }
+            }
+          }
+        };
       }
 
       const list = await Employee.findAll({
-        where: { [Op.and]: query },
+        ...specialtiesQuery,
+        ...nameQuery,
         attributes: ['id', 'name'],
-        include: {
-          association: 'specialty',
-          attributes: ['name']
-        },
         order: ['name'],
         limit: LIMIT
       });
