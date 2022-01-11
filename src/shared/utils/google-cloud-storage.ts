@@ -8,6 +8,7 @@ const storage = new Storage();
 const bucket = storage.bucket(bucketName);
 
 export function deleteFileFromUrl(url: string) {
+  if (!url) return;
   const filename = url.split('/').pop();
   return deleteFile(`${folderName}/${filename}`);
 }
@@ -22,9 +23,7 @@ export function createFileFromStream(fileStream: Stream, filename: string) {
   const uniqueName = `${key}-${filename}`;
 
   return new Promise<{ filename: string; url: string }>((resolve, reject) => {
-    const gcFile = bucket
-      .file(`${folderName}/${uniqueName}`)
-      .createWriteStream();
+    const gcFile = bucket.file(`${folderName}/${uniqueName}`).createWriteStream();
     gcFile.on('error', reject);
     gcFile.on('finish', () =>
       resolve({
