@@ -8,6 +8,7 @@ export const indexSchema = Joi.object({
 
 export const createSchema = Joi.object({
   workoutProfileId: Joi.number().required(),
+  trainers: Joi.array().items(Joi.number()).min(1).required(),
   resume: Joi.string().required(),
   date: Joi.string().isoDate().required(),
   notes: Joi.string().allow(null, '')
@@ -16,6 +17,7 @@ export const createSchema = Joi.object({
 export const updateSchema = Joi.object({
   id: Joi.number().required(),
   workoutProfileId: Joi.number().required(),
+  trainers: Joi.array().items(Joi.number()).min(1).required(),
   resume: Joi.string().required(),
   date: Joi.string().isoDate().required(),
   notes: Joi.string().allow(null, '')

@@ -26,6 +26,7 @@ import Notification from './models/Notification';
 import NotificationEmployee from './models/NotificationEmployee';
 import Calendar from './models/Calendar';
 import CalendarAvailability from './models/CalendarAvailability';
+import TeamGroup from './models/TeamGroup';
 
 const connection = new Sequelize(DB_CONFIG);
 
@@ -54,6 +55,7 @@ export function databaseConfig() {
   NotificationEmployee.setup(connection);
   Calendar.setup(connection);
   CalendarAvailability.setup(connection);
+  TeamGroup.setup(connection);
 
   Activity.setupAssociations();
   Event.setupAssociations();
@@ -75,6 +77,7 @@ export function databaseConfig() {
   Notification.setupAssociations();
   Calendar.setupAssociations();
   CalendarAvailability.setupAssociations();
+  TeamGroup.setupAssociations();
 }
 
 export default connection;

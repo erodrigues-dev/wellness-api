@@ -2,10 +2,10 @@ export class LoginViewModel {
   id: number;
   name: string;
   email: string;
-  specialty: {
+  specialties: {
     id: number;
     name: string;
-  };
+  }[];
   imageUrl: string;
   permissions: number;
 
@@ -15,10 +15,14 @@ export class LoginViewModel {
     viewModel.id = obj.id;
     viewModel.name = obj.name;
     viewModel.email = obj.email;
-    viewModel.specialty = obj.specialty;
     viewModel.imageUrl = obj.imageUrl;
     viewModel.permissions = obj.profile.permissions;
+    viewModel.specialties = this.mapSpecialties(obj.specialties);
 
     return viewModel;
+  }
+
+  static mapSpecialties(specialties) {
+    return specialties?.map(item => ({ id: item.id, name: item.name })) || [];
   }
 }

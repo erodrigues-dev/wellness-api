@@ -5,7 +5,8 @@ import WorkoutProfile from '../../../database/models/WorkoutProfile';
 interface ListWorkoutProfileData {
   page: number;
   limit: number;
-  customer: string;
+  name: string;
+  type: 'customer' | 'team-group';
 }
 
 export class ListWorkoutProfileUseCase {
@@ -23,11 +24,25 @@ export class ListWorkoutProfileUseCase {
     return WorkoutProfile.findAndCountAll({
       ...this.getPaginateOptions(),
       ...this.getWhereOptions(),
-      include: {
-        association: 'customer',
-        attributes: ['id', 'name']
+      include: [
+        {
+          association: 'customer',
+          attributes: ['id', 'name']
+        },
+        {
+          association: 'teamGroup',
+          attributes: ['id', 'name']
+        }
+      ],
+      attributes: {
+        include: [
+          literal(`CASE WHEN "customer_id" IS NOT NULL THEN "customer"."name"
+            ELSE "teamGroup".name
+            END as "name"
+          `) as any
+        ]
       },
-      order: [literal('customer.name')]
+      order: [literal('"name"')]
     });
   }
 
@@ -49,14 +64,26 @@ export class ListWorkoutProfileUseCase {
   }
 
   private getWhereOptions() {
-    const { customer } = this.data;
-    if (customer) {
-      return {
-        where: {
-          ['$customer.name$']: { [Op.iLike]: `%${customer}%` }
-        }
-      };
+    const { name, type } = this.data;
+    const criterias = [];
+    if (name) {
+      criterias.push({
+        [Op.or]: [
+          { ['$customer.name$']: { [Op.iLike]: `%${name}%` } },
+          { ['$teamGroup.name$']: { [Op.iLike]: `%${name}%` } }
+        ]
+      });
     }
+
+    if (type === 'customer') {
+      criterias.push({ customerId: { [Op.not]: null } });
+    }
+
+    if (type === 'team-group') {
+      criterias.push({ teamGroupId: { [Op.not]: null } });
+    }
+
+    if (criterias.length > 0) return { where: { [Op.and]: criterias } };
 
     return {};
   }

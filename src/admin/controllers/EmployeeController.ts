@@ -40,9 +40,7 @@ export class EmployeeController {
   async store(req: Request, res: Response, next: NextFunction): Promise<Response> {
     try {
       const createModel = new CreateEmployeeModel().parse(req.body).withImageUrl(req.file as ICloudFile);
-
       const model = await new CreateEmployeeUseCase(createModel).create();
-
       return res.json(model);
     } catch (error) {
       next(error);

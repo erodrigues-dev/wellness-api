@@ -1,5 +1,6 @@
 import WorkoutLog from '../../../database/models/WorkoutLog';
 import { getPaginateOptions } from '../../../utils/getPaginateOptions';
+import { parseTrainers } from './parseTrainer';
 
 interface Data {
   page: number;
@@ -21,13 +22,25 @@ export class ListWorkoutLogUseCase {
   private query() {
     const { workoutProfileId, page, limit } = this.data;
     return WorkoutLog.findAndCountAll({
-      where: { workoutProfileId },
       ...getPaginateOptions(page, limit),
+      include: [
+        {
+          association: 'trainers',
+          attributes: ['id', 'name']
+        }
+      ],
+      where: { workoutProfileId },
       order: [['date', 'desc']]
     });
   }
 
   private parse(list: WorkoutLog[]) {
-    return list.map(item => item.toJSON());
+    return list.map(item => {
+      const { trainers, ...parsed } = item.toJSON() as any;
+      return {
+        ...parsed,
+        trainers: parseTrainers(trainers)
+      };
+    });
   }
 }

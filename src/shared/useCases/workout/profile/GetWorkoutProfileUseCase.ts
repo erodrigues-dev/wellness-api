@@ -10,10 +10,16 @@ export class GetWorkoutProfileUseCase {
 
   private query(id: number) {
     return WorkoutProfile.findByPk(id, {
-      include: {
-        association: 'customer',
-        attributes: ['id', 'name']
-      }
+      include: [
+        {
+          association: 'customer',
+          attributes: ['id', 'name']
+        },
+        {
+          association: 'teamGroup',
+          attributes: ['id', 'name']
+        }
+      ]
     });
   }
 

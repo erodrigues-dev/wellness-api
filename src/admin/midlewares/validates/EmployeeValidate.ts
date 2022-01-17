@@ -24,8 +24,8 @@ router.post(
       name: Joi.string().required(),
       email: Joi.string().required().email(),
       phone: Joi.string().allow(null, '').max(20),
-      specialtyId: Joi.number().allow(''),
-      profileId: Joi.number().required()
+      profileId: Joi.number().required(),
+      specialties: Joi.array().items(Joi.number())
     })
   })
 );
@@ -37,8 +37,8 @@ router.put(
       id: Joi.number().required(),
       name: Joi.string().required(),
       phone: Joi.string().allow(null, '').max(20),
-      specialtyId: Joi.number().allow(''),
-      profileId: Joi.number().required()
+      profileId: Joi.number().required(),
+      specialties: Joi.array().items(Joi.number())
     })
   })
 );

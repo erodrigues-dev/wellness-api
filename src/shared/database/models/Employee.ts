@@ -1,4 +1,4 @@
-import { Association, DataTypes, Model, Sequelize } from 'sequelize';
+import { Association, BelongsToManySetAssociationsMixin, DataTypes, Model, Sequelize } from 'sequelize';
 
 import Profile from './Profile';
 import Specialty from './Specialty';
@@ -11,15 +11,16 @@ export default class Employee extends Model {
   imageUrl?: string;
   phone: string;
   tempPassword: string;
-  specialtyId?: number;
 
   profileId: number;
   profile?: Profile;
-  specialty?: Specialty;
+  specialties?: Specialty[];
 
   readonly createdAt: Date;
   readonly updatedAt: Date;
   readonly deletedAt: Date;
+
+  setSpecialties: BelongsToManySetAssociationsMixin<Specialty, number>;
 
   static associations: {
     profile: Association<Employee, Profile>;
@@ -34,8 +35,7 @@ export default class Employee extends Model {
         imageUrl: DataTypes.STRING,
         profileId: DataTypes.INTEGER,
         phone: DataTypes.STRING,
-        tempPassword: DataTypes.STRING,
-        specialtyId: DataTypes.INTEGER
+        tempPassword: DataTypes.STRING
       },
       {
         sequelize: connection,
@@ -51,9 +51,12 @@ export default class Employee extends Model {
       as: 'profile'
     });
 
-    Employee.belongsTo(Specialty, {
-      foreignKey: 'specialtyId',
-      as: 'specialty'
+    Employee.belongsToMany(Specialty, {
+      through: 'employees_specialties',
+      as: 'specialties',
+      foreignKey: 'employee_id',
+      otherKey: 'specialty_id',
+      timestamps: false
     });
   }
 }

@@ -272,7 +272,25 @@ export class Permission {
     name: 'Delete notifications'
   };
 
-  //! last-value 2 ** 38
+  static readonly TeamGroupList: PermissionItem = {
+    id: 2 ** 39,
+    group: 'Team/Group',
+    name: 'List Team/Groups'
+  };
+
+  static readonly TeamGroupCreateUpdate: PermissionItem = {
+    id: 2 ** 40,
+    group: 'Team/Group',
+    name: 'Create/Update Team/Groups'
+  };
+
+  static readonly TeamGroupDelete: PermissionItem = {
+    id: 2 ** 41,
+    group: 'Team/Group',
+    name: 'Delete Team/Groups'
+  };
+
+  //! last-value 2 ** 41
 
   //! MAX_VALUE <52> Ex. 2 ** 52
 }

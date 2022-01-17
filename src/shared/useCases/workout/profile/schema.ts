@@ -1,7 +1,17 @@
 import { Joi } from 'celebrate';
 
 export const createSchema = Joi.object({
-  customerId: Joi.number().required(),
+  type: Joi.string().valid('customer', 'team-group').required(),
+  customerId: Joi.when('type', {
+    is: 'customer',
+    then: Joi.number().required(),
+    otherwise: Joi.forbidden()
+  }),
+  teamGroupId: Joi.when('type', {
+    is: 'team-group',
+    then: Joi.string().uuid().required(),
+    otherwise: Joi.forbidden()
+  }),
   age: Joi.number().allow(null),
   height: Joi.string().allow(null, ''),
   weight: Joi.number().allow(null),
