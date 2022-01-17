@@ -26,7 +26,7 @@ export class SessionController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.user;
-      const { name, email, confirmationCode, password, specialtyId } = req.body;
+      const { name, email, confirmationCode, password, specialties } = req.body;
       const file = req.file as ICloudFile;
       const payload = await service.update({
         id,
@@ -34,7 +34,7 @@ export class SessionController {
         email,
         confirmationCode,
         password,
-        specialtyId,
+        specialties,
         imageUrl: file?.url
       });
 
