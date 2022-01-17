@@ -1,6 +1,6 @@
 'use strict';
 
-const { QueryInterface, DataTypes } = require('sequelize');
+const { QueryInterface, DataTypes, fn } = require('sequelize');
 
 module.exports = {
   /**
@@ -9,10 +9,10 @@ module.exports = {
   up: async queryInterface => {
     await queryInterface.createTable('calendars', {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         primaryKey: true,
-        autoIncrement: true,
-        allowNull: false
+        allowNull: false,
+        defaultValue: fn('uuid_generate_v4')
       },
       category_id: {
         type: DataTypes.INTEGER,

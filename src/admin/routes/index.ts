@@ -22,6 +22,7 @@ import calendarRouter from './CalendarRouter';
 import calendarAvailabilityRouter from './CalendarAvailabilityRouter';
 import teamGroupRouter from './TeamGroupRouter';
 import autoCompleteRouter from './AutoCompleteRouter';
+import calendarSlotRouter from './CalendarSlotRouter';
 
 const router = Router();
 
@@ -47,5 +48,6 @@ router.use(calendarRouter);
 router.use(calendarAvailabilityRouter);
 router.use(teamGroupRouter);
 router.use(autoCompleteRouter);
+router.use(calendarSlotRouter);
 
 export default router;
