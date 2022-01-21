@@ -2,7 +2,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import Category from './Category';
 
 export default class Calendar extends Model {
-  id: number;
+  id: string;
   name: string;
   categoryId: number;
   minHoursToSchedule: number;
