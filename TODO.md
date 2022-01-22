@@ -13,23 +13,23 @@
 
 - [x] renomear calendar availability para calendar slot
 - [x] listar slots
-- [ ] configurar permissoes
+- [x] configurar permissoes
 
 ## scheduler (calendario da pagina principal)
 
-- [ ] listar categorias
-- [ ] listar calendarios
-- [ ] listar slots
+- [x] listar categorias
+- [x] listar calendarios
+- [x] listar slots
 
 ## calendar x activities
 
-- [ ] associar atividades ao calendario
+- [x] associar atividades ao calendario
 
 ## Calendar entries
 
-- [ ] criar modelo
+- [x] criar modelo
 - [x] criar migration
 - [ ] controller
 - [ ] rotas
 - [ ] validar regras de disponibilidade
-- [ ]
+- [ ] unificar rotas do calendario no CalendarRouter
