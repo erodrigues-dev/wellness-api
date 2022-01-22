@@ -5,6 +5,7 @@ import Customer from '../../shared/database/models/Customer';
 import TeamGroup from '../../shared/database/models/TeamGroup';
 import Employee from '../../shared/database/models/Employee';
 import Specialty from '../../shared/database/models/Specialty';
+import Activity from '../../shared/database/models/Activity';
 
 const LIMIT = 20;
 
@@ -98,6 +99,24 @@ export class AutoCompleteControlller {
         limit: LIMIT
       });
 
+      return res.json(list);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async activities(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { q } = req.query;
+
+      const list = await Activity.findAll({
+        where: {
+          name: { [Op.iLike]: `%${q}%` }
+        },
+        attributes: ['id', 'name'],
+        order: ['name'],
+        limit: LIMIT
+      });
       return res.json(list);
     } catch (error) {
       next(error);

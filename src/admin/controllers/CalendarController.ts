@@ -10,7 +10,8 @@ const storeSchema = Joi.object({
   minHoursToSchedule: Joi.number().required(),
   minHoursToCancel: Joi.number().required(),
   maxDaysInFuture: Joi.number().required(),
-  maxEntryPerSlot: Joi.number().required()
+  maxEntryPerSlot: Joi.number().required(),
+  activities: Joi.array().items(Joi.number()).min(1).required()
 });
 
 export class CalendarController {

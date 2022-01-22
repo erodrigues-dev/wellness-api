@@ -10,5 +10,6 @@ router.get('/autocomplete/customers', bindRoute(controller, 'customers'));
 router.get('/autocomplete/team-groups', bindRoute(controller, 'teamGroups'));
 router.get('/autocomplete/employees', bindRoute(controller, 'employees'));
 router.get('/autocomplete/specialties', bindRoute(controller, 'specialties'));
+router.get('/autocomplete/activities', bindRoute(controller, 'activities'));
 
 export default router;
