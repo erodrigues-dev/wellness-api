@@ -18,8 +18,8 @@ router.post('/calendars', checkPermission(Permission.CalendarCreateUpdate), bind
 router.put('/calendars/:id', checkPermission(Permission.CalendarCreateUpdate), bindRoute(calendarController, 'update'));
 router.delete('/calendars/:id', checkPermission(Permission.CalendarDelete), bindRoute(calendarController, 'destroy'));
 
-router.get('/calendar/:calendarId/entries', bindRoute(entryController, 'index'));
-router.post('/calendar/:calendarId/entries', bindRoute(entryController, 'store'));
-router.put('/calendar/:calendarId/entries/:id', bindRoute(entryController, 'update'));
+router.get('/calendars/:calendarId/entries', bindRoute(entryController, 'index'));
+router.post('/calendars/:calendarId/entries', bindRoute(entryController, 'store'));
+router.put('/calendars/:calendarId/entries/:id', bindRoute(entryController, 'update'));
 
 export default router;
