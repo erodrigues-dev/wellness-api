@@ -24,3 +24,12 @@
 ## calendar x activities
 
 - [ ] associar atividades ao calendario
+
+## Calendar entries
+
+- [ ] criar modelo
+- [x] criar migration
+- [ ] controller
+- [ ] rotas
+- [ ] validar regras de disponibilidade
+- [ ]
