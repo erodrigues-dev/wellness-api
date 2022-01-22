@@ -27,6 +27,7 @@ import NotificationEmployee from './models/NotificationEmployee';
 import Calendar from './models/Calendar';
 import TeamGroup from './models/TeamGroup';
 import CalendarSlot from './models/CalendarSlot';
+import CalendarEntry from './models/CalendarEntry';
 
 const connection = new Sequelize(DB_CONFIG);
 
@@ -56,6 +57,7 @@ export function databaseConfig() {
   Calendar.setup(connection);
   TeamGroup.setup(connection);
   CalendarSlot.setup(connection);
+  CalendarEntry.setup(connection);
 
   Activity.setupAssociations();
   Event.setupAssociations();
@@ -78,6 +80,7 @@ export function databaseConfig() {
   Calendar.setupAssociations();
   TeamGroup.setupAssociations();
   CalendarSlot.setupAssociations();
+  CalendarEntry.setupAssociations();
 }
 
 export default connection;
