@@ -8,7 +8,8 @@ export default class CalendarEntry extends Model {
   calendarId: string;
   activityId: number;
   customerId: number;
-  dateTime: Date;
+  dateStart: Date;
+  dateEnd: Date;
 
   createdAt: Date;
   updatedAt: Date;
@@ -20,7 +21,8 @@ export default class CalendarEntry extends Model {
   static setup(connection: Sequelize) {
     CalendarEntry.init(
       {
-        dateTime: DataTypes.DATE
+        dateStart: DataTypes.DATE,
+        dateEnd: DataTypes.DATE
       },
       {
         sequelize: connection,

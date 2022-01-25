@@ -19,7 +19,11 @@ module.exports = {
         allowNull: false,
         references: { model: 'customers' }
       },
-      date_time: {
+      date_start: {
+        type: Sequelize.DATE,
+        allowNull: false
+      },
+      date_end: {
         type: Sequelize.DATE,
         allowNull: false
       },

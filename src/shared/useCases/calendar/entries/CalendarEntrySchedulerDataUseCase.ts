@@ -13,7 +13,7 @@ export class CalendarEntrySchedulerDataUseCase {
 
     const list = await CalendarEntry.findAll({
       where: {
-        [Op.and]: [{ calendarId: { [Op.in]: calendars } }, literal(`date_trunc('day', "date_time") = '${dateOnly}'`)]
+        [Op.and]: [{ calendarId: { [Op.in]: calendars } }, literal(`date_trunc('day', "date_start") = '${dateOnly}'`)]
       }
     });
 

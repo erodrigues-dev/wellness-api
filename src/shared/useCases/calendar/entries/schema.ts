@@ -4,7 +4,8 @@ export const storeSchema = Joi.object({
   calendarId: Joi.string().uuid().required(),
   customerId: Joi.number().required(),
   activityId: Joi.number().required(),
-  dateTime: Joi.string().isoDate().required()
+  dateStart: Joi.string().isoDate().required(),
+  dateEnd: Joi.string().isoDate().required()
 });
 
 export const schedulerSchema = Joi.object({
