@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { CalendarEntryListUseCase } from '../../shared/useCases/calendar/entries/CalendarEntryListUseCase';
+import { CalendarEntrySchedulerDataUseCase } from '../../shared/useCases/calendar/entries/CalendarEntrySchedulerDataUseCase';
 import { CalendarEntryStoreUseCase } from '../../shared/useCases/calendar/entries/CalendarEntryStoreUseCase';
 
 export class CalendarEntryController {
@@ -27,6 +28,16 @@ export class CalendarEntryController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       return res.sendStatus(200);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async schedulerData(req: Request, res: Response, next: NextFunction) {
+    try {
+      const useCase = new CalendarEntrySchedulerDataUseCase();
+      const data = await useCase.getData({ ...req.query });
+      return res.json(data);
     } catch (error) {
       next(error);
     }
