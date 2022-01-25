@@ -6,3 +6,8 @@ export const storeSchema = Joi.object({
   activityId: Joi.number().required(),
   dateTime: Joi.string().isoDate().required()
 });
+
+export const schedulerSchema = Joi.object({
+  calendars: Joi.array().items(Joi.string()).required().min(1),
+  date: Joi.string().isoDate().required()
+});
