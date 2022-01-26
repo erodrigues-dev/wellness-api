@@ -12,6 +12,19 @@ export class CalendarEntrySchedulerDataUseCase {
     const [dateOnly] = date.split('T');
 
     const list = await CalendarEntry.findAll({
+      attributes: {
+        exclude: ['activityId', 'customerId', 'createdAt', 'updatedAt']
+      },
+      include: [
+        {
+          association: 'activity',
+          attributes: ['id', 'name']
+        },
+        {
+          association: 'customer',
+          attributes: ['id', 'name']
+        }
+      ],
       where: {
         [Op.and]: [{ calendarId: { [Op.in]: calendars } }, literal(`date_trunc('day', "date_start") = '${dateOnly}'`)]
       }
