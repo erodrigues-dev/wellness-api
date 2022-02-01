@@ -46,6 +46,21 @@ export class CalendarService {
     return this._parseModel(model.toJSON());
   }
 
+  async listActivities(calendarId) {
+    const calendar = await Calendar.findByPk(calendarId, {
+      attributes: ['id'],
+      include: {
+        association: 'activities',
+        attributes: ['id', 'name']
+      }
+    });
+
+    return calendar.activities.map(activity => ({
+      id: activity.id,
+      name: activity.name
+    }));
+  }
+
   async create({ activities, ...data }) {
     const transaction = await Calendar.sequelize.transaction();
     try {
