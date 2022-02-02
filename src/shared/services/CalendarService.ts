@@ -51,13 +51,14 @@ export class CalendarService {
       attributes: ['id'],
       include: {
         association: 'activities',
-        attributes: ['id', 'name']
+        attributes: ['id', 'name', 'duration']
       }
     });
 
     return calendar.activities.map(activity => ({
       id: activity.id,
-      name: activity.name
+      name: activity.name,
+      duration: activity.duration
     }));
   }
 
