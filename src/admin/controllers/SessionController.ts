@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { PermissionHelper } from '../../shared/models/entities/Permission';
 import service from '../../shared/services/UserService';
 import { EmployeeRecoverPasswordUseCase } from '../../shared/useCases/employee/recover-password/EmployeeRecoverPasswordUseCase';
-import { SendEmailConfirmationUseCase } from '../../shared/useCases/SendEmailConfirmationUseCase';
+import { SendEmailConfirmationUseCase } from '../../shared/useCases/email-confirmation/SendEmailConfirmationUseCase';
 import { ICloudFile } from '../../shared/utils/interfaces/ICloudFile';
 
 export class SessionController {

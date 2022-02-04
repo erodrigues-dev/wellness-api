@@ -1,6 +1,6 @@
-import EmailConfirmationCode from '../database/models/EmailConfirmationCode';
-import { sendEmailConfirmation } from '../sendingblue';
-import { generateConfirmationCode } from '../utils/hash-password';
+import EmailConfirmationCode from '../../database/models/EmailConfirmationCode';
+import { sendEmailConfirmation } from '../../sendingblue';
+import { generateConfirmationCode } from '../../utils/hash-password';
 
 export class SendEmailConfirmationUseCase {
   constructor(private name: string, private email: string) {}
