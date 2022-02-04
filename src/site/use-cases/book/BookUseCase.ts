@@ -1,8 +1,6 @@
 import { Op, fn } from 'sequelize';
 import OrderActivity from '../../../shared/database/models/OrderActivity';
-import Event from '../../../shared/database/models/Event';
 import { PAID_STATUS } from '../../../shared/models/enums';
-import { ScheduleCreateUseCase } from '../../../shared/useCases/schedule';
 
 interface Data {
   user_id: number;
@@ -14,14 +12,14 @@ interface Data {
 export class BookUseCase {
   async handle(data: Data): Promise<void> {
     const orderActivityId = await this.getOrderActivityId(data);
-    await new ScheduleCreateUseCase(data.user_id, orderActivityId, data.slot_id, data.date).create();
+    // await new ScheduleCreateUseCase(data.user_id, orderActivityId, data.slot_id, data.date).create();
   }
 
   private async getOrderActivityId({ user_id, activity_id, slot_id, date }: Data) {
     const ids = await this.listOrderActivityIds(user_id, activity_id);
     for (const orderActivityId of ids) {
       try {
-        await new ScheduleCreateUseCase(user_id, orderActivityId, slot_id, date).checkOrderAvailable(orderActivityId);
+        // await new ScheduleCreateUseCase(user_id, orderActivityId, slot_id, date).checkOrderAvailable(orderActivityId);
         return orderActivityId;
       } catch (error) {
         continue;

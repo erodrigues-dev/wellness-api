@@ -1,6 +1,6 @@
 import { addDays, subDays, startOfMonth, endOfMonth } from 'date-fns';
 
-import { ListDaysUseCase as UseCase } from '../../../shared/useCases/schedule/ListDaysUseCase';
+// import { ListDaysUseCase as UseCase } from '../../../shared/useCases/schedule/ListDaysUseCase';
 
 export class ListDaysUseCase {
   handle(activityId: number, referenceDate: Date): Promise<string[]> {
@@ -8,7 +8,8 @@ export class ListDaysUseCase {
 
     console.log('>> search by dates', start, end);
 
-    return new UseCase(activityId, start, end).list();
+    // return new UseCase(activityId, start, end).list();
+    return Promise.resolve(null);
   }
 
   private buildInterval(date: Date): [Date, Date] {

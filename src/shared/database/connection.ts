@@ -8,13 +8,11 @@ import Customer from './models/Customer';
 import CustomerDiscount from './models/CustomerDiscount';
 import EmailConfirmationCode from './models/EmailConfirmationCode';
 import Employee from './models/Employee';
-import Event from './models/Event';
 import Order from './models/Order';
 import OrderActivity from './models/OrderActivity';
 import OrderPackage from './models/OrderPackage';
 import Package from './models/Package';
 import Profile from './models/Profile';
-import Schedule from './models/Schedule';
 import Specialty from './models/Specialty';
 import Waiver from './models/Waiver';
 import CustomerWaiver from './models/CustomerWaiver';
@@ -34,14 +32,12 @@ const connection = new Sequelize(DB_CONFIG);
 export function databaseConfig() {
   Activity.setup(connection);
   Employee.setup(connection);
-  Event.setup(connection);
   Customer.setup(connection);
   Package.setup(connection);
   Profile.setup(connection);
   Category.setup(connection);
   CustomerDiscount.setup(connection);
   Order.setup(connection);
-  Schedule.setup(connection);
   OrderPackage.setup(connection);
   OrderActivity.setup(connection);
   EmailConfirmationCode.setup(connection);
@@ -60,7 +56,6 @@ export function databaseConfig() {
   CalendarEntry.setup(connection);
 
   Activity.setupAssociations();
-  Event.setupAssociations();
   Customer.setupAssociations();
   Employee.setupAssociations();
   Package.setupAssociations();
@@ -70,7 +65,6 @@ export function databaseConfig() {
   Order.setupAssociations();
   OrderPackage.setupAssociations();
   OrderActivity.setupAssociations();
-  Schedule.setupAssociations();
   EmailConfirmationCode.setupAssociations();
   CustomerWaiver.setupAssociations();
   WorkoutProfile.setupAssociations();
