@@ -9,6 +9,14 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.fn('uuid_generate_v4')
       },
+      date_start: {
+        type: Sequelize.DATE,
+        allowNull: false
+      },
+      date_end: {
+        type: Sequelize.DATE,
+        allowNull: false
+      },
       calendar_id: {
         type: Sequelize.UUID,
         allowNull: false,
@@ -19,18 +27,14 @@ module.exports = {
         allowNull: false,
         references: { model: 'customers' }
       },
-      date_start: {
-        type: Sequelize.DATE,
-        allowNull: false
-      },
-      date_end: {
-        type: Sequelize.DATE,
-        allowNull: false
-      },
       activity_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'activities' }
+      },
+      notes: {
+        type: Sequelize.STRING(600),
+        allowNull: true
       },
       created_at: Sequelize.DATE,
       updated_at: Sequelize.DATE
