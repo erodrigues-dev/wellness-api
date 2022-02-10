@@ -4,27 +4,20 @@ import CustomerDiscount from '../database/models/CustomerDiscount';
 import Package from '../database/models/Package';
 import { DiscountTypeEnum } from '../models/enums/DiscountTypeEnum';
 import CustomerDiscountViewModel from '../models/viewmodels/CustomerDiscountViewModel';
-import ICustomerDiscountService, {
-  IFilter,
-  IStore,
-  IUpdate
-} from './interfaces/ICustomerDiscountService';
+import ICustomerDiscountService, { IFilter, IStore, IUpdate } from './interfaces/ICustomerDiscountService';
 
 export class CustomerDiscountService implements ICustomerDiscountService {
   private db = CustomerDiscount;
 
   async list(filter: IFilter): Promise<CustomerDiscountViewModel[]> {
-    const [results] = await this.db.sequelize.query(
-      this.buildSelectQuery(filter),
-      {
-        replacements: {
-          customerId: filter.customerId,
-          relationName: `%${filter.relationName}%`,
-          page: filter.page ?? null,
-          limit: filter.limit ?? null
-        }
+    const [results] = await this.db.sequelize.query(this.buildSelectQuery(filter), {
+      replacements: {
+        customerId: filter.customerId,
+        relationName: `%${filter.relationName}%`,
+        page: filter.page ?? null,
+        limit: filter.limit ?? null
       }
-    );
+    });
 
     return results.map(item => CustomerDiscountViewModel.from(item));
   }
@@ -49,22 +42,19 @@ export class CustomerDiscountService implements ICustomerDiscountService {
   }
 
   async count(filter: IFilter): Promise<number> {
-    const [results] = await this.db.sequelize.query(
-      this.buildSelectQuery(filter, true),
-      {
-        replacements: {
-          customerId: filter.customerId,
-          relationName: `%${filter.relationName}%`
-        }
+    const [results] = await this.db.sequelize.query(this.buildSelectQuery(filter, true), {
+      replacements: {
+        customerId: filter.customerId,
+        relationName: `%${filter.relationName}%`
       }
-    );
+    });
 
     const [{ count }] = results as any;
 
     return Number(count);
   }
 
-  async store(data: IStore): Promise<number> {
+  async store(data): Promise<number> {
     await this.checkDuplicated(data);
     await this.checkRelationId(data.relationType, data.relationId);
     await this.checkDiscountValue(data);
@@ -99,35 +89,25 @@ export class CustomerDiscountService implements ICustomerDiscountService {
   }
 
   private async checkDuplicated(data: IStore | IUpdate) {
-    const existent = await this.find(
-      data.customerId,
-      data.relationType,
-      data.relationId
-    );
+    const existent = await this.find(data.customerId, data.relationType, data.relationId);
 
-    if (existent && existent.id !== data['id'])
-      throw new CustomError('Discount duplicated', 400);
+    if (existent && existent.id !== data['id']) throw new CustomError('Discount duplicated', 400);
   }
 
   private async checkDiscountValue(data: IStore | IUpdate) {
     if (data.type === DiscountTypeEnum.Percent) {
-      if (data.value < 1 || data.value > 100)
-        throw new CustomError('Invalid percent value', 400);
+      if (data.value < 1 || data.value > 100) throw new CustomError('Invalid percent value', 400);
       return;
     }
 
     if (data.relationType === 'activity') {
       const { price } = await Activity.findByPk(data.relationId);
-      if (data.value > price)
-        throw new CustomError(
-          'Invalid value, must be less than Activity price'
-        );
+      if (data.value > price) throw new CustomError('Invalid value, must be less than Activity price');
     }
 
     if (data.relationType === 'package') {
       const { price } = await Package.findByPk(data.relationId);
-      if (data.value > price)
-        throw new CustomError('Invalid value, must be less than Package price');
+      if (data.value > price) throw new CustomError('Invalid value, must be less than Package price');
     }
   }
 
@@ -173,14 +153,8 @@ export class CustomerDiscountService implements ICustomerDiscountService {
     `;
   }
 
-  private buildSelectQuery(
-    filter: IFilter,
-    count = false,
-    id: number = null
-  ): string {
-    let sql = `SELECT ${
-      count ? 'COUNT(1)' : '*'
-    } FROM (${this.getBaseQuery()}) q1`;
+  private buildSelectQuery(filter: IFilter, count = false, id: number = null): string {
+    let sql = `SELECT ${count ? 'COUNT(1)' : '*'} FROM (${this.getBaseQuery()}) q1`;
 
     const where = [
       filter?.customerId ? 'q1.customer_id = :customerId' : null,
@@ -193,9 +167,7 @@ export class CustomerDiscountService implements ICustomerDiscountService {
     }
 
     if (filter?.page && !count && !id) {
-      sql = `${sql} limit ${filter.limit || 10} offset ${
-        (Number(filter.page) - 1) * (Number(filter.limit) || 10)
-      }`;
+      sql = `${sql} limit ${filter.limit || 10} offset ${(Number(filter.page) - 1) * (Number(filter.limit) || 10)}`;
     }
 
     return sql;

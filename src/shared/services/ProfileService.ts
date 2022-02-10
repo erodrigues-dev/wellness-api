@@ -4,17 +4,10 @@ import CustomError from '../custom-error/CustomError';
 import Profile from '../database/models/Profile';
 import { ProfileDto } from '../models/dto/ProfileDto';
 import { ProfileFilterDto } from '../models/dto/ProfileFilterDto';
-import {
-  ProfileListViewModel,
-  ProfileViewModel
-} from '../models/viewmodels/ProfileViewModel';
+import { ProfileListViewModel, ProfileViewModel } from '../models/viewmodels/ProfileViewModel';
 
 export class ProfileService {
-  async list(
-    filter: ProfileFilterDto,
-    page: number = null,
-    limit: number = null
-  ): Promise<ProfileListViewModel[]> {
+  async list(filter: ProfileFilterDto, page: number = null, limit: number = null): Promise<ProfileListViewModel[]> {
     const where = this.buildQuery(filter);
 
     const findOptions: FindOptions = {
@@ -45,7 +38,7 @@ export class ProfileService {
   }
 
   async create(profile: ProfileDto): Promise<void> {
-    await Profile.create(profile);
+    await Profile.create(profile as any);
   }
 
   async update(profile: ProfileDto): Promise<void> {
@@ -63,8 +56,7 @@ export class ProfileService {
 
     if (filter.name) where['name'] = { [Op.iLike]: `%${filter.name}%` };
 
-    if (filter.description)
-      where['description'] = { [Op.iLike]: `%${filter.description}%` };
+    if (filter.description) where['description'] = { [Op.iLike]: `%${filter.description}%` };
 
     return where;
   }

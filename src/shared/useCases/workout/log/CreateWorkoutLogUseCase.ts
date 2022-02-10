@@ -32,7 +32,7 @@ export class CreateWorkoutLogUseCase {
   private async create({ trainers, ...data }: CreateWorkoutLogData) {
     const transaction = await WorkoutLog.sequelize.transaction();
     try {
-      const model = await WorkoutLog.create(data, { transaction });
+      const model = await WorkoutLog.create(data as any, { transaction });
       await model.setTrainers(trainers, { transaction });
       await transaction.commit();
       return model;

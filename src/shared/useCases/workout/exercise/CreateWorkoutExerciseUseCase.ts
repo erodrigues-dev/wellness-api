@@ -28,6 +28,6 @@ export class CreateWorkoutExerciseUseCase {
   }
 
   private create(data: CreateWorkoutExerciseData) {
-    return WorkoutExerciseLog.create(data);
+    return WorkoutExerciseLog.create(data as any);
   }
 }

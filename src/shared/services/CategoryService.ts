@@ -35,7 +35,7 @@ export class CategoryService implements ICategoryService {
     return model.toJSON() as ICategory;
   }
 
-  async create(category: ICategory): Promise<ICategory> {
+  async create(category): Promise<ICategory> {
     const model: Category = await this.db.create(category);
 
     return model.toJSON() as ICategory;

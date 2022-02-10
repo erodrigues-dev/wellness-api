@@ -60,9 +60,7 @@ export class PackageUseCase {
   }
 
   private async updateInSquare(catalogId: string) {
-    const catalog = catalogId
-      ? await squareCatalogService.get(catalogId)
-      : null;
+    const catalog = catalogId ? await squareCatalogService.get(catalogId) : null;
     const req = new SquareCatalogUpsertRequestBuilder(catalog);
     req.setName(this.data.name);
     req.setPrice(this.data.price);
@@ -73,7 +71,7 @@ export class PackageUseCase {
 
   private async createInDb(): Promise<Package> {
     const { activities, ...dataModel } = this.data;
-    const model = await Package.create(dataModel, {
+    const model = await Package.create(dataModel as any, {
       transaction: this.transaction
     });
 
@@ -133,9 +131,6 @@ export class PackageUseCase {
   }
 
   private async updateSquareIdInDb(packageId: number, squareId: string) {
-    await Package.update(
-      { squareId },
-      { where: { id: packageId }, transaction: this.transaction }
-    );
+    await Package.update({ squareId }, { where: { id: packageId }, transaction: this.transaction });
   }
 }
