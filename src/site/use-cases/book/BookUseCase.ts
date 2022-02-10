@@ -58,6 +58,7 @@ export class BookUseCase {
   }
 
   private getSlot(id: number) {
-    return Event.findByPk(id);
+    // return Event.findByPk(id);
+    throw new Error('Not implemented');
   }
 }
