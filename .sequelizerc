@@ -1,21 +1,13 @@
 const path = require('path');
 
-require('dotenv/config');
+const nodeEnv = process.env.NODE_ENV;
+
+require('dotenv').config({
+  path: nodeEnv ? `.env.${nodeEnv}` : '.env'
+});
 
 module.exports = {
   config: '.sequelize-config.js',
-  'migrations-path': path.resolve(
-    __dirname,
-    'src',
-    'shared',
-    'database',
-    'migrations'
-  ),
-  'seeders-path': path.resolve(
-    __dirname,
-    'src',
-    'shared',
-    'database',
-    'seeders'
-  )
+  'migrations-path': path.resolve(__dirname, 'src', 'shared', 'database', 'migrations'),
+  'seeders-path': path.resolve(__dirname, 'src', 'shared', 'database', 'seeders')
 };
