@@ -26,6 +26,7 @@ import Calendar from './models/Calendar';
 import TeamGroup from './models/TeamGroup';
 import CalendarSlot from './models/CalendarSlot';
 import CalendarEntry from './models/CalendarEntry';
+import CalendarLabel from './models/CalendarLabel';
 
 const connection = new Sequelize(DB_CONFIG);
 
@@ -54,6 +55,7 @@ export function databaseConfig() {
   TeamGroup.setup(connection);
   CalendarSlot.setup(connection);
   CalendarEntry.setup(connection);
+  CalendarLabel.setup(connection);
 
   Activity.setupAssociations();
   Customer.setupAssociations();
