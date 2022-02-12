@@ -4,6 +4,19 @@ import { getPaginateOptions } from '../utils/getPaginateOptions';
 import { Op } from 'sequelize';
 
 export class CalendarService {
+  listAll() {
+    return Calendar.findAll({
+      attributes: {
+        exclude: ['categoryId', 'deletedAt']
+      },
+      include: {
+        association: 'category',
+        attributes: ['id', 'name']
+      },
+      order: ['name']
+    });
+  }
+
   async list({ name, categoryName, page, limit }) {
     const where = {};
     if (name) where['name'] = { [Op.iLike]: `%${name}%` };
@@ -46,10 +59,26 @@ export class CalendarService {
     return this._parseModel(model.toJSON());
   }
 
+  async listActivities(calendarId) {
+    const calendar = await Calendar.findByPk(calendarId, {
+      attributes: ['id'],
+      include: {
+        association: 'activities',
+        attributes: ['id', 'name', 'duration']
+      }
+    });
+
+    return calendar.activities.map(activity => ({
+      id: activity.id,
+      name: activity.name,
+      duration: activity.duration
+    }));
+  }
+
   async create({ activities, ...data }) {
     const transaction = await Calendar.sequelize.transaction();
     try {
-      const model = await Calendar.create(data, { transaction });
+      const model = await Calendar.create(data as any, { transaction });
       await model.setActivities(activities, { transaction });
       await transaction.commit();
       return model.id;

@@ -72,6 +72,16 @@ export class CalendarController {
       next(error);
     }
   }
+
+  async listActivities(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const result = await this.service.listActivities(id);
+      return res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const makeCalendarController = () => new CalendarController();

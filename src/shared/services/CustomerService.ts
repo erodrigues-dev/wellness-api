@@ -50,7 +50,7 @@ export class CustomerService {
     const emailExist = await this.checkEmail(data.email);
     if (emailExist) throw new CustomError('Email is in use', 400);
 
-    const customerDb = await CustomerDb.create(data);
+    const customerDb = await CustomerDb.create(data as any);
     return Customer.map(customerDb.toJSON());
   }
 
