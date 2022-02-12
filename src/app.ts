@@ -1,10 +1,4 @@
-import { config } from 'dotenv';
-
-const envName = process.env.NODE_ENV;
-config({
-  path: envName ? `.env.${envName}` : '.env'
-});
-
+import '../dotenv-config';
 import 'express-async-errors';
 
 import cors from 'cors';
