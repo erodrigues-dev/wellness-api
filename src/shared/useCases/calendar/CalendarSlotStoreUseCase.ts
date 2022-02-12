@@ -1,4 +1,4 @@
-import Model from '../../../database/models/CalendarSlot';
+import Model from '../../database/models/CalendarSlot';
 
 type DataItem = {
   id: string;

@@ -1,9 +1,9 @@
 import { Op, literal } from 'sequelize';
-import CalendarEntry from '../../../database/models/CalendarEntry';
-import { schedulerSchema } from './schema';
+import CalendarEntry from '../../database/models/CalendarEntry';
+import { itemsSchema } from './schema';
 
-export class CalendarEntrySchedulerDataUseCase {
-  async getData(data) {
+export class SchedulerItemsUseCase {
+  async list(data) {
     const validData = this.validate(data);
     return this.query(validData);
   }
@@ -34,7 +34,7 @@ export class CalendarEntrySchedulerDataUseCase {
   }
 
   private validate(data) {
-    const result = schedulerSchema.validate(data);
+    const result = itemsSchema.validate(data);
 
     if (result.error) throw result.error;
 

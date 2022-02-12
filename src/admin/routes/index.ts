@@ -16,10 +16,10 @@ import waiverRouter from './WaiverRouter';
 import customerWaiverRouter from './CustomerWaiverRouter';
 import workoutRouter from './WorkoutRouter';
 import notificationRouter from './NotificationRouter';
-import calendarRouter from './CalendarRouter';
 import teamGroupRouter from './TeamGroupRouter';
 import autoCompleteRouter from './AutoCompleteRouter';
-import calendarSlotRouter from './CalendarSlotRouter';
+import calendarRouter from './CalendarRouter';
+import schedulerRouter from './SchedulerRouter';
 
 const router = Router();
 
@@ -39,9 +39,9 @@ router.use(waiverRouter);
 router.use(customerWaiverRouter);
 router.use(workoutRouter);
 router.use(notificationRouter);
-router.use(calendarRouter);
 router.use(teamGroupRouter);
 router.use(autoCompleteRouter);
-router.use(calendarSlotRouter);
+router.use(calendarRouter);
+router.use(schedulerRouter);
 
 export default router;

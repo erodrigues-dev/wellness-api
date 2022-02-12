@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
-import { CalendarSlotListUseCase } from '../../shared/useCases/calendar/slots/CalendarSlotListUseCase';
-import { CalendarSlotStoreUseCase } from '../../shared/useCases/calendar/slots/CalendarSlotStoreUseCase';
+import { CalendarSlotListUseCase } from '../../shared/useCases/calendar/CalendarSlotListUseCase';
+import { CalendarSlotStoreUseCase } from '../../shared/useCases/calendar/CalendarSlotStoreUseCase';
 
 const itemSchema = Joi.object({
   id: Joi.string().uuid().required(),
@@ -22,9 +22,9 @@ const schema = Joi.object({
 export class CalendarSlotController {
   async index(req: Request, res: Response, next: NextFunction) {
     try {
-      const { calendarId } = req.params;
+      const { id } = req.params;
       const useCase = new CalendarSlotListUseCase();
-      const list = await useCase.list(calendarId);
+      const list = await useCase.list(id);
       return res.json(list);
     } catch (error) {
       next(error);
@@ -33,7 +33,7 @@ export class CalendarSlotController {
 
   async store(req: Request, res: Response, next: NextFunction) {
     try {
-      const { calendarId } = req.params;
+      const { id: calendarId } = req.params;
       const data = await schema.validateAsync({ calendarId, ...req.body });
       const useCase = new CalendarSlotStoreUseCase();
       await useCase.handle(data);

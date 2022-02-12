@@ -5,10 +5,10 @@ import { Permission } from '../../shared/models/entities/Permission';
 import { checkPermission } from '../../shared/utils/permission';
 
 import { makeCalendarController } from '../controllers/CalendarController';
-import { makeCalendarEntryController } from '../controllers/CalendarEntryController';
+import { makeCalendarSlotController } from '../controllers/CalendarSlotController';
 
 const calendarController = makeCalendarController();
-const entryController = makeCalendarEntryController();
+const slotController = makeCalendarSlotController();
 
 const router = Router();
 
@@ -17,12 +17,9 @@ router.get('/calendars/:id', checkPermission(Permission.CalendarList), bindRoute
 router.post('/calendars', checkPermission(Permission.CalendarCreateUpdate), bindRoute(calendarController, 'store'));
 router.put('/calendars/:id', checkPermission(Permission.CalendarCreateUpdate), bindRoute(calendarController, 'update'));
 router.delete('/calendars/:id', checkPermission(Permission.CalendarDelete), bindRoute(calendarController, 'destroy'));
-
 router.get('/calendars/:id/activities', bindRoute(calendarController, 'listActivities'));
 
-router.get('/calendars/scheduler/entries', bindRoute(entryController, 'schedulerData'));
-router.get('/calendars/:calendarId/entries', bindRoute(entryController, 'index'));
-router.post('/calendars/:calendarId/entries', bindRoute(entryController, 'store'));
-router.put('/calendars/:calendarId/entries/:id', bindRoute(entryController, 'update'));
+router.get('/calendars/:calendarId/slots', bindRoute(slotController, 'index'));
+router.post('/calendars/:calendarId/slots', bindRoute(slotController, 'store'));
 
 export default router;

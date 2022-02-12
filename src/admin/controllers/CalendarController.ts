@@ -42,16 +42,6 @@ export class CalendarController {
     }
   }
 
-  async listActivities(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { id } = req.params;
-      const result = await this.service.listActivities(id);
-      return res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  }
-
   async store(req: Request, res: Response, next: NextFunction) {
     try {
       const data = await storeSchema.validateAsync(req.body);
@@ -78,6 +68,16 @@ export class CalendarController {
       const { id } = req.params;
       await this.service.destroy(id);
       return res.sendStatus(StatusCodes.NO_CONTENT);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async listActivities(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const result = await this.service.listActivities(id);
+      return res.json(result);
     } catch (error) {
       next(error);
     }
