@@ -14,8 +14,18 @@ module.exports = {
         allowNull: false
       },
       color: {
-        type: Sequelize.STRING(9),
+        type: Sequelize.STRING(7),
         allowNull: false
+      },
+      created_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn('now')
+      },
+      updated_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn('now')
       }
     });
   },
