@@ -13,6 +13,6 @@ router.get('/scheduler/items', bindRoute(controller, 'listItems'));
 router.get('/scheduler/items/:id', bindRoute(controller, 'getItem'));
 router.post('/scheduler/items', bindRoute(controller, 'addItem'));
 router.put('/scheduler/items/:id', bindRoute(controller, 'updateItem'));
-router.delete('/scheduler/items/:id', bindRoute(controller, 'removeItem'));
+router.post('/scheduler/items/:id/cancel', bindRoute(controller, 'cancelItem'));
 
 export default router;

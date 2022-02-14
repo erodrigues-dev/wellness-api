@@ -4,7 +4,7 @@ import { CalendarService } from '../../shared/services/CalendarService';
 import { SchedulerAddItemUseCase } from '../../shared/useCases/scheduler/SchedulerAddItemUseCase';
 import { SchedulerGetItemUseCase } from '../../shared/useCases/scheduler/SchedulerGetItemUseCase';
 import { SchedulerListItemsUseCase } from '../../shared/useCases/scheduler/SchedulerListItemsUseCase';
-import { SchedulerRemoveItemUseCase } from '../../shared/useCases/scheduler/SchedulerRemoveItemUseCase';
+import { SchedulerCancelItemUseCase } from '../../shared/useCases/scheduler/SchedulerCancelItemUseCase';
 import { SchedulerSlotUseCase } from '../../shared/useCases/scheduler/SchedulerSlotsUseCase';
 import { SchedulerUpdateItemUseCase } from '../../shared/useCases/scheduler/SchedulerUpdateItemUseCase';
 
@@ -83,10 +83,10 @@ export class SchedulerController {
     }
   }
 
-  async removeItem(req: Request, res: Response, next: NextFunction) {
+  async cancelItem(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const usecase = new SchedulerRemoveItemUseCase();
+      const usecase = new SchedulerCancelItemUseCase();
       await usecase.handle(id);
       return res.sendStatus(204);
     } catch (error) {
