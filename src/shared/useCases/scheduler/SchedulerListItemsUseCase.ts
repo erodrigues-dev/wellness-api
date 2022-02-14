@@ -2,7 +2,7 @@ import { Op, literal } from 'sequelize';
 import CalendarEntry from '../../database/models/CalendarEntry';
 import { itemsSchema } from './schema';
 
-export class SchedulerItemsUseCase {
+export class SchedulerListItemsUseCase {
   async list(data) {
     const validData = this.validate(data);
     return this.query(validData);
@@ -13,7 +13,7 @@ export class SchedulerItemsUseCase {
 
     const list = await CalendarEntry.findAll({
       attributes: {
-        exclude: ['activityId', 'customerId', 'createdAt', 'updatedAt']
+        exclude: ['activityId', 'customerId', 'labelId', 'createdAt', 'updatedAt']
       },
       include: [
         {
@@ -23,6 +23,10 @@ export class SchedulerItemsUseCase {
         {
           association: 'customer',
           attributes: ['id', 'name']
+        },
+        {
+          association: 'label',
+          attributes: { exclude: ['createdAt', 'updatedAt'] }
         }
       ],
       where: {

@@ -3,7 +3,29 @@ import CalendarEntry from '../../database/models/CalendarEntry';
 
 export class SchedulerGetItemUseCase {
   async handle(id) {
-    const model = await CalendarEntry.findByPk(id);
+    const model = await CalendarEntry.findByPk(id, {
+      attributes: {
+        exclude: ['activityId', 'customerId', 'labelId', 'calendarId']
+      },
+      include: [
+        {
+          association: 'activity',
+          attributes: ['id', 'name', 'duration']
+        },
+        {
+          association: 'customer',
+          attributes: ['id', 'name']
+        },
+        {
+          association: 'label',
+          attributes: ['id', 'name', 'color']
+        },
+        {
+          association: 'calendar',
+          attributes: ['id', 'name']
+        }
+      ]
+    });
     if (!model) throw new NotFoundError('Scheduler item not found');
 
     return model;
