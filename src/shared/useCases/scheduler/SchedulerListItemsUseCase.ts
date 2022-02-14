@@ -30,7 +30,11 @@ export class SchedulerListItemsUseCase {
         }
       ],
       where: {
-        [Op.and]: [{ calendarId: { [Op.in]: calendars } }, literal(`date_trunc('day', "date_start") = '${dateOnly}'`)]
+        [Op.and]: [
+          { calendarId: { [Op.in]: calendars } },
+          literal(`date_trunc('day', "date_start") = '${dateOnly}'`),
+          { canceledAt: { [Op.is]: null } }
+        ]
       }
     });
 
