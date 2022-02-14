@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { CalendarService } from '../../shared/services/CalendarService';
 import { SchedulerAddItemUseCase } from '../../shared/useCases/scheduler/SchedulerAddItemUseCase';
 import { SchedulerGetItemUseCase } from '../../shared/useCases/scheduler/SchedulerGetItemUseCase';
-import { SchedulerItemsUseCase } from '../../shared/useCases/scheduler/SchedulerItemsUseCase';
+import { SchedulerListItemsUseCase } from '../../shared/useCases/scheduler/SchedulerListItemsUseCase';
 import { SchedulerRemoveItemUseCase } from '../../shared/useCases/scheduler/SchedulerRemoveItemUseCase';
 import { SchedulerSlotUseCase } from '../../shared/useCases/scheduler/SchedulerSlotsUseCase';
 import { SchedulerUpdateItemUseCase } from '../../shared/useCases/scheduler/SchedulerUpdateItemUseCase';
@@ -41,9 +41,9 @@ export class SchedulerController {
     }
   }
 
-  async items(req: Request, res: Response, next: NextFunction) {
+  async listItems(req: Request, res: Response, next: NextFunction) {
     try {
-      const usecase = new SchedulerItemsUseCase();
+      const usecase = new SchedulerListItemsUseCase();
       const list = await usecase.list(req.query);
       return res.json(list);
     } catch (error) {
