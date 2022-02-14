@@ -14,6 +14,7 @@ export default class CalendarEntry extends Model {
   dateEnd: Date;
   notes: String;
 
+  canceledAt: Date;
   createdAt: Date;
   updatedAt: Date;
 
@@ -27,7 +28,8 @@ export default class CalendarEntry extends Model {
       {
         dateStart: DataTypes.DATE,
         dateEnd: DataTypes.DATE,
-        notes: DataTypes.STRING
+        notes: DataTypes.STRING,
+        canceledAt: DataTypes.DATE
       },
       {
         sequelize: connection,
