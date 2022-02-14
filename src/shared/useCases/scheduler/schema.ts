@@ -13,6 +13,7 @@ export const updateItemSchema = Joi.object({
   calendarId: Joi.string().uuid().required(),
   customerId: Joi.number().required(),
   activityId: Joi.number().required(),
+  labelId: Joi.string().uuid(),
   dateStart: Joi.string().isoDate().required(),
   notes: Joi.string().max(600)
 });
