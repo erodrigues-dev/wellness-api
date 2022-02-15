@@ -33,3 +33,18 @@
 - [ ] rotas
 - [ ] validar regras de disponibilidade
 - [ ] unificar rotas do calendario no CalendarRouter
+
+## dependencies
+
+- [ ] update
+
+  - [ ] @types/bcrypt
+  - [ ] @types/express-jwt
+  - [ ] @types/node
+  - [ ] axios
+  - [ ] commander
+  - [ ] dotenv
+  - [ ] typescript
+
+- [ ] remove
+  - [ ] celebrate
