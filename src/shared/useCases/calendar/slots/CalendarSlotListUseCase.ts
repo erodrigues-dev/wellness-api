@@ -1,12 +1,12 @@
-import Model from '../../database/models/CalendarSlot';
+import Model from '../../../database/models/CalendarSlot'
 
 export class CalendarSlotListUseCase {
   async list(calendarId) {
     const dbList = await Model.findAll({
       where: { calendarId }
-    });
+    })
 
-    return dbList.map(this.parse);
+    return dbList.map(this.parse)
   }
 
   private parse(item: Model) {
@@ -17,6 +17,6 @@ export class CalendarSlotListUseCase {
       recurrenceRule: item.recurrenceRule,
       recurrenceExceptions: JSON.parse(item.recurrenceExceptions || '[]'),
       status: item.status
-    };
+    }
   }
 }
