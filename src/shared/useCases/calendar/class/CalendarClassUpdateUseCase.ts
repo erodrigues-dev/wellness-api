@@ -1,6 +1,6 @@
 import CalendarClass from '../../../database/models/CalendarClass'
 
-import { updateSchema } from './schema'
+import { updateSchema } from './calendar-class-schema'
 
 export class CalendarClassUpdateUseCase {
   async handle(data: any) {
