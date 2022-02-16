@@ -1,4 +1,6 @@
-import { format, parse, addMinutes } from 'date-fns'
+import { format, parse, addMinutes, parseISO } from 'date-fns'
+
+export { addMinutes, parseISO }
 
 export function formatTime24To12(time: string): string {
   const dateTime = parse(time, 'HH:mm:ss', new Date())
@@ -21,5 +23,3 @@ export function getDate(value: string) {
 
   return isoDate.split('T')[0]
 }
-
-export { addMinutes }
