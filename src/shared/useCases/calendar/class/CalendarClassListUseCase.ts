@@ -2,6 +2,7 @@ import { literal, Op } from 'sequelize'
 import CalendarClass from '../../../database/models/CalendarClass'
 import CalendarEntry from '../../../database/models/CalendarEntry'
 import { getDate } from '../../../utils/date-utils'
+import { listSchema } from './calendar-class-schema'
 
 interface Props {
   date: string
@@ -10,6 +11,8 @@ interface Props {
 
 export class CalendarClassListUseCase {
   async handle(data: Props) {
+    await listSchema.validateAsync(data)
+
     const [byDate, recurrence] = await Promise.all([
       this.queryByDate(data),
       this.queryRecurrences(data)
@@ -24,8 +27,8 @@ export class CalendarClassListUseCase {
       where: {
         [Op.and]: [
           { calendarId: { [Op.in]: data.calendars } },
-          literal(`date_trunc('day', "date_start") = '${date}'`),
-          { recurrenceRule: { [Op.is]: null } }
+          { recurrenceRule: { [Op.is]: null } },
+          literal(`date_trunc('day', "date_start") = '${date}'`)
         ]
       }
     })
