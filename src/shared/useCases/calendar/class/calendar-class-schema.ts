@@ -1,5 +1,10 @@
 import joi from 'joi'
 
+export const listSchema = joi.object({
+  calendars: joi.array().items(joi.string()).min(1).required(),
+  date: joi.string().isoDate().required()
+})
+
 export const storeSchema = joi.object({
   calendarId: joi.string().uuid().required(),
   activityId: joi.number().required(),
