@@ -3,13 +3,23 @@ import Activity from '../../database/models/Activity'
 
 import { addMinutes } from '../../utils/date-utils'
 
-import { addItemSchema } from './schema'
+import { createItemSchema } from './schema'
 
 export class SchedulerCreateItemUseCase {
   async handle(data) {
-    const validData = await addItemSchema.validateAsync(data)
+    const validData = await createItemSchema.validateAsync(data)
     const dateEnd = await this.calculateDateEnd(validData)
     const model = await CalendarEntry.create({ ...validData, dateEnd })
+
+    await model.reload({
+      include: [
+        { association: 'calendar', attributes: ['id', 'name'] },
+        { association: 'activity', attributes: ['id', 'name', 'duration'] },
+        { association: 'customer', attributes: ['id', 'name'] },
+        { association: 'label', attributes: ['id', 'name', 'color'] }
+      ]
+    })
+
     return model
   }
 
