@@ -27,6 +27,18 @@ export class CalendarClassCreateUseCase {
     await storeSchema.validateAsync(data)
   }
 
+  async save(data) {
+    const endDate = await this.calculateEndDate(data)
+    const model = await CalendarClass.create({ ...data, endDate })
+    await model.reload({
+      include: [
+        { association: 'calendar', attributes: ['id', 'name'] },
+        { association: 'activity', attributes: ['id', 'name', 'duration'] }
+      ]
+    })
+    return model
+  }
+
   async calculateEndDate({ activityId, dateStart }: Data) {
     const { duration } = await Activity.findByPk(activityId, { attributes: ['duration'] })
     const date = parseISO(dateStart)
