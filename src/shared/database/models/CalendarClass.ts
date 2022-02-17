@@ -3,17 +3,17 @@ import Activity from './Activity'
 import Calendar from './Calendar'
 
 export default class CalendarClass extends Model {
-  id: String
-  calendarId: String
-  activityId: Number
+  id: string
+  calendarId: string
+  activityId: number
 
   dateStart: Date
   dateEnd: Date
-  slots: Number
-  recurrenceRule: String
-  recurrenceExceptions: String
-  color: String
-  notes: String
+  slots: number
+  recurrenceRule: string
+  recurrenceExceptions: string
+  color: string
+  notes: string
 
   calendar?: Calendar
   activity?: Activity
