@@ -20,9 +20,11 @@ export class CalendarClassListUseCase {
       this.queryRecurrences(data)
     ])
 
+    const all = [...byDate, ...recurrence]
+
     // TODO: calcular appointments/slots
 
-    return [...byDate, ...recurrence]
+    return all
   }
 
   private async queryByDate(data: Props) {
@@ -37,7 +39,7 @@ export class CalendarClassListUseCase {
       }
     })
 
-    return list
+    return list.map(item => item.toJSON())
   }
 
   private async queryRecurrences(data: Props) {
@@ -50,7 +52,9 @@ export class CalendarClassListUseCase {
       }
     })
 
-    return list.filter(current => this.hasDateInRecurrence(current, data.date))
+    return list
+      .map(item => item.toJSON())
+      .filter(current => this.hasDateInRecurrence(current, data.date))
   }
 
   private hasDateInRecurrence(calendarClass: CalendarClass, date: string): boolean {
