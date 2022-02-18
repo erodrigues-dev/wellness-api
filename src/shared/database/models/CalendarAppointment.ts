@@ -33,7 +33,7 @@ export default class CalendarAppointment extends Model {
       },
       {
         sequelize: connection,
-        tableName: 'calendars_entries',
+        tableName: 'calendars_appointments',
         paranoid: true,
         deletedAt: 'canceledAt'
       }
@@ -57,7 +57,7 @@ export default class CalendarAppointment extends Model {
     })
 
     CalendarAppointment.belongsTo(CalendarLabel, {
-      foreignKey: 'labelId',
+      foreignKey: 'calendarLabelId',
       as: 'label'
     })
   }
