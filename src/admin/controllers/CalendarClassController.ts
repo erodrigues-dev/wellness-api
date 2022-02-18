@@ -1,0 +1,55 @@
+import { Request, Response, NextFunction } from 'express'
+import { CalendarClassCreateUseCase } from '../../shared/useCases/calendar/class/CalendarClassCreateUseCase'
+import { CalendarClassDestroyUseCase } from '../../shared/useCases/calendar/class/CalendarClassDestroyUseCase'
+import { CalendarClassListUseCase } from '../../shared/useCases/calendar/class/CalendarClassListUseCase'
+import { CalendarClassUpdateUseCase } from '../../shared/useCases/calendar/class/CalendarClassUpdateUseCase'
+
+export class CalendarClassController {
+  async list(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = { ...req.query } as any
+      const usecase = new CalendarClassListUseCase()
+      const list = await usecase.handle(data)
+      return res.json(list)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async store(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = { ...req.body }
+      const usecase = new CalendarClassCreateUseCase()
+      const model = await usecase.handle(data)
+      return res.json(model)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = { ...req.params, ...req.body }
+      const usecase = new CalendarClassUpdateUseCase()
+      const model = await usecase.handle(data)
+      return res.json(model)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async destroy(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params
+      const usecase = new CalendarClassDestroyUseCase()
+      const model = await usecase.handle(id)
+      return res.json(model)
+    } catch (error) {
+      next(error)
+    }
+  }
+}
+
+export function makeCalendarClassController() {
+  return new CalendarClassController()
+}
