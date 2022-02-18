@@ -1,4 +1,4 @@
-import CalendarEntry from '../../database/models/CalendarEntry'
+import CalendarAppointment from '../../database/models/CalendarAppointment'
 import Activity from '../../database/models/Activity'
 
 import { addMinutes } from '../../utils/date-utils'
@@ -9,7 +9,7 @@ export class SchedulerCreateItemUseCase {
   async handle(data) {
     const validData = await createItemSchema.validateAsync(data)
     const dateEnd = await this.calculateDateEnd(validData)
-    const model = await CalendarEntry.create({ ...validData, dateEnd })
+    const model = await CalendarAppointment.create({ ...validData, dateEnd })
 
     await model.reload({
       include: [

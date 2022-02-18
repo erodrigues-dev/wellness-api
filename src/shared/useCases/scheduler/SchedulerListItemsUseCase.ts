@@ -1,17 +1,17 @@
-import { Op, literal } from 'sequelize';
-import CalendarEntry from '../../database/models/CalendarEntry';
-import { itemsSchema } from './schema';
+import { Op, literal } from 'sequelize'
+import CalendarAppointment from '../../database/models/CalendarAppointment'
+import { itemsSchema } from './schema'
 
 export class SchedulerListItemsUseCase {
   async list(data) {
-    const validData = this.validate(data);
-    return this.query(validData);
+    const validData = this.validate(data)
+    return this.query(validData)
   }
 
   private async query({ calendars, date }) {
-    const [dateOnly] = date.split('T');
+    const [dateOnly] = date.split('T')
 
-    const list = await CalendarEntry.findAll({
+    const list = await CalendarAppointment.findAll({
       attributes: {
         exclude: ['activityId', 'customerId', 'labelId', 'createdAt', 'updatedAt']
       },
@@ -36,16 +36,16 @@ export class SchedulerListItemsUseCase {
           { canceledAt: { [Op.is]: null } }
         ]
       }
-    });
+    })
 
-    return list;
+    return list
   }
 
   private validate(data) {
-    const result = itemsSchema.validate(data);
+    const result = itemsSchema.validate(data)
 
-    if (result.error) throw result.error;
+    if (result.error) throw result.error
 
-    return result.value;
+    return result.value
   }
 }
