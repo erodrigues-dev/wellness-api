@@ -48,3 +48,10 @@
 
 - [ ] remove
   - [ ] celebrate
+
+## rename calendar_entries to calendar_appointments
+
+- [x] rename table
+- [x] rename column label_id to calendar_label_id
+- [x] enable paranoid
+- [x] configure deletedAt to canceledAt
