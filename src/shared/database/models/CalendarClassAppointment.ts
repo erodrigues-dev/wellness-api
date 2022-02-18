@@ -1,17 +1,20 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
 import CalendarClass from './CalendarClass'
+import CalendarLabel from './CalendarLabel'
 import Customer from './Customer'
 
 export default class CalendarClassAppointment extends Model {
   id: string
-  calendarClassId: string
   customerId: number
+  calendarClassId: string
+  calendarLabelId: string
   dateStart: Date
   dateEnd: Date
   notes: string
 
-  calendarClass?: CalendarClass
   customer?: Customer
+  calendarClass?: CalendarClass
+  calendarLabel?: CalendarLabel
 
   createdAt?: Date
   updatedAt?: Date
@@ -28,7 +31,7 @@ export default class CalendarClassAppointment extends Model {
         sequelize: connection,
         tableName: 'calendars_class_appointments',
         paranoid: true,
-        deletedAt: 'canceled_at'
+        deletedAt: 'canceledAt'
       }
     )
   }
@@ -37,6 +40,11 @@ export default class CalendarClassAppointment extends Model {
     CalendarClassAppointment.belongsTo(CalendarClass, {
       foreignKey: 'calendarClassId',
       as: 'calendarClass'
+    })
+
+    CalendarClassAppointment.belongsTo(CalendarLabel, {
+      foreignKey: 'calendarLabelId',
+      as: 'calendarLabel'
     })
 
     CalendarClassAppointment.belongsTo(Customer, {
