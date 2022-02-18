@@ -14,9 +14,9 @@ const itemSchema = Joi.object({
 
 const schema = Joi.object({
   calendarId: Joi.string().required(),
-  created: Joi.array().items(itemSchema),
-  updated: Joi.array().items(itemSchema),
-  deleted: Joi.array().items(itemSchema)
+  created: Joi.array().items(itemSchema).default([]),
+  updated: Joi.array().items(itemSchema).default([]),
+  deleted: Joi.array().items(itemSchema).default([])
 })
 
 export class CalendarSlotController {
