@@ -25,7 +25,7 @@ import NotificationEmployee from './models/NotificationEmployee'
 import Calendar from './models/Calendar'
 import TeamGroup from './models/TeamGroup'
 import CalendarSlot from './models/CalendarSlot'
-import CalendarEntry from './models/CalendarEntry'
+import CalendarAppointment from './models/CalendarAppointment'
 import CalendarLabel from './models/CalendarLabel'
 import CalendarClass from './models/CalendarClass'
 import CalendarClassAppointment from './models/CalendarClassAppointment'
@@ -56,7 +56,7 @@ export function databaseConfig() {
   Calendar.setup(connection)
   TeamGroup.setup(connection)
   CalendarSlot.setup(connection)
-  CalendarEntry.setup(connection)
+  CalendarAppointment.setup(connection)
   CalendarLabel.setup(connection)
   CalendarClass.setup(connection)
   CalendarClassAppointment.setup(connection)
@@ -80,7 +80,7 @@ export function databaseConfig() {
   Calendar.setupAssociations()
   TeamGroup.setupAssociations()
   CalendarSlot.setupAssociations()
-  CalendarEntry.setupAssociations()
+  CalendarAppointment.setupAssociations()
   CalendarClass.setupAssociations()
   CalendarClassAppointment.setupAssociations()
 }

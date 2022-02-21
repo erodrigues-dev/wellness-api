@@ -1,14 +1,14 @@
-import CalendarEntry from '../../database/models/CalendarEntry';
+import CalendarAppointment from '../../database/models/CalendarAppointment'
 
 export class SchedulerCancelItemUseCase {
   async handle(id: string) {
-    await CalendarEntry.update(
+    await CalendarAppointment.update(
       {
         canceledAt: new Date()
       },
       {
         where: { id }
       }
-    );
+    )
   }
 }

@@ -1,9 +1,9 @@
-import { NotFoundError } from '../../custom-error';
-import CalendarEntry from '../../database/models/CalendarEntry';
+import { NotFoundError } from '../../custom-error'
+import CalendarAppointment from '../../database/models/CalendarAppointment'
 
 export class SchedulerGetItemUseCase {
   async handle(id) {
-    const model = await CalendarEntry.findByPk(id, {
+    const model = await CalendarAppointment.findByPk(id, {
       attributes: {
         exclude: ['activityId', 'customerId', 'labelId', 'calendarId']
       },
@@ -25,9 +25,9 @@ export class SchedulerGetItemUseCase {
           attributes: ['id', 'name']
         }
       ]
-    });
-    if (!model) throw new NotFoundError('Scheduler item not found');
+    })
+    if (!model) throw new NotFoundError('Scheduler item not found')
 
-    return model;
+    return model
   }
 }

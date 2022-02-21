@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('calendars_entries', {
+    await queryInterface.createTable('calendars_appointments', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -38,10 +38,10 @@ module.exports = {
       },
       created_at: Sequelize.DATE,
       updated_at: Sequelize.DATE
-    });
+    })
   },
 
   down: async queryInterface => {
-    await queryInterface.dropTable('calendars_entries');
+    await queryInterface.dropTable('calendars_appointments')
   }
-};
+}

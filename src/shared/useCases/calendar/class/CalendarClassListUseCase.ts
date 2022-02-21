@@ -2,7 +2,7 @@ import { literal, Op } from 'sequelize'
 import { rrulestr } from 'rrule'
 
 import CalendarClass from '../../../database/models/CalendarClass'
-import CalendarEntry from '../../../database/models/CalendarEntry'
+import CalendarAppointment from '../../../database/models/CalendarAppointment'
 import { getDate, parseISO, startOfDay, isSameDay } from '../../../utils/date-utils'
 import { listSchema } from './calendar-class-schema'
 
