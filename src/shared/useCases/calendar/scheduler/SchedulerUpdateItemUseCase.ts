@@ -1,7 +1,7 @@
-import CalendarAppointment from '../../database/models/CalendarAppointment'
-import Activity from '../../database/models/Activity'
+import CalendarAppointment from '../../../database/models/CalendarAppointment'
+import Activity from '../../../database/models/Activity'
 
-import { addMinutes } from '../../utils/date-utils'
+import { addMinutes } from '../../../utils/date-utils'
 
 import { updateItemSchema } from './schema'
 

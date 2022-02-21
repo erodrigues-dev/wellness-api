@@ -1,4 +1,4 @@
-import CalendarAppointment from '../../database/models/CalendarAppointment'
+import CalendarAppointment from '../../../database/models/CalendarAppointment'
 
 export class SchedulerCancelItemUseCase {
   async handle(id: string) {

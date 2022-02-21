@@ -1,5 +1,5 @@
 import { Op, literal } from 'sequelize'
-import CalendarAppointment from '../../database/models/CalendarAppointment'
+import CalendarAppointment from '../../../database/models/CalendarAppointment'
 import { itemsSchema } from './schema'
 
 export class SchedulerListItemsUseCase {
