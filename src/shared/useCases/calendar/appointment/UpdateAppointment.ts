@@ -1,11 +1,12 @@
 import CalendarAppointment from '../../../database/models/CalendarAppointment'
 
-import { createAppointmentSchema } from './schema'
+import { updateAppointmentSchema } from './schema'
 import CalendarClass from '../../../database/models/CalendarClass'
 import { CalculateDateEnd } from './CalculateDateEnd'
 import { GetModel } from './GetModel'
 
-interface AddAppointmentData {
+interface UpdateAppointmentData {
+  id: string
   calendarClassId: string
   calendarId: string
   activityId: number
@@ -15,7 +16,7 @@ interface AddAppointmentData {
   notes: string
 }
 
-export class CalendarAddAppointmentUseCase {
+export class CalendarUpdateAppointmentUseCase {
   private calculateDateEnd: CalculateDateEnd
   private getModel: GetModel
 
@@ -24,19 +25,19 @@ export class CalendarAddAppointmentUseCase {
     this.getModel = new GetModel()
   }
 
-  async handle(data: AddAppointmentData) {
-    await createAppointmentSchema.validateAsync(data)
-    const id = await this.save(data)
-    return this.getModel.handle(id)
+  async handle(data: UpdateAppointmentData) {
+    await updateAppointmentSchema.validateAsync(data)
+    await this.save(data)
+    return this.getModel.handle(data.id)
   }
 
-  private save(data: AddAppointmentData) {
+  private save(data: UpdateAppointmentData) {
     const isClassAppointment = Boolean(data.calendarClassId)
     if (isClassAppointment) return this.saveWithClassAppointment(data)
     return this.saveWithAppointment(data)
   }
 
-  private async saveWithClassAppointment(data: AddAppointmentData) {
+  private async saveWithClassAppointment({ id, ...data }: UpdateAppointmentData) {
     const calendarClass = await CalendarClass.findByPk(data.calendarClassId)
 
     const dateEnd = await this.calculateDateEnd.calculate({
@@ -55,14 +56,12 @@ export class CalendarAddAppointmentUseCase {
       dateEnd
     }
 
-    const { id } = await CalendarAppointment.create(appointmentData)
-    return id
+    await CalendarAppointment.update(appointmentData, { where: { id } })
   }
 
-  private async saveWithAppointment(data: AddAppointmentData) {
+  private async saveWithAppointment({ id, ...data }: UpdateAppointmentData) {
     const dateEnd = await this.calculateDateEnd.calculate(data)
 
-    const { id } = await CalendarAppointment.create({ ...data, dateEnd })
-    return id
+    await CalendarAppointment.update({ ...data, dateEnd }, { where: { id } })
   }
 }
