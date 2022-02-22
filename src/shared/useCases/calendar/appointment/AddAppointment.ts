@@ -38,13 +38,14 @@ export class CalendarAddAppointmentUseCase {
     })
 
     const appointmentData = {
-      dateStart: data.dateStart,
-      dateEnd,
       calendarClassId: calendarClass.id,
+      calendarId: calendarClass.calendarId,
       activityId: calendarClass.activityId,
       customerId: data.customerId,
       calendarLabelId: data.calendarLabelId,
-      notes: data.notes
+      notes: data.notes,
+      dateStart: data.dateStart,
+      dateEnd
     }
 
     const { id } = await CalendarAppointment.create(appointmentData)
