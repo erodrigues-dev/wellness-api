@@ -76,8 +76,8 @@ export class SchedulerController {
     try {
       const data = { ...req.params, ...req.body }
       const usecase = new CalendarUpdateAppointmentUseCase()
-      await usecase.handle(data)
-      return res.sendStatus(204)
+      const model = await usecase.handle(data)
+      return res.json(model)
     } catch (error) {
       next(error)
     }
