@@ -62,7 +62,7 @@ export class SchedulerController {
     }
   }
 
-  async addItem(req: Request, res: Response, next: NextFunction) {
+  async addAppointment(req: Request, res: Response, next: NextFunction) {
     try {
       const useCase = new CalendarAddAppointmentUseCase()
       const model = await useCase.handle(req.body)
@@ -72,7 +72,7 @@ export class SchedulerController {
     }
   }
 
-  async updateItem(req: Request, res: Response, next: NextFunction) {
+  async updateAppointment(req: Request, res: Response, next: NextFunction) {
     try {
       const data = { ...req.params, ...req.body }
       const usecase = new SchedulerUpdateItemUseCase()
@@ -83,7 +83,7 @@ export class SchedulerController {
     }
   }
 
-  async cancelItem(req: Request, res: Response, next: NextFunction) {
+  async cancelAppointment(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
       const usecase = new SchedulerCancelItemUseCase()
