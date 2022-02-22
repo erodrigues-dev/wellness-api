@@ -25,7 +25,7 @@ export class SchedulerListItemsUseCase {
           attributes: ['id', 'name']
         },
         {
-          association: 'label',
+          association: 'calendarLabel',
           attributes: { exclude: ['createdAt', 'updatedAt'] }
         }
       ],
