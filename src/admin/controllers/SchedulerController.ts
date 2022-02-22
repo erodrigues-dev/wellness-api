@@ -6,7 +6,7 @@ import { SchedulerGetItemUseCase } from '../../shared/useCases/calendar/schedule
 import { SchedulerListItemsUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerListItemsUseCase'
 import { SchedulerCancelItemUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerCancelItemUseCase'
 import { SchedulerSlotUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerSlotsUseCase'
-import { SchedulerUpdateItemUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerUpdateItemUseCase'
+import { CalendarUpdateAppointmentUseCase } from '../../shared/useCases/calendar/appointment/UpdateAppointment'
 
 export class SchedulerController {
   async calendars(req: Request, res: Response, next: NextFunction) {
@@ -75,7 +75,7 @@ export class SchedulerController {
   async updateAppointment(req: Request, res: Response, next: NextFunction) {
     try {
       const data = { ...req.params, ...req.body }
-      const usecase = new SchedulerUpdateItemUseCase()
+      const usecase = new CalendarUpdateAppointmentUseCase()
       await usecase.handle(data)
       return res.sendStatus(204)
     } catch (error) {
