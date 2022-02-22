@@ -1,0 +1,130 @@
+openapi: 3.0.1
+info:
+  title: Elite Wellness
+  version: 0.0.2
+  description: Admin API documentation
+
+servers:
+  - url: http://localhost:3333/admin
+    description: Local API
+  - url: http://stg.api.elitewellnessperformance.com:8090/admin
+    description: Staging API
+
+security:
+  - token: []
+
+paths:
+  /scheduler/appointments:
+    get:
+      tags:
+        - scheduler
+      summary: list appointments
+      parameters:
+        - name: calendars
+          in: query
+          required: true
+          schema:
+            type: array
+        - name: date
+          in: query
+          required: true
+          description: format ISO8601
+          schema:
+            type: string
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Appointment'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    'token':
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+
+    IdAndName:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    IdIntegerAndName:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    Appointment:
+      type: object
+      properties:
+        id:
+          type: string
+        dateStart:
+          type: string
+        dateEnd:
+          type: string
+        calendarId:
+          type: string
+        calendarLabelId:
+          type: string
+        calendarClassId:
+          type: string
+        activity:
+          allOf:
+            - $ref: '#/components/schemas/IdIntegerAndName'
+            - type: object
+              properties:
+                duration:
+                  type: integer
+        customer:
+          $ref: '#/components/schemas/IdIntegerAndName'
+        calendarLabel:
+          allOf:
+            - $ref: '#/components/schemas/IdAndName'
+            - type: object
+              properties:
+                color:
+                  type: string
+        notes:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        canceledAt:
+          type: string
