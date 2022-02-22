@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
 
 import { CalendarService } from '../../shared/services/CalendarService'
-import { SchedulerCreateItemUseCase } from '../../shared/useCases/scheduler/SchedulerCreateItemUseCase'
-import { SchedulerGetItemUseCase } from '../../shared/useCases/scheduler/SchedulerGetItemUseCase'
-import { SchedulerListItemsUseCase } from '../../shared/useCases/scheduler/SchedulerListItemsUseCase'
-import { SchedulerCancelItemUseCase } from '../../shared/useCases/scheduler/SchedulerCancelItemUseCase'
-import { SchedulerSlotUseCase } from '../../shared/useCases/scheduler/SchedulerSlotsUseCase'
-import { SchedulerUpdateItemUseCase } from '../../shared/useCases/scheduler/SchedulerUpdateItemUseCase'
+import { CalendarAddAppointmentUseCase } from '../../shared/useCases/calendar/appointment/AddAppointment'
+import { SchedulerGetItemUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerGetItemUseCase'
+import { SchedulerListItemsUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerListItemsUseCase'
+import { SchedulerCancelItemUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerCancelItemUseCase'
+import { SchedulerSlotUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerSlotsUseCase'
+import { SchedulerUpdateItemUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerUpdateItemUseCase'
 
 export class SchedulerController {
   async calendars(req: Request, res: Response, next: NextFunction) {
@@ -64,7 +64,7 @@ export class SchedulerController {
 
   async addItem(req: Request, res: Response, next: NextFunction) {
     try {
-      const useCase = new SchedulerCreateItemUseCase()
+      const useCase = new CalendarAddAppointmentUseCase()
       const model = await useCase.handle(req.body)
       return res.json(model)
     } catch (error) {
