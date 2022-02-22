@@ -28,7 +28,6 @@ import CalendarSlot from './models/CalendarSlot'
 import CalendarAppointment from './models/CalendarAppointment'
 import CalendarLabel from './models/CalendarLabel'
 import CalendarClass from './models/CalendarClass'
-import CalendarClassAppointment from './models/CalendarClassAppointment'
 
 const connection = new Sequelize(DB_CONFIG)
 
@@ -59,7 +58,6 @@ export function databaseConfig() {
   CalendarAppointment.setup(connection)
   CalendarLabel.setup(connection)
   CalendarClass.setup(connection)
-  CalendarClassAppointment.setup(connection)
 
   Activity.setupAssociations()
   Customer.setupAssociations()
@@ -82,7 +80,6 @@ export function databaseConfig() {
   CalendarSlot.setupAssociations()
   CalendarAppointment.setupAssociations()
   CalendarClass.setupAssociations()
-  CalendarClassAppointment.setupAssociations()
 }
 
 export default connection
