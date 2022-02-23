@@ -7,8 +7,7 @@
     "dev": "ts-node-dev --inspect=0.0.0.0:7001 --exit-child --respawn --transpile-only --clear --rs src/server.ts",
     "build": "rm -rf dist/* && tsc",
     "postbuild": "copyfiles src/**/*.yaml dist/",
-    "pwd": "ts-node ./password.ts",
-    "build:seed": "tsc src/shared/database/seeders/*.ts",
+    "deploy:stg": "gh workflow run staging.yml -r",
     "migration:status": "sequelize db:migrate:status",
     "migration:create": "sequelize migration:create --name",
     "migration:up": "sequelize db:migrate",
@@ -19,7 +18,8 @@
     "seed:up:all": "sequelize db:seed:all",
     "seed:down:all": "sequelize db:seed:undo:all",
     "lint": "tsc --noEmit",
-    "tunnel": "lt --port 3333 --subdomain wellness-dev --print-requests --open"
+    "tunnel": "lt --port 3333 --subdomain wellness-dev --print-requests --open",
+    "pwd": "ts-node ./password.ts"
   },
   "keywords": [],
   "author": "",
