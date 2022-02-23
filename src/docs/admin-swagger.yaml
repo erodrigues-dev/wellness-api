@@ -27,7 +27,33 @@ paths:
               schema:
                 type: array
                 items:
-                $ref: '#/components/schemas/Calendar'
+                  $ref: '#/components/schemas/Calendar'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
+  /scheduler/calendars/:id/activities:
+    get:
+      tags:
+        - scheduler
+      summary: list activities associateds in calendar
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: calendar id
+          schema:
+            type: string
+      responses:
+        200:
+          description: list of calendars
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
         400:
           $ref: '#/components/responses/BadRequest'
         500:
@@ -116,6 +142,19 @@ components:
           type: integer
         name:
           type: string
+
+    Activity:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 4
+        name:
+          type: string
+          example: Adult Training
+        duration:
+          type: integer
+          example: 30
 
     Calendar:
       type: object
