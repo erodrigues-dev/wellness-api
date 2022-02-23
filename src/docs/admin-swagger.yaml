@@ -14,6 +14,25 @@ security:
   - token: []
 
 paths:
+  /scheduler/calendars:
+    get:
+      tags:
+        - scheduler
+      summary: list calendars
+      responses:
+        200:
+          description: list of calendars
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                $ref: '#/components/schemas/Calendar'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
   /scheduler/appointments:
     get:
       tags:
@@ -41,25 +60,34 @@ paths:
                 items:
                   $ref: '#/components/schemas/Appointment'
         400:
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationError'
+          $ref: '#/components/responses/BadRequest'
         500:
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: '#/components/responses/InternalError'
 
 components:
+  # ---- security schemas
   securitySchemes:
     'token':
       type: http
       scheme: bearer
       bearerFormat: JWT
 
+  # ---- responses
+  responses:
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+
+  # ---- schemas
   schemas:
     ValidationError:
       type: object
@@ -88,6 +116,43 @@ components:
           type: integer
         name:
           type: string
+
+    Calendar:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 3500f32f-3e4a-4a42-88a4-31ad2c83bb09
+        name:
+          type: string
+          example: Anthony
+        minHoursToSchedule:
+          type: number
+          example: 12
+        minHoursToCancel:
+          type: number
+          example: 12
+        maxDaysInFuture:
+          type: number
+          example: 365
+        maxEntryPerSlot:
+          type: number
+          example: 1
+        createdAt:
+          type: string
+          example: 2022-02-10T23:40:36.370Z
+        updatedAt:
+          type: string
+          example: 2022-02-10T23:40:36.370Z
+        category:
+          type: object
+          properties:
+            id:
+              type: number
+              example: 6
+            name:
+              type: string
+              example: Categoria 1
 
     Appointment:
       type: object
