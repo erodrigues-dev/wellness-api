@@ -68,9 +68,11 @@ psql# CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 
 # dump
-pg_dump -U postgres -Fc -d wellness_dev > dump_out
+pg_dump -U username -h host -p port -d dbname > dump.sql
 # restore
-pg_restore -U postgres -Fc -d wellness_dev < dump_out
+psql -U username -d wellness_dev < dump.sql
+# reassign owner
+psql# REASSIGN OWNED BY usename TO wellness;
 ```
 
 ### 🤯 Migrations
