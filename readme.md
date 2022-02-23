@@ -58,14 +58,27 @@ docker run \
 -e POSTGRES_PASSWORD=docker \
 -p 5432:5432 \
 -d postgres
+
+# create database
+psql# CREATE DATABASE wellness_dev;
+# create user
+psql# CREATE ROLE wellness WITH CREATEDB LOGIN PASSWORD wellness;
+# activate uuid_generate_v4()
+psql# CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+
+# dump
+pg_dump -U postgres -Fc -d wellness_dev > dump_out
+# restore
+pg_restore -U postgres -Fc -d wellness_dev < dump_out
 ```
 
 ### 🤯 Migrations
 
 ```sh
-# run migrations
-yarn build:migration
-yarn migration:up
+npm run migration:status
+npm run migration:up
+npm run migration:down
 ```
 
 ### Sequelize
