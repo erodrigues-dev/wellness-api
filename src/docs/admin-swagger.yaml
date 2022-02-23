@@ -59,32 +59,21 @@ paths:
         500:
           $ref: '#/components/responses/InternalError'
 
-  /scheduler/appointments:
-    get:
+  /scheduler/appointments/:id/cancel:
+    post:
       tags:
         - scheduler
-      summary: list appointments
+      summary: Cancel appointment
       parameters:
-        - name: calendars
-          in: query
+        - name: id
+          in: path
           required: true
-          schema:
-            type: array
-        - name: date
-          in: query
-          required: true
-          description: format ISO8601
+          description: appointment Id
           schema:
             type: string
       responses:
-        200:
-          description: ok
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Appointment'
+        204:
+          description: Not Content
         400:
           $ref: '#/components/responses/BadRequest'
         500:
@@ -120,12 +109,14 @@ components:
       properties:
         message:
           type: string
+          example: Field name is required
 
     Error:
       type: object
       properties:
         message:
           type: string
+          example: unexpected error
 
     IdAndName:
       type: object
