@@ -18,7 +18,7 @@ export class SchedulerListItemsUseCase {
       include: [
         {
           association: 'activity',
-          attributes: ['id', 'name']
+          attributes: ['id', 'name', 'duration']
         },
         {
           association: 'customer',
