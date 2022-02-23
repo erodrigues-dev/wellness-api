@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
 
 import { CalendarService } from '../../shared/services/CalendarService'
-import { SchedulerCreateItemUseCase } from '../../shared/useCases/scheduler/SchedulerCreateItemUseCase'
-import { SchedulerGetItemUseCase } from '../../shared/useCases/scheduler/SchedulerGetItemUseCase'
-import { SchedulerListItemsUseCase } from '../../shared/useCases/scheduler/SchedulerListItemsUseCase'
-import { SchedulerCancelItemUseCase } from '../../shared/useCases/scheduler/SchedulerCancelItemUseCase'
-import { SchedulerSlotUseCase } from '../../shared/useCases/scheduler/SchedulerSlotsUseCase'
-import { SchedulerUpdateItemUseCase } from '../../shared/useCases/scheduler/SchedulerUpdateItemUseCase'
+import { CalendarAddAppointmentUseCase } from '../../shared/useCases/calendar/appointment/AddAppointment'
+import { SchedulerGetItemUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerGetItemUseCase'
+import { SchedulerListItemsUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerListItemsUseCase'
+import { SchedulerCancelItemUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerCancelItemUseCase'
+import { SchedulerSlotUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerSlotsUseCase'
+import { CalendarUpdateAppointmentUseCase } from '../../shared/useCases/calendar/appointment/UpdateAppointment'
 
 export class SchedulerController {
   async calendars(req: Request, res: Response, next: NextFunction) {
@@ -62,9 +62,9 @@ export class SchedulerController {
     }
   }
 
-  async addItem(req: Request, res: Response, next: NextFunction) {
+  async addAppointment(req: Request, res: Response, next: NextFunction) {
     try {
-      const useCase = new SchedulerCreateItemUseCase()
+      const useCase = new CalendarAddAppointmentUseCase()
       const model = await useCase.handle(req.body)
       return res.json(model)
     } catch (error) {
@@ -72,18 +72,18 @@ export class SchedulerController {
     }
   }
 
-  async updateItem(req: Request, res: Response, next: NextFunction) {
+  async updateAppointment(req: Request, res: Response, next: NextFunction) {
     try {
       const data = { ...req.params, ...req.body }
-      const usecase = new SchedulerUpdateItemUseCase()
-      await usecase.handle(data)
-      return res.sendStatus(204)
+      const usecase = new CalendarUpdateAppointmentUseCase()
+      const model = await usecase.handle(data)
+      return res.json(model)
     } catch (error) {
       next(error)
     }
   }
 
-  async cancelItem(req: Request, res: Response, next: NextFunction) {
+  async cancelAppointment(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
       const usecase = new SchedulerCancelItemUseCase()

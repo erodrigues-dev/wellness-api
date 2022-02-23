@@ -1,5 +1,5 @@
-import { NotFoundError } from '../../custom-error'
-import CalendarAppointment from '../../database/models/CalendarAppointment'
+import { NotFoundError } from '../../../custom-error'
+import CalendarAppointment from '../../../database/models/CalendarAppointment'
 
 export class SchedulerGetItemUseCase {
   async handle(id) {

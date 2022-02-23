@@ -1,5 +1,5 @@
-import { Op } from 'sequelize';
-import Model from '../../database/models/CalendarSlot';
+import { Op } from 'sequelize'
+import Model from '../../../database/models/CalendarSlot'
 
 export class SchedulerSlotUseCase {
   async list(calendars) {
@@ -7,9 +7,9 @@ export class SchedulerSlotUseCase {
       where: {
         calendarId: { [Op.in]: calendars }
       }
-    });
+    })
 
-    return dbList.map(this.parse);
+    return dbList.map(this.parse)
   }
 
   private parse(item: Model) {
@@ -21,6 +21,6 @@ export class SchedulerSlotUseCase {
       recurrenceRule: item.recurrenceRule,
       recurrenceExceptions: JSON.parse(item.recurrenceExceptions || '[]'),
       status: item.status
-    };
+    }
   }
 }

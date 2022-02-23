@@ -1,5 +1,5 @@
 import { Op, literal } from 'sequelize'
-import CalendarAppointment from '../../database/models/CalendarAppointment'
+import CalendarAppointment from '../../../database/models/CalendarAppointment'
 import { itemsSchema } from './schema'
 
 export class SchedulerListItemsUseCase {
@@ -25,7 +25,7 @@ export class SchedulerListItemsUseCase {
           attributes: ['id', 'name']
         },
         {
-          association: 'label',
+          association: 'calendarLabel',
           attributes: { exclude: ['createdAt', 'updatedAt'] }
         }
       ],
