@@ -59,6 +59,33 @@ paths:
         500:
           $ref: '#/components/responses/InternalError'
 
+  /scheduler/appointments:
+    post:
+      tags:
+        - scheduler
+      summary: Create appointment
+      requestBody:
+        description: >
+          Ao informar o campo `calendarClassId` os campos
+          `calendarId` e `activityId` serão automaticamente carregados da classe
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAppointment'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
   /scheduler/appointments/:id/cancel:
     post:
       tags:
@@ -183,6 +210,24 @@ components:
             name:
               type: string
               example: Categoria 1
+
+    CreateAppointment:
+      type: object
+      properties:
+        calendarClassId:
+          type: string
+        calendarId:
+          type: string
+        activityId:
+          type: integer
+        dateStart:
+          type: string
+        customerId:
+          type: integer
+        calendarLabelId:
+          type: string
+        notes:
+          type: string
 
     Appointment:
       type: object
