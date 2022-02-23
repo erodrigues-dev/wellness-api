@@ -5,7 +5,8 @@ import { itemsSchema } from './schema'
 export class SchedulerListItemsUseCase {
   async list(data) {
     const validData = this.validate(data)
-    return this.query(validData)
+    const appointments = await this.query(validData)
+    return { appointments }
   }
 
   private async query({ calendars, date }) {
