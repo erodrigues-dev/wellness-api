@@ -59,6 +59,43 @@ paths:
         500:
           $ref: '#/components/responses/InternalError'
 
+  /scheduler/items:
+    get:
+      tags:
+        - scheduler
+      summary: List scheduler items
+      parameters:
+        - in: query
+          name: calendars
+          required: true
+          description: list of calendar ids
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: date
+          required: true
+          description: date format ISO8601
+          schema:
+            type: string
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  appointments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Appointment'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
   /scheduler/appointments:
     post:
       tags:
