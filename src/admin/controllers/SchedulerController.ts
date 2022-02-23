@@ -4,7 +4,7 @@ import { CalendarService } from '../../shared/services/CalendarService'
 import { CalendarAddAppointmentUseCase } from '../../shared/useCases/calendar/appointment/AddAppointment'
 import { SchedulerGetItemUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerGetItemUseCase'
 import { SchedulerListItemsUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerListItemsUseCase'
-import { SchedulerCancelItemUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerCancelItemUseCase'
+import { CalendarCancelAppointmentUseCase } from '../../shared/useCases/calendar/appointment/CancelAppointment'
 import { SchedulerSlotUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerSlotsUseCase'
 import { CalendarUpdateAppointmentUseCase } from '../../shared/useCases/calendar/appointment/UpdateAppointment'
 
@@ -86,7 +86,7 @@ export class SchedulerController {
   async cancelAppointment(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
-      const usecase = new SchedulerCancelItemUseCase()
+      const usecase = new CalendarCancelAppointmentUseCase()
       await usecase.handle(id)
       return res.sendStatus(204)
     } catch (error) {

@@ -1,6 +1,6 @@
 import CalendarAppointment from '../../../database/models/CalendarAppointment'
 
-export class SchedulerCancelItemUseCase {
+export class CalendarCancelAppointmentUseCase {
   async handle(id: string) {
     await CalendarAppointment.update(
       {
