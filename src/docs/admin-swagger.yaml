@@ -123,17 +123,13 @@ paths:
         500:
           $ref: '#/components/responses/InternalError'
 
-  /scheduler/appointments/:id:
+  /scheduler/appointments/{id}:
     put:
       tags:
         - scheduler
       summary: Update appointment
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#components/parameters/pathId'
       requestBody:
         description: >
           Ao informar o campo `calendarClassId` os campos
@@ -156,21 +152,77 @@ paths:
         500:
           $ref: '#/components/responses/InternalError'
 
-  /scheduler/appointments/:id/cancel:
+  /scheduler/appointments/{id}/cancel:
     post:
       tags:
         - scheduler
       summary: Cancel appointment
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: appointment Id
-          schema:
-            type: string
+        - $ref: '#components/parameters/pathId'
       responses:
         204:
           description: Not Content
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
+  /scheduler/classes:
+    post:
+      tags:
+        - scheduler
+      summary: Create a class
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCalendarClass'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarClass'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
+  /scheduler/classes/{id}:
+    put:
+      tags:
+        - scheduler
+      summary: Update a class
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCalendarClass'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarClass'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+    delete:
+      tags:
+        - scheduler
+      summary: Delete a class
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      responses:
+        204:
+          description: Ok
         400:
           $ref: '#/components/responses/BadRequest'
         500:
@@ -183,6 +235,15 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
+  # ---- parameters
+  parameters:
+    pathId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
 
   # ---- responses
   responses:
@@ -281,6 +342,17 @@ components:
               type: string
               example: Categoria 1
 
+    CalendarSimpleObj:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      example:
+        id: 3500f32f-3e4a-4a42-88a4-31ad2c83bb09
+        name: Anthony
+
     CreateAppointment:
       type: object
       properties:
@@ -299,6 +371,56 @@ components:
         notes:
           type: string
 
+    RequestCalendarClass:
+      type: object
+      properties:
+        calendarId:
+          type: string
+        activityId:
+          type: integer
+        dateStart:
+          type: string
+        slots:
+          type: integer
+        recurrenceRule:
+          type: string
+        recurrenceExceptions:
+          type: string
+        color:
+          type: string
+        notes:
+          type: string
+
+    CalendarClass:
+      type: object
+      properties:
+        id:
+          type: string
+        calendarId:
+          type: string
+        calendar:
+          $ref: '#/components/schemas/CalendarSimpleObj'
+        activityId:
+          type: integer
+        activity:
+          $ref: '#components/schemas/Activity'
+        dateStart:
+          type: string
+        slots:
+          type: integer
+        recurrenceRule:
+          type: string
+        recurrenceExceptions:
+          type: string
+        color:
+          type: string
+        notes:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
     Appointment:
       type: object
       properties:
@@ -315,12 +437,7 @@ components:
         calendarClassId:
           type: string
         activity:
-          allOf:
-            - $ref: '#/components/schemas/IdIntegerAndName'
-            - type: object
-              properties:
-                duration:
-                  type: integer
+          $ref: '#components/schemas/Activity'
         customer:
           $ref: '#/components/schemas/IdIntegerAndName'
         calendarLabel:
