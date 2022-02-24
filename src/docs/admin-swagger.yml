@@ -228,6 +228,66 @@ paths:
         500:
           $ref: '#/components/responses/InternalError'
 
+  /scheduler/blocks:
+    post:
+      tags:
+        - scheduler
+      summary: create calendar block
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCalendarBlock'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarBlock'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+  /scheduler/blocks/{id}:
+    put:
+      tags:
+        - scheduler
+      summary: update calendar block2
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCalendarBlock'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarBlock'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+    delete:
+      tags:
+        - scheduler
+      summary: update calendar block
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      responses:
+        204:
+          description: No Content
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
 components:
   # ---- security schemas
   securitySchemes:
@@ -454,4 +514,47 @@ components:
         updatedAt:
           type: string
         canceledAt:
+          type: string
+
+    RequestCalendarBlock:
+      type: object
+      properties:
+        calendarId:
+          type: string
+        start:
+          type: string
+        end:
+          type: string
+        recurrenceRule:
+          type: string
+        recurrenceExceptions:
+          type: array
+          items:
+            type: string
+
+    CalendarBlock:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          example: block
+        calendarId:
+          type: string
+        calendar:
+          $ref: '#/components/schemas/CalendarSimpleObj'
+        start:
+          type: string
+        end:
+          type: string
+        recurrenceRule:
+          type: string
+        recurrenceExceptions:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+        udpatedAt:
           type: string
