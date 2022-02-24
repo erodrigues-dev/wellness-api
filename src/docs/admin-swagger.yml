@@ -321,9 +321,20 @@ components:
             $ref: '#/components/schemas/ValidationError'
     NotFound:
       description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
 
   # ---- schemas
   schemas:
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Not Found Error
+
     ValidationError:
       type: object
       properties:
