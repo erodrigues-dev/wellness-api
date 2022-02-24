@@ -222,7 +222,7 @@ paths:
         - $ref: '#components/parameters/pathId'
       responses:
         204:
-          description: Ok
+          description: No content
         400:
           $ref: '#/components/responses/BadRequest'
         500:
