@@ -1,10 +1,12 @@
 import { Router } from 'express'
 import { bindRoute } from '../../shared/utils/bindRoute'
 import { makeCalendarClassController } from '../controllers/CalendarClassController'
+import { makeCalendarSlotController } from '../controllers/CalendarSlotController'
 import { makeSchedulerController } from '../controllers/SchedulerController'
 
 const controller = makeSchedulerController()
 const calendarClassController = makeCalendarClassController()
+const calendarSlotController = makeCalendarSlotController()
 const router = Router()
 
 // --> calendars
@@ -30,5 +32,10 @@ router.post(
 router.post('/scheduler/classes', bindRoute(calendarClassController, 'store'))
 router.put('/scheduler/classes/:id', bindRoute(calendarClassController, 'update'))
 router.delete('/scheduler/classes/:id', bindRoute(calendarClassController, 'destroy'))
+
+// --> blocks
+router.post('/scheduler/blocks', bindRoute(calendarSlotController, 'createBlock'))
+router.put('/scheduler/blocks/:id', bindRoute(calendarSlotController, 'updateBlock'))
+router.delete('/scheduler/blocks/:id', bindRoute(calendarSlotController, 'destroyBlock'))
 
 export default router

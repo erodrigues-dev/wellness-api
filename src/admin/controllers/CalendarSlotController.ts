@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import Joi from 'joi'
+import { CalendarCreateBlockUseCase } from '../../shared/useCases/calendar/slots/CalendarCreateBlockUseCase'
 import { CalendarSlotListUseCase } from '../../shared/useCases/calendar/slots/CalendarSlotListUseCase'
 import { CalendarSlotStoreUseCase } from '../../shared/useCases/calendar/slots/CalendarSlotStoreUseCase'
 
@@ -38,6 +39,32 @@ export class CalendarSlotController {
       const useCase = new CalendarSlotStoreUseCase()
       await useCase.handle(data)
       return res.sendStatus(204)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async createBlock(req: Request, res: Response, next: NextFunction) {
+    try {
+      const usecase = new CalendarCreateBlockUseCase()
+      const model = await usecase.handle(req.body)
+      return res.json(model)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async updateBlock(req: Request, res: Response, next: NextFunction) {
+    try {
+      return res.sendStatus(200)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async destroyBlock(req: Request, res: Response, next: NextFunction) {
+    try {
+      return res.sendStatus(200)
     } catch (error) {
       next(error)
     }
