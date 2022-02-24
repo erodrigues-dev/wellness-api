@@ -1,3 +1,4 @@
+import { NotFoundError } from '../../../custom-error'
 import CalendarSlot from '../../../database/models/CalendarSlot'
 
 export class GetModel {
@@ -8,6 +9,9 @@ export class GetModel {
         attributes: ['id', 'name']
       }
     })
+
+    if (!model) throw new NotFoundError()
+
     return this.map(model.toJSON())
   }
 
