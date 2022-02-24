@@ -5,10 +5,10 @@ info:
   description: Admin API documentation
 
 servers:
+  - url: https://stg.api.elitewellnessperformance.com/admin
+    description: Staging API
   - url: http://localhost:3333/admin
     description: Local API
-  - url: http://stg.api.elitewellnessperformance.com:8090/admin
-    description: Staging API
 
 security:
   - token: []
