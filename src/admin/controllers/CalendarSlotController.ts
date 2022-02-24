@@ -4,6 +4,7 @@ import { CalendarCreateBlockUseCase } from '../../shared/useCases/calendar/slots
 import { CalendarUpdateBlockUseCase } from '../../shared/useCases/calendar/slots/CalendarUpdateBlockUseCase'
 import { CalendarSlotListUseCase } from '../../shared/useCases/calendar/slots/CalendarSlotListUseCase'
 import { CalendarSlotStoreUseCase } from '../../shared/useCases/calendar/slots/CalendarSlotStoreUseCase'
+import { CalendarDestroyBlockUseCase } from '../../shared/useCases/calendar/slots/CalendarDestroyBlockUseCase'
 
 const itemSchema = Joi.object({
   id: Joi.string().uuid().required(),
@@ -68,7 +69,10 @@ export class CalendarSlotController {
 
   async destroyBlock(req: Request, res: Response, next: NextFunction) {
     try {
-      return res.sendStatus(200)
+      const { id } = req.params
+      const usecase = new CalendarDestroyBlockUseCase()
+      await usecase.handle(id)
+      return res.sendStatus(204)
     } catch (error) {
       next(error)
     }
