@@ -8,7 +8,7 @@
     "build": "rm -rf dist/* && tsc",
     "postbuild": "copyfiles src/**/*.yml dist/",
     "deploy:stg": "gh workflow run staging.yml -r",
-    "postdeploy:stg": "gh run watch",
+    "postdeploy:stg": "echo 'wait starting pipeline...' && sleep 3 && gh run watch",
     "migration:status": "sequelize db:migrate:status",
     "migration:create": "sequelize migration:create --name",
     "migration:up": "sequelize db:migrate",
