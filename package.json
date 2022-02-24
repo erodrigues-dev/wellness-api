@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "ts-node-dev --inspect=0.0.0.0:7001 --exit-child --respawn --transpile-only --clear --rs src/server.ts",
+    "dev": "ts-node-dev --inspect --watch src/docs --exit-child --respawn --transpile-only --clear --rs src/server.ts",
     "build": "rm -rf dist/* && tsc",
     "postbuild": "copyfiles src/**/*.yaml dist/",
     "deploy:stg": "gh workflow run staging.yml -r",

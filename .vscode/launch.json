@@ -9,7 +9,6 @@
       "request": "attach",
       "name": "Attach Node",
       "restart": true,
-      "port": 7001,
       "address": "localhost"
     }
   ]
