@@ -42,8 +42,8 @@ export class CalendarClassController {
     try {
       const { id } = req.params
       const usecase = new CalendarClassDestroyUseCase()
-      const model = await usecase.handle(id)
-      return res.json(model)
+      await usecase.handle(id)
+      return res.sendStatus(204)
     } catch (error) {
       next(error)
     }
