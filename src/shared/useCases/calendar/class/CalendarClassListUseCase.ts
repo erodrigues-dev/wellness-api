@@ -5,6 +5,7 @@ import CalendarClass from '../../../database/models/CalendarClass'
 import CalendarAppointment from '../../../database/models/CalendarAppointment'
 import { getDate, parseISO, startOfDay, isSameDay } from '../../../utils/date-utils'
 import { listSchema } from './calendar-class-schema'
+import { GetModel } from './GetModel'
 
 interface Props {
   date: string
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export class CalendarClassListUseCase {
+  constructor(private getModel = new GetModel()) {}
+
   async handle(data: Props) {
     await listSchema.validateAsync(data)
 
@@ -36,7 +39,8 @@ export class CalendarClassListUseCase {
           { recurrenceRule: { [Op.is]: null } },
           literal(`date_trunc('day', "date_start") = '${date}'`)
         ]
-      }
+      },
+      include: this.getModel.getIncludes()
     })
 
     return list.map(item => item.toJSON())
@@ -49,7 +53,8 @@ export class CalendarClassListUseCase {
           { recurrenceRule: { [Op.not]: null } },
           literal(`date_trunc('day', "date_start") <= '${data.date}'`)
         ]
-      }
+      },
+      include: this.getModel.getIncludes()
     })
 
     return list
