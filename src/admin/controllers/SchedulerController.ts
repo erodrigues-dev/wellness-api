@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 
 import { CalendarService } from '../../shared/services/CalendarService'
 import { CalendarAddAppointmentUseCase } from '../../shared/useCases/calendar/appointment/AddAppointment'
-import { SchedulerGetItemUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerGetItemUseCase'
+import { CalendarGetAppointmentUseCase } from '../../shared/useCases/calendar/appointment/GetAppointment'
 import { SchedulerListItemsUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerListItemsUseCase'
 import { CalendarCancelAppointmentUseCase } from '../../shared/useCases/calendar/appointment/CancelAppointment'
 import { SchedulerSlotUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerSlotsUseCase'
@@ -51,10 +51,10 @@ export class SchedulerController {
     }
   }
 
-  async getItem(req: Request, res: Response, next: NextFunction) {
+  async getAppointment(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
-      const usecase = new SchedulerGetItemUseCase()
+      const usecase = new CalendarGetAppointmentUseCase()
       const model = await usecase.handle(id)
       return res.json(model)
     } catch (error) {

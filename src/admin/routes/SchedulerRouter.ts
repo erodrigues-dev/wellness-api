@@ -18,9 +18,9 @@ router.get('/scheduler/slots', bindRoute(controller, 'slots'))
 
 // --> items
 router.get('/scheduler/items', bindRoute(controller, 'listItems'))
-router.get('/scheduler/items/:id', bindRoute(controller, 'getItem'))
 
 // --> appointments
+router.get('/scheduler/appointments/:id', bindRoute(controller, 'getAppointment'))
 router.post('/scheduler/appointments', bindRoute(controller, 'addAppointment'))
 router.put('/scheduler/appointments/:id', bindRoute(controller, 'updateAppointment'))
 router.post(
