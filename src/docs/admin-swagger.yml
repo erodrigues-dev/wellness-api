@@ -85,12 +85,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  appointments:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Appointment'
+                $ref: '#/components/schemas/SchedulerItems'
         400:
           $ref: '#/components/responses/BadRequest'
         500:
@@ -266,6 +261,7 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
+
   /scheduler/blocks/{id}:
     put:
       tags:
@@ -587,3 +583,50 @@ components:
           type: string
         udpatedAt:
           type: string
+
+    CalendarSlot:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          example: available
+        calendarId:
+          type: string
+        calendar:
+          $ref: '#/components/schemas/CalendarSimpleObj'
+        start:
+          type: string
+        end:
+          type: string
+        recurrenceRule:
+          type: string
+        recurrenceExceptions:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+        udpatedAt:
+          type: string
+
+    SchedulerItems:
+      type: object
+      properties:
+        appointments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Appointment'
+        classes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarClass'
+        blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarBlock'
+        slots:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarSlot'
