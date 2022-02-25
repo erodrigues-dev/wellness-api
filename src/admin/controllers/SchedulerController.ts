@@ -44,7 +44,7 @@ export class SchedulerController {
   async listItems(req: Request, res: Response, next: NextFunction) {
     try {
       const usecase = new SchedulerListItemsUseCase()
-      const result = await usecase.list(req.query)
+      const result = await usecase.list(req.query as any)
       return res.json(result)
     } catch (error) {
       next(error)
