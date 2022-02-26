@@ -1,5 +1,6 @@
 import { Op } from 'sequelize'
 import Model from '../../../database/models/CalendarSlot'
+import { RecurrenceUtil } from '../../../utils/RecurrenceUtil'
 import { GetModel } from '../slots/GetModel'
 
 interface Data {
@@ -8,7 +9,10 @@ interface Data {
 }
 
 export class SchedulerListSlotUseCase {
-  constructor(private getModel = new GetModel()) {}
+  constructor(
+    private getModel = new GetModel(),
+    private recurrenceUtil = new RecurrenceUtil()
+  ) {}
 
   async handle(data: Data) {
     const dbList = await Model.findAll({
@@ -19,7 +23,13 @@ export class SchedulerListSlotUseCase {
     })
 
     return dbList
-      .filter(item => this.getModel.checkDateInRecurrence(item, data.date))
-      .map(this.getModel.map)
+      .filter(item =>
+        this.recurrenceUtil.hasDateInRecurrence({
+          rrule: item.recurrenceRule,
+          exceptions: item.recurrenceExceptions,
+          date: data.date
+        })
+      )
+      .map(item => this.getModel.map(item))
   }
 }
