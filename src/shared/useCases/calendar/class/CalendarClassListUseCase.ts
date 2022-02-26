@@ -27,7 +27,7 @@ export class CalendarClassListUseCase {
 
     // TODO: calcular appointments/slots
 
-    return all
+    return all.map(this.getModel.map)
   }
 
   private async queryByDate(data: Props) {

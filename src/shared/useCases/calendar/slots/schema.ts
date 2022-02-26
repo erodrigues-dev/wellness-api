@@ -2,8 +2,8 @@ import joi from 'joi'
 
 export const createBlockSchema = joi.object({
   calendarId: joi.string().uuid().required(),
-  start: joi.string().isoDate().required(),
-  end: joi.string().isoDate().required(),
+  dateStart: joi.string().isoDate().required(),
+  dateEnd: joi.string().isoDate().required(),
   recurrenceRule: joi.string().allow(null),
   recurrenceExceptions: joi.array().items(joi.string().isoDate()).default([]).allow(null)
 })

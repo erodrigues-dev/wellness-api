@@ -5,7 +5,7 @@ import { CalendarAddAppointmentUseCase } from '../../shared/useCases/calendar/ap
 import { CalendarGetAppointmentUseCase } from '../../shared/useCases/calendar/appointment/GetAppointment'
 import { SchedulerListItemsUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerListItemsUseCase'
 import { CalendarCancelAppointmentUseCase } from '../../shared/useCases/calendar/appointment/CancelAppointment'
-import { SchedulerSlotUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerSlotsUseCase'
+import { SchedulerSlotUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerListSlotsUseCase'
 import { CalendarUpdateAppointmentUseCase } from '../../shared/useCases/calendar/appointment/UpdateAppointment'
 
 export class SchedulerController {

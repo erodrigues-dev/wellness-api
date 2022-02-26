@@ -39,7 +39,7 @@ export class CalendarListAppointmentsUseCase {
       }
     })
 
-    return list
+    return list.map(this.getModel.map)
   }
 
   private validate(data) {

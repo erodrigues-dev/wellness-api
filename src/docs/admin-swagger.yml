@@ -324,43 +324,33 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            properties:
+              message:
+                type: string
+                example: unexpected error
     BadRequest:
       description: Bad request
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ValidationError'
+            type: object
+            properties:
+              message:
+                type: string
+                example: Field is required
     NotFound:
       description: Not found
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/NotFoundError'
+            type: object
+            properties:
+              message:
+                type: string
+                example: Not Found Error
 
   # ---- schemas
   schemas:
-    NotFoundError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Not Found Error
-
-    ValidationError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Field name is required
-
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-          example: unexpected error
-
     IdAndName:
       type: object
       properties:
@@ -481,29 +471,39 @@ components:
       properties:
         id:
           type: string
-        calendarId:
-          type: string
-        calendar:
-          $ref: '#/components/schemas/CalendarSimpleObj'
-        activityId:
-          type: integer
-        activity:
-          $ref: '#components/schemas/Activity'
         dateStart:
+          type: string
+        dateEnd:
           type: string
         slots:
           type: integer
+        color:
+          type: string
+        calendarId:
+          type: string
+        activityId:
+          type: integer
+        calendar:
+          $ref: '#/components/schemas/CalendarSimpleObj'
+        activity:
+          $ref: '#components/schemas/Activity'
+        notes:
+          type: string
         recurrenceRule:
           type: string
         recurrenceExceptions:
+          type: array
+          items:
+            type: string
+
+    CalendarLabel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
           type: string
         color:
-          type: string
-        notes:
-          type: string
-        createdAt:
-          type: string
-        updatedAt:
           type: string
 
     Appointment:
@@ -515,30 +515,25 @@ components:
           type: string
         dateEnd:
           type: string
+        customerId:
+          type: integer
+        activityId:
+          type: integer
         calendarId:
           type: string
         calendarLabelId:
           type: string
         calendarClassId:
           type: string
-        activity:
-          $ref: '#components/schemas/Activity'
         customer:
           $ref: '#/components/schemas/IdIntegerAndName'
+        activity:
+          $ref: '#components/schemas/Activity'
+        calendar:
+          $ref: '#/components/schemas/CalendarSimpleObj'
         calendarLabel:
-          allOf:
-            - $ref: '#/components/schemas/IdAndName'
-            - type: object
-              properties:
-                color:
-                  type: string
+          $ref: '#/components/schemas/CalendarLabel'
         notes:
-          type: string
-        createdAt:
-          type: string
-        updatedAt:
-          type: string
-        canceledAt:
           type: string
 
     RequestCalendarBlock:
@@ -546,9 +541,9 @@ components:
       properties:
         calendarId:
           type: string
-        start:
+        dateStart:
           type: string
-        end:
+        dateEnd:
           type: string
         recurrenceRule:
           type: string
@@ -565,24 +560,20 @@ components:
         status:
           type: string
           example: block
+        dateStart:
+          type: string
+        dateEnd:
+          type: string
         calendarId:
           type: string
         calendar:
           $ref: '#/components/schemas/CalendarSimpleObj'
-        start:
-          type: string
-        end:
-          type: string
         recurrenceRule:
           type: string
         recurrenceExceptions:
           type: array
           items:
             type: string
-        createdAt:
-          type: string
-        udpatedAt:
-          type: string
 
     CalendarSlot:
       type: object
@@ -592,24 +583,20 @@ components:
         status:
           type: string
           example: available
+        dateStart:
+          type: string
+        dateEnd:
+          type: string
         calendarId:
           type: string
         calendar:
           $ref: '#/components/schemas/CalendarSimpleObj'
-        start:
-          type: string
-        end:
-          type: string
         recurrenceRule:
           type: string
         recurrenceExceptions:
           type: array
           items:
             type: string
-        createdAt:
-          type: string
-        udpatedAt:
-          type: string
 
     SchedulerItems:
       type: object

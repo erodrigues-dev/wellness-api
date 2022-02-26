@@ -2,23 +2,39 @@ import { NotFoundError } from '../../../custom-error'
 import CalendarSlot from '../../../database/models/CalendarSlot'
 
 export class GetModel {
-  async handle(id: string) {
+  async handle(id: string): Promise<any> {
     const model = await CalendarSlot.findByPk(id, {
-      include: {
-        association: 'calendar',
-        attributes: ['id', 'name']
-      }
+      include: this.getIncludes()
     })
 
     if (!model) throw new NotFoundError()
 
-    return this.map(model.toJSON())
+    return this.map(model)
   }
 
-  private map(item) {
+  getIncludes() {
+    return [
+      {
+        association: 'calendar',
+        attributes: ['id', 'name']
+      }
+    ]
+  }
+
+  map(item: CalendarSlot) {
     return {
-      ...item,
-      recurrenceExceptions: JSON.parse(item.recurrenceExceptions || '[]')
+      id: item.id,
+      status: item.status,
+      dateStart: item.start,
+      dateEnd: item.end,
+      calendarId: item.calendarId,
+      calendar: item.calendar,
+      recurrenceRule: item.recurrenceRule,
+      recurrenceExceptions: JSON.parse(item.recurrenceExceptions || '[]') as string[]
     }
+  }
+
+  checkDateInRecurrence(item: CalendarSlot, date: string) {
+    return true
   }
 }
