@@ -18,8 +18,3 @@ export const updateItemSchema = Joi.object({
   labelId: Joi.string().uuid().allow(null),
   notes: Joi.string().max(600).allow(null, '')
 })
-
-export const itemsSchema = Joi.object({
-  calendars: Joi.array().items(Joi.string()).required().min(1),
-  date: Joi.string().isoDate().required()
-})

@@ -15,7 +15,7 @@ import useErrorHandlers from './shared/error-handlers'
 import useSiteModule from './site/site-module'
 import useWebhooksModule from './webhooks/webhook-module'
 
-const swaggerDocument = YAML.load(path.join(__dirname, 'docs', 'admin-swagger.yaml'))
+const swaggerDocument = YAML.load(path.join(__dirname, 'docs', 'admin-swagger.yml'))
 
 databaseConfig()
 

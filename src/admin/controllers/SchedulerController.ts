@@ -2,10 +2,10 @@ import { Request, Response, NextFunction } from 'express'
 
 import { CalendarService } from '../../shared/services/CalendarService'
 import { CalendarAddAppointmentUseCase } from '../../shared/useCases/calendar/appointment/AddAppointment'
-import { SchedulerGetItemUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerGetItemUseCase'
+import { CalendarGetAppointmentUseCase } from '../../shared/useCases/calendar/appointment/GetAppointment'
 import { SchedulerListItemsUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerListItemsUseCase'
-import { SchedulerCancelItemUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerCancelItemUseCase'
-import { SchedulerSlotUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerSlotsUseCase'
+import { CalendarCancelAppointmentUseCase } from '../../shared/useCases/calendar/appointment/CancelAppointment'
+import { SchedulerSlotUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerListSlotsUseCase'
 import { CalendarUpdateAppointmentUseCase } from '../../shared/useCases/calendar/appointment/UpdateAppointment'
 
 export class SchedulerController {
@@ -44,17 +44,17 @@ export class SchedulerController {
   async listItems(req: Request, res: Response, next: NextFunction) {
     try {
       const usecase = new SchedulerListItemsUseCase()
-      const list = await usecase.list(req.query)
-      return res.json(list)
+      const result = await usecase.list(req.query as any)
+      return res.json(result)
     } catch (error) {
       next(error)
     }
   }
 
-  async getItem(req: Request, res: Response, next: NextFunction) {
+  async getAppointment(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
-      const usecase = new SchedulerGetItemUseCase()
+      const usecase = new CalendarGetAppointmentUseCase()
       const model = await usecase.handle(id)
       return res.json(model)
     } catch (error) {
@@ -86,7 +86,7 @@ export class SchedulerController {
   async cancelAppointment(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
-      const usecase = new SchedulerCancelItemUseCase()
+      const usecase = new CalendarCancelAppointmentUseCase()
       await usecase.handle(id)
       return res.sendStatus(204)
     } catch (error) {

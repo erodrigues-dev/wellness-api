@@ -4,6 +4,7 @@ import CalendarClass from '../../../database/models/CalendarClass'
 import { parseISO, addMinutes } from '../../../utils/date-utils'
 
 import { storeSchema } from './calendar-class-schema'
+import { GetModel } from './GetModel'
 
 interface Data {
   calendarId: string
@@ -17,10 +18,17 @@ interface Data {
 }
 
 export class CalendarClassCreateUseCase {
+  private getModel: GetModel
+
+  constructor() {
+    this.getModel = new GetModel()
+  }
+
   async handle(data: Data) {
     await this.validate(data)
     const dateEnd = await this.calculateEndDate(data)
-    return CalendarClass.create({ ...data, dateEnd })
+    const { id } = await CalendarClass.create({ ...data, dateEnd })
+    return this.getModel.handle(id)
   }
 
   async validate(data: Data) {

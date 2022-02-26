@@ -1,51 +1,31 @@
-import { Op, literal } from 'sequelize'
-import CalendarAppointment from '../../../database/models/CalendarAppointment'
-import { itemsSchema } from './schema'
+import { CalendarListAppointmentsUseCase } from '../appointment/ListAppointments'
+import { CalendarClassListUseCase } from '../class/CalendarClassListUseCase'
+import { SchedulerListSlotUseCase } from './SchedulerListSlotsUseCase'
+
+interface Data {
+  calendars: string[]
+  date: string
+}
 
 export class SchedulerListItemsUseCase {
-  async list(data) {
-    const validData = this.validate(data)
-    return this.query(validData)
-  }
+  constructor(
+    private listAppointments = new CalendarListAppointmentsUseCase(),
+    private listClasses = new CalendarClassListUseCase(),
+    private listSlots = new SchedulerListSlotUseCase()
+  ) {}
 
-  private async query({ calendars, date }) {
-    const [dateOnly] = date.split('T')
+  async list(data: Data) {
+    const [appointments, classes, slots] = await Promise.all([
+      this.listAppointments.handle(data),
+      this.listClasses.handle(data),
+      this.listSlots.handle(data)
+    ])
 
-    const list = await CalendarAppointment.findAll({
-      attributes: {
-        exclude: ['activityId', 'customerId', 'labelId', 'createdAt', 'updatedAt']
-      },
-      include: [
-        {
-          association: 'activity',
-          attributes: ['id', 'name']
-        },
-        {
-          association: 'customer',
-          attributes: ['id', 'name']
-        },
-        {
-          association: 'calendarLabel',
-          attributes: { exclude: ['createdAt', 'updatedAt'] }
-        }
-      ],
-      where: {
-        [Op.and]: [
-          { calendarId: { [Op.in]: calendars } },
-          literal(`date_trunc('day', "date_start") = '${dateOnly}'`),
-          { canceledAt: { [Op.is]: null } }
-        ]
-      }
-    })
-
-    return list
-  }
-
-  private validate(data) {
-    const result = itemsSchema.validate(data)
-
-    if (result.error) throw result.error
-
-    return result.value
+    return {
+      appointments,
+      classes,
+      blocks: slots.filter(x => x.status === 'block'),
+      slots: slots.filter(x => x.status === 'available')
+    }
   }
 }

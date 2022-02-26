@@ -3,11 +3,15 @@ import CalendarClass from '../../../database/models/CalendarClass'
 import { addMinutes, parseISO } from '../../../utils/date-utils'
 
 import { updateSchema } from './calendar-class-schema'
+import { GetModel } from './GetModel'
 
 export class CalendarClassUpdateUseCase {
+  private getModel = new GetModel()
+
   async handle(data: any) {
     await this.validate(data)
-    return this.save(data)
+    await this.save(data)
+    return this.getModel.handle(data.id)
   }
 
   validate(data: any) {
@@ -17,13 +21,6 @@ export class CalendarClassUpdateUseCase {
   private async save({ id, ...data }) {
     const endDate = await this.calculateEndDate(data)
     await CalendarClass.update({ ...data, endDate }, { where: { id } })
-
-    return CalendarClass.findByPk(id, {
-      include: [
-        { association: 'calendar', attributes: ['id', 'name'] },
-        { association: 'activity', attributes: ['id', 'name', 'duration'] }
-      ]
-    })
   }
 
   private async calculateEndDate({ activityId, dateStart }: any) {
