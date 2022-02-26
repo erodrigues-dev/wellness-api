@@ -5,7 +5,6 @@ import { CalendarAddAppointmentUseCase } from '../../shared/useCases/calendar/ap
 import { CalendarGetAppointmentUseCase } from '../../shared/useCases/calendar/appointment/GetAppointment'
 import { SchedulerListItemsUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerListItemsUseCase'
 import { CalendarCancelAppointmentUseCase } from '../../shared/useCases/calendar/appointment/CancelAppointment'
-import { SchedulerSlotUseCase } from '../../shared/useCases/calendar/scheduler/SchedulerListSlotsUseCase'
 import { CalendarUpdateAppointmentUseCase } from '../../shared/useCases/calendar/appointment/UpdateAppointment'
 
 export class SchedulerController {
@@ -25,17 +24,6 @@ export class SchedulerController {
       const service = new CalendarService()
       const result = await service.listActivities(id)
       return res.json(result)
-    } catch (error) {
-      next(error)
-    }
-  }
-
-  async slots(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { calendars } = req.query
-      const usecase = new SchedulerSlotUseCase()
-      const list = await usecase.list(calendars)
-      return res.json(list)
     } catch (error) {
       next(error)
     }

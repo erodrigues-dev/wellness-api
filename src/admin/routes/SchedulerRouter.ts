@@ -13,9 +13,6 @@ const router = Router()
 router.get('/scheduler/calendars', bindRoute(controller, 'calendars'))
 router.get('/scheduler/calendars/:id/activities', bindRoute(controller, 'activities'))
 
-// --> slots
-router.get('/scheduler/slots', bindRoute(controller, 'slots'))
-
 // --> items
 router.get('/scheduler/items', bindRoute(controller, 'listItems'))
 
