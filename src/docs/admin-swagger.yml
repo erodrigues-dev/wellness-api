@@ -14,51 +14,7 @@ security:
   - token: []
 
 paths:
-  /scheduler/calendars:
-    get:
-      tags:
-        - scheduler
-      summary: list calendars
-      responses:
-        200:
-          description: list of calendars
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Calendar'
-        400:
-          $ref: '#/components/responses/BadRequest'
-        500:
-          $ref: '#/components/responses/InternalError'
-
-  /scheduler/calendars/{id}/activities:
-    get:
-      tags:
-        - scheduler
-      summary: list activities associateds in calendar
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: calendar id
-          schema:
-            type: string
-      responses:
-        200:
-          description: list of calendars
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Activity'
-        400:
-          $ref: '#/components/responses/BadRequest'
-        500:
-          $ref: '#/components/responses/InternalError'
-
+  # > scheduler paths
   /scheduler/items:
     get:
       tags:
@@ -299,6 +255,52 @@ paths:
           $ref: '#/components/responses/NotFound'
         500:
           $ref: '#/components/responses/InternalError'
+
+  /scheduler/calendars:
+    get:
+      tags:
+        - scheduler
+      summary: list calendars
+      responses:
+        200:
+          description: list of calendars
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Calendar'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
+  /scheduler/calendars/{id}/activities:
+    get:
+      tags:
+        - scheduler
+      summary: list activities associateds in calendar
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: calendar id
+          schema:
+            type: string
+      responses:
+        200:
+          description: list of calendars
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+  # < end scheduler
 
 components:
   # ---- security schemas
