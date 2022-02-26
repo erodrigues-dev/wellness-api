@@ -1,5 +1,7 @@
+import { rrulestr } from 'rrule'
 import { NotFoundError } from '../../../custom-error'
 import CalendarSlot from '../../../database/models/CalendarSlot'
+import { isSameDay, parseISO, startOfDay } from '../../../utils/date-utils'
 
 export class GetModel {
   async handle(id: string): Promise<any> {
@@ -32,9 +34,5 @@ export class GetModel {
       recurrenceRule: item.recurrenceRule,
       recurrenceExceptions: JSON.parse(item.recurrenceExceptions || '[]') as string[]
     }
-  }
-
-  checkDateInRecurrence(item: CalendarSlot, date: string) {
-    return true
   }
 }
