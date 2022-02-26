@@ -6,6 +6,7 @@ import CalendarAppointment from '../../../database/models/CalendarAppointment'
 import { getDate, parseISO, startOfDay, isSameDay } from '../../../utils/date-utils'
 import { listSchema } from './calendar-class-schema'
 import { GetModel } from './GetModel'
+import { RecurrenceUtil } from '../../../utils/RecurrenceUtil'
 
 interface Props {
   date: string
@@ -13,19 +14,20 @@ interface Props {
 }
 
 export class CalendarClassListUseCase {
-  constructor(private getModel = new GetModel()) {}
+  constructor(
+    private getModel = new GetModel(),
+    private recurrenceUtil = new RecurrenceUtil()
+  ) {}
 
   async handle(data: Props) {
     await listSchema.validateAsync(data)
 
-    const [byDate, recurrence] = await Promise.all([
+    const [byDate, byRecurrence] = await Promise.all([
       this.queryByDate(data),
       this.queryRecurrences(data)
     ])
 
-    const all = [...byDate, ...recurrence]
-
-    // TODO: calcular appointments/slots
+    const all = [...byDate, ...byRecurrence]
 
     return all.map(this.getModel.map)
   }
@@ -59,32 +61,12 @@ export class CalendarClassListUseCase {
 
     return list
       .map(item => item.toJSON())
-      .filter(current => this.hasDateInRecurrence(current, data.date))
-  }
-
-  private hasDateInRecurrence(calendarClass: CalendarClass, date: string): boolean {
-    const { recurrenceRule, recurrenceExceptions } = calendarClass
-    const dateOnly = startOfDay(parseISO(date))
-
-    if (this.isExceptionDate(recurrenceExceptions, dateOnly)) {
-      return false
-    }
-
-    return this.dateInRecurrenceRule(recurrenceRule, dateOnly)
-  }
-
-  private isExceptionDate(recurrenceExceptions, date) {
-    const exceptions = JSON.parse(recurrenceExceptions || '[]').map(exceptionDate =>
-      parseISO(exceptionDate)
-    ) as Date[]
-
-    return exceptions.some(exceptionDate => isSameDay(date, exceptionDate))
-  }
-
-  private dateInRecurrenceRule(recurrenceRule: string, date: Date) {
-    const rule = rrulestr(recurrenceRule)
-    const dateInclude = rule.after(date, true)
-
-    return Boolean(dateInclude)
+      .filter(item =>
+        this.recurrenceUtil.hasDateInRecurrence({
+          rrule: item.recurrenceRule,
+          exceptions: item.recurrenceExceptions,
+          date: data.date
+        })
+      )
   }
 }
