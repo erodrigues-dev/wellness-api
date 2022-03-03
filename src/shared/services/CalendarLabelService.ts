@@ -5,8 +5,13 @@ export class CalendarLabelService {
     return CalendarLabel.findAll();
   }
 
-  store(data: any) {
-    return CalendarLabel.create(data);
+  async store(data: any) {
+    const model = await CalendarLabel.create(data)
+    return {
+      id: model.id,
+      name: model.name,
+      color: model.color
+    }
   }
 
   async update({ id, ...data }: any) {
