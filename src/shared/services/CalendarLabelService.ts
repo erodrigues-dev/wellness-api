@@ -10,7 +10,9 @@ export class CalendarLabelService {
   }
 
   async update({ id, ...data }: any) {
-    await CalendarLabel.update(data, { where: { id } });
+    const [count] = await CalendarLabel.update(data, { where: { id } })
+    if (count === 0) throw new NotFoundError('Label not found')
+    return { id, ...data }
   }
 
   async destroy(id) {

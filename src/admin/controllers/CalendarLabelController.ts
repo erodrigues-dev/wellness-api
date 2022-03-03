@@ -42,11 +42,11 @@ export class CalendarLabelController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await this.schemas.update.validateAsync({ ...req.params, ...req.body });
-      await this.service.update(data);
-      return res.sendStatus(204);
+      const data = await this.schemas.update.validateAsync({ ...req.params, ...req.body })
+      const model = await this.service.update(data)
+      return res.json(model)
     } catch (error) {
-      next(error);
+      next(error)
     }
   }
 
