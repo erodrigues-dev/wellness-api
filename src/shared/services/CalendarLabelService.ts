@@ -15,7 +15,8 @@ export class CalendarLabelService {
     return { id, ...data }
   }
 
-  async destroy(id) {
-    await CalendarLabel.destroy({ where: { id } });
+  async destroy(id: string) {
+    const count = await CalendarLabel.destroy({ where: { id } })
+    if (count === 0) throw new NotFoundError('Label not found')
   }
 }
