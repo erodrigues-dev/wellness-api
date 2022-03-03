@@ -302,11 +302,11 @@ paths:
           $ref: '#/components/responses/InternalError'
   # < end scheduler
 
-  # > calendars-labels
-  /calendars-labels:
+  # > calendar-labels
+  /calendar-labels:
     get:
       tags:
-        - calendars-labels
+        - calendar-labels
       summary: list all calendar labels
       responses:
         200:
@@ -327,7 +327,7 @@ paths:
           $ref: '#/components/responses/InternalError'
     post:
       tags:
-        - calendars-labels
+        - calendar-labels
       summary: create a calendar label
       requestBody:
         required: true
@@ -353,10 +353,10 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-  /calendars-labels/{id}:
+  /calendar-labels/{id}:
     get:
       tags:
-        - calendars-labels
+        - calendar-labels
       summary: get a calendar label by id
       parameters:
         - $ref: '#components/parameters/pathId'
@@ -377,7 +377,7 @@ paths:
           $ref: '#/components/responses/InternalError'
     put:
       tags:
-        - calendars-labels
+        - calendar-labels
       summary: update a calendar label
       parameters:
         - $ref: '#components/parameters/pathId'
@@ -407,7 +407,7 @@ paths:
           $ref: '#/components/responses/InternalError'
     delete:
       tags:
-        - calendars-labels
+        - calendar-labels
       summary: delete a calendar label
       parameters:
         - $ref: '#components/parameters/pathId'
