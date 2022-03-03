@@ -1,8 +1,12 @@
-import CalendarLabel from '../database/models/CalendarLabel';
+import { NotFoundError } from '../custom-error'
+import CalendarLabel from '../database/models/CalendarLabel'
 
 export class CalendarLabelService {
-  list() {
-    return CalendarLabel.findAll();
+  async list() {
+    const list = await CalendarLabel.findAll({
+      attributes: { exclude: ['createdAt', 'updatedAt'] }
+    })
+    return list.map(item => item.toJSON())
   }
 
   async store(data: any) {
