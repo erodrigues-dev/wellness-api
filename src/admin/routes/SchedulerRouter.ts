@@ -24,6 +24,10 @@ router.post(
   '/scheduler/appointments/:id/cancel',
   bindRoute(controller, 'cancelAppointment')
 )
+router.post(
+  '/scheduler/appointments/check-availability',
+  bindRoute(controller, 'checkAvailability')
+)
 
 // --> classes
 router.post('/scheduler/classes', bindRoute(calendarClassController, 'store'))
