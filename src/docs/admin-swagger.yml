@@ -485,6 +485,42 @@ components:
           type: string
         color:
           type: string
+
+    RequestCalendarBlock:
+      type: object
+      properties:
+        calendarId:
+          type: string
+        dateStart:
+          type: string
+        dateEnd:
+          type: string
+        recurrenceRule:
+          type: string
+        recurrenceExceptions:
+          type: array
+          items:
+            type: string
+
+    RequestCalendarClass:
+      type: object
+      properties:
+        calendarId:
+          type: string
+        activityId:
+          type: integer
+        dateStart:
+          type: string
+        slots:
+          type: integer
+        recurrenceRule:
+          type: string
+        recurrenceExceptions:
+          type: string
+        color:
+          type: string
+        notes:
+          type: string
     # << requests
 
     IdAndName:
@@ -582,26 +618,6 @@ components:
         notes:
           type: string
 
-    RequestCalendarClass:
-      type: object
-      properties:
-        calendarId:
-          type: string
-        activityId:
-          type: integer
-        dateStart:
-          type: string
-        slots:
-          type: integer
-        recurrenceRule:
-          type: string
-        recurrenceExceptions:
-          type: string
-        color:
-          type: string
-        notes:
-          type: string
-
     CalendarClass:
       type: object
       properties:
@@ -671,22 +687,6 @@ components:
           $ref: '#/components/schemas/CalendarLabel'
         notes:
           type: string
-
-    RequestCalendarBlock:
-      type: object
-      properties:
-        calendarId:
-          type: string
-        dateStart:
-          type: string
-        dateEnd:
-          type: string
-        recurrenceRule:
-          type: string
-        recurrenceExceptions:
-          type: array
-          items:
-            type: string
 
     CalendarBlock:
       type: object
