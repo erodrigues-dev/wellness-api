@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "prepare": "husky install",
     "start": "node src/server.js",
     "dev": "ts-node-dev --inspect --watch src/docs --exit-child --respawn --transpile-only --clear --rs src/server.ts",
     "build": "rm -rf dist/* && tsc",
@@ -67,6 +68,7 @@
     "@types/yamljs": "^0.2.31",
     "commander": "^6.2.0",
     "copyfiles": "^2.4.1",
+    "husky": "^7.0.4",
     "localtunnel": "^2.0.0",
     "nodemon": "^2.0.2",
     "prettier": "^2.1.2",
