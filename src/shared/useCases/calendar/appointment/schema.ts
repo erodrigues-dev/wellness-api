@@ -26,3 +26,9 @@ export const listAppointmentsSchema = Joi.object({
   calendars: Joi.array().items(Joi.string()).required().min(1),
   date: Joi.string().isoDate().required()
 })
+
+export const checkAvailabilitySchema = Joi.object({
+  calendarId: Joi.string().uuid().required(),
+  activityId: Joi.number().required(),
+  date: Joi.string().isoDate().required()
+})

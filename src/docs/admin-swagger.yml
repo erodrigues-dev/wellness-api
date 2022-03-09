@@ -134,6 +134,36 @@ paths:
         500:
           $ref: '#/components/responses/InternalError'
 
+  /scheduler/appointments/check-availability:
+    post:
+      tags:
+        - scheduler
+      summary: Check slot availability
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCheckAvailability'
+            example:
+              calendarId: '3500f32f-3e4a-4a42-88a4-31ad2c83bb09'
+              activityId: 5
+              date: '2022-01-01T07:00:00-0300'
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isFree:
+                    type: boolean
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
   /scheduler/classes:
     post:
       tags:
@@ -353,6 +383,7 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
+
   /calendar-labels/{id}:
     get:
       tags:
@@ -456,7 +487,14 @@ components:
             properties:
               message:
                 type: string
-                example: Bad Request
+              type:
+                type: string
+              status:
+                type: number
+            example:
+              message: '"any_field" is required'
+              type: ValidationError
+              status: 400
     NotFound:
       description: Not found
       content:
@@ -477,6 +515,52 @@ components:
         name:
           type: string
         color:
+          type: string
+
+    RequestCalendarBlock:
+      type: object
+      properties:
+        calendarId:
+          type: string
+        dateStart:
+          type: string
+        dateEnd:
+          type: string
+        recurrenceRule:
+          type: string
+        recurrenceExceptions:
+          type: array
+          items:
+            type: string
+
+    RequestCalendarClass:
+      type: object
+      properties:
+        calendarId:
+          type: string
+        activityId:
+          type: integer
+        dateStart:
+          type: string
+        slots:
+          type: integer
+        recurrenceRule:
+          type: string
+        recurrenceExceptions:
+          type: string
+        color:
+          type: string
+        notes:
+          type: string
+
+    RequestCheckAvailability:
+      type: object
+      properties:
+        calendarId:
+          type: string
+        activityId:
+          type: number
+        date:
           type: string
     # << requests
 
@@ -575,26 +659,6 @@ components:
         notes:
           type: string
 
-    RequestCalendarClass:
-      type: object
-      properties:
-        calendarId:
-          type: string
-        activityId:
-          type: integer
-        dateStart:
-          type: string
-        slots:
-          type: integer
-        recurrenceRule:
-          type: string
-        recurrenceExceptions:
-          type: string
-        color:
-          type: string
-        notes:
-          type: string
-
     CalendarClass:
       type: object
       properties:
@@ -664,22 +728,6 @@ components:
           $ref: '#/components/schemas/CalendarLabel'
         notes:
           type: string
-
-    RequestCalendarBlock:
-      type: object
-      properties:
-        calendarId:
-          type: string
-        dateStart:
-          type: string
-        dateEnd:
-          type: string
-        recurrenceRule:
-          type: string
-        recurrenceExceptions:
-          type: array
-          items:
-            type: string
 
     CalendarBlock:
       type: object
