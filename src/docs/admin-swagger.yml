@@ -134,6 +134,36 @@ paths:
         500:
           $ref: '#/components/responses/InternalError'
 
+  /scheduler/appointments/check-availability:
+    post:
+      tags:
+        - scheduler
+      summary: Check slot availability
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCheckAvailability'
+            example:
+              calendarId: '3500f32f-3e4a-4a42-88a4-31ad2c83bb09'
+              activityId: 5
+              date: '2022-01-01T07:00:00-0300'
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isFree:
+                    type: boolean
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
   /scheduler/classes:
     post:
       tags:
@@ -353,6 +383,7 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
+
   /calendar-labels/{id}:
     get:
       tags:
@@ -520,6 +551,16 @@ components:
         color:
           type: string
         notes:
+          type: string
+
+    RequestCheckAvailability:
+      type: object
+      properties:
+        calendarId:
+          type: string
+        activityId:
+          type: number
+        date:
           type: string
     # << requests
 
