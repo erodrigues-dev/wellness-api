@@ -456,7 +456,14 @@ components:
             properties:
               message:
                 type: string
-                example: Bad Request
+              type:
+                type: string
+              status:
+                type: number
+            example:
+              message: '"any_field" is required'
+              type: ValidationError
+              status: 400
     NotFound:
       description: Not found
       content:
