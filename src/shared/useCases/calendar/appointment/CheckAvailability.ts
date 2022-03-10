@@ -4,7 +4,7 @@ import { checkAvailabilitySchema } from './schema'
 
 interface CheckAvailabilityData {
   calendarId: string
-  activityId: number
+  ignoreAppointmentId: string
   date: string
 }
 
@@ -20,15 +20,16 @@ export class CalendarCheckAvailabilityUseCase {
   }
 
   private async isFree(data: CheckAvailabilityData) {
-    const count = await CalendarAppointment.count({
-      where: {
-        calendarId: data.calendarId,
-        activityId: data.activityId,
-        dateStart: { [Op.lte]: data.date },
-        dateEnd: { [Op.gte]: data.date },
-        calendarClassId: { [Op.is]: null }
-      }
-    })
+    const where = {
+      calendarId: data.calendarId,
+      dateStart: { [Op.lte]: data.date },
+      dateEnd: { [Op.gte]: data.date },
+      calendarClassId: { [Op.is]: null }
+    } as any
+
+    if (data.ignoreAppointmentId) where.id = { [Op.ne]: data.ignoreAppointmentId }
+
+    const count = await CalendarAppointment.count({ where })
 
     return count === 0
   }
