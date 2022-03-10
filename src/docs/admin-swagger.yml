@@ -670,6 +670,8 @@ components:
           type: string
         slots:
           type: integer
+        reservedSlots:
+          type: integer
         color:
           type: string
         calendarId:
