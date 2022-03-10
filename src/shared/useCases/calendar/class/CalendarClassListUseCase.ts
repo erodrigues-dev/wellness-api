@@ -29,7 +29,7 @@ export class CalendarClassListUseCase {
 
     const all = [...byDate, ...byRecurrence]
 
-    return all.map(item => this.map(item))
+    return all.map(item => this.getModel.map(item))
   }
 
   private async queryByDate(data: Props) {
@@ -42,7 +42,7 @@ export class CalendarClassListUseCase {
           literal(`date_trunc('day', "CalendarClass"."date_start") = '${date}'`)
         ]
       },
-      include: this.getIncludes(data.date)
+      include: this.getModel.getIncludesWithAppointments(data.date)
     })
 
     return list.map(item => item.toJSON())
@@ -56,7 +56,7 @@ export class CalendarClassListUseCase {
           literal(`date_trunc('day', "CalendarClass"."date_start") <= '${data.date}'`)
         ]
       },
-      include: this.getIncludes(data.date)
+      include: this.getModel.getIncludesWithAppointments(data.date)
     })
 
     return list
@@ -68,37 +68,5 @@ export class CalendarClassListUseCase {
           date: data.date
         })
       )
-  }
-
-  private getIncludes(date: string) {
-    const dateOnly = getDate(date)
-    return [
-      { association: 'calendar', attributes: ['id', 'name'] },
-      { association: 'activity', attributes: ['id', 'name', 'duration'] },
-      {
-        association: 'appointments',
-        attributes: ['id'],
-        where: literal(`date_trunc('day', "appointments"."date_start") = '${dateOnly}'`),
-        required: false
-      }
-    ]
-  }
-
-  private map(item: CalendarClass) {
-    return {
-      id: item.id,
-      dateStart: item.dateStart,
-      dateEnd: item.dateEnd,
-      slots: item.slots,
-      reservedSlots: item.appointments?.length,
-      color: item.color,
-      calendarId: item.calendarId,
-      activityId: item.activityId,
-      calendar: item.calendar,
-      activity: item.activity,
-      notes: item.notes,
-      recurrenceRule: item.recurrenceRule,
-      recurrenceExceptions: JSON.parse(item.recurrenceExceptions || '[]')
-    }
   }
 }
