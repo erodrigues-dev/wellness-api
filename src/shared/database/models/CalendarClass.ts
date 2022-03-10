@@ -1,6 +1,7 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
 import Activity from './Activity'
 import Calendar from './Calendar'
+import CalendarAppointment from './CalendarAppointment'
 
 export default class CalendarClass extends Model {
   id: string
@@ -17,6 +18,7 @@ export default class CalendarClass extends Model {
 
   calendar?: Calendar
   activity?: Activity
+  appointments?: CalendarAppointment[]
 
   createdAt?: Date
   updatedAt?: Date
@@ -46,6 +48,11 @@ export default class CalendarClass extends Model {
     CalendarClass.belongsTo(Activity, {
       foreignKey: 'activityId',
       as: 'activity'
+    })
+
+    CalendarClass.hasMany(CalendarAppointment, {
+      foreignKey: 'calendarClassId',
+      as: 'appointments'
     })
   }
 }
