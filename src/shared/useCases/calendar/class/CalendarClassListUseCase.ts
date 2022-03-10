@@ -29,7 +29,7 @@ export class CalendarClassListUseCase {
 
     const all = [...byDate, ...byRecurrence]
 
-    return all.map(this.getModel.map)
+    return all.map(item => this.getModel.map(item))
   }
 
   private async queryByDate(data: Props) {
@@ -39,10 +39,10 @@ export class CalendarClassListUseCase {
         [Op.and]: [
           { calendarId: { [Op.in]: data.calendars } },
           { recurrenceRule: { [Op.is]: null } },
-          literal(`date_trunc('day', "date_start") = '${date}'`)
+          literal(`date_trunc('day', "CalendarClass"."date_start") = '${date}'`)
         ]
       },
-      include: this.getModel.getIncludes()
+      include: this.getModel.getIncludesWithAppointments(data.date)
     })
 
     return list.map(item => item.toJSON())
@@ -53,10 +53,10 @@ export class CalendarClassListUseCase {
       where: {
         [Op.and]: [
           { recurrenceRule: { [Op.not]: null } },
-          literal(`date_trunc('day', "date_start") <= '${data.date}'`)
+          literal(`date_trunc('day', "CalendarClass"."date_start") <= '${data.date}'`)
         ]
       },
-      include: this.getModel.getIncludes()
+      include: this.getModel.getIncludesWithAppointments(data.date)
     })
 
     return list
