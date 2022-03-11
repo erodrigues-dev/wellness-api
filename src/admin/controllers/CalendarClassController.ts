@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { CalendarClassCreateUseCase } from '../../shared/useCases/calendar/class/CalendarClassCreateUseCase'
 import { CalendarClassDestroyUseCase } from '../../shared/useCases/calendar/class/CalendarClassDestroyUseCase'
+import { CalendarClassGetByIdUseCase } from '../../shared/useCases/calendar/class/CalendarClassGetByIdUseCase'
 import { CalendarClassListUseCase } from '../../shared/useCases/calendar/class/CalendarClassListUseCase'
 import { CalendarClassUpdateUseCase } from '../../shared/useCases/calendar/class/CalendarClassUpdateUseCase'
 
@@ -11,6 +12,17 @@ export class CalendarClassController {
       const usecase = new CalendarClassListUseCase()
       const list = await usecase.handle(data)
       return res.json(list)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async get(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params
+      const usecase = new CalendarClassGetByIdUseCase()
+      const model = await usecase.handle(id)
+      return res.json(model)
     } catch (error) {
       next(error)
     }

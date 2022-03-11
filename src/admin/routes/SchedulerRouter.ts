@@ -31,6 +31,7 @@ router.post(
 
 // --> classes
 router.post('/scheduler/classes', bindRoute(calendarClassController, 'store'))
+router.get('/scheduler/classes/:id', bindRoute(calendarClassController, 'get'))
 router.put('/scheduler/classes/:id', bindRoute(calendarClassController, 'update'))
 router.delete('/scheduler/classes/:id', bindRoute(calendarClassController, 'destroy'))
 
