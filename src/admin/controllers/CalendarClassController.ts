@@ -4,6 +4,7 @@ import { CalendarClassDestroyUseCase } from '../../shared/useCases/calendar/clas
 import { CalendarClassGetByIdUseCase } from '../../shared/useCases/calendar/class/CalendarClassGetByIdUseCase'
 import { CalendarClassListUseCase } from '../../shared/useCases/calendar/class/CalendarClassListUseCase'
 import { CalendarClassUpdateUseCase } from '../../shared/useCases/calendar/class/CalendarClassUpdateUseCase'
+import { CalendarClassListAppointmentsUseCase } from '../../shared/useCases/calendar/class/ListAppointments'
 
 export class CalendarClassController {
   async list(req: Request, res: Response, next: NextFunction) {
@@ -22,6 +23,17 @@ export class CalendarClassController {
       const { id } = req.params
       const usecase = new CalendarClassGetByIdUseCase()
       const model = await usecase.handle(id)
+      return res.json(model)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async getAppointments(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id: calendarClassId, date } = req.params
+      const usecase = new CalendarClassListAppointmentsUseCase()
+      const model = await usecase.handle({ calendarClassId, date })
       return res.json(model)
     } catch (error) {
       next(error)
