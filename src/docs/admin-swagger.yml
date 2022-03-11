@@ -242,6 +242,49 @@ paths:
         500:
           $ref: '#/components/responses/InternalError'
 
+  /scheduler/classes/{id}/appointments/{date}:
+    get:
+      tags:
+        - scheduler
+      summary: List Appointments of a Class
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Calendar Class Id
+          schema:
+            type: string
+        - in: path
+          name: date
+          required: true
+          description: Date of Class ISO8601
+          schema:
+            type: string
+            example: 2022-01-01
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/CalendarClassAppointment'
+                example:
+                  - id: '05412710-139d-4ade-b470-480aea585481'
+                    customer:
+                      id: 100
+                      name: Jhon Doe
+                    calendarLabel:
+                      id: b49b8ff5-9d77-4132-9b1c-2ac16c575f42
+                      name: Checked In
+                      color: '#89D831'
+                    notes: any notes
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
   /scheduler/blocks:
     post:
       tags:
@@ -813,3 +856,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CalendarSlot'
+
+    CalendarClassAppointment:
+      type: object
+      properties:
+        id:
+          type: string
+        customer:
+          $ref: '#/components/schemas/IdIntegerAndName'
+        calendarLabel:
+          $ref: '#/components/schemas/CalendarLabel'
+        notes:
+          type: string
