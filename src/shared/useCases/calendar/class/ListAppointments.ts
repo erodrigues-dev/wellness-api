@@ -31,7 +31,7 @@ export class CalendarClassListAppointmentsUseCase {
       },
       include: [
         { association: 'customer', attributes: ['id', 'name'] },
-        { association: 'calendarLabel' }
+        { association: 'calendarLabel', attributes: ['id', 'name', 'color'] }
       ],
       attributes: ['id', 'notes']
     })
