@@ -18,7 +18,7 @@ paths:
   /scheduler/items:
     get:
       tags:
-        - scheduler
+        - Scheduler Items
       summary: List scheduler items
       parameters:
         - in: query
@@ -50,7 +50,7 @@ paths:
   /scheduler/appointments:
     post:
       tags:
-        - scheduler
+        - Scheduler Appointments
       summary: Create appointment
       requestBody:
         description: >
@@ -77,7 +77,7 @@ paths:
   /scheduler/appointments/{id}:
     get:
       tags:
-        - scheduler
+        - Scheduler Appointments
       summary: Get appointment by id
       parameters:
         - $ref: '#components/parameters/pathId'
@@ -94,7 +94,7 @@ paths:
           $ref: '#/components/responses/InternalError'
     put:
       tags:
-        - scheduler
+        - Scheduler Appointments
       summary: Update appointment
       parameters:
         - $ref: '#components/parameters/pathId'
@@ -122,7 +122,7 @@ paths:
   /scheduler/appointments/{id}/cancel:
     post:
       tags:
-        - scheduler
+        - Scheduler Appointments
       summary: Cancel appointment
       parameters:
         - $ref: '#components/parameters/pathId'
@@ -137,7 +137,7 @@ paths:
   /scheduler/appointments/check-availability:
     post:
       tags:
-        - scheduler
+        - Scheduler Appointments
       summary: Check slot availability
       requestBody:
         required: true
@@ -167,7 +167,7 @@ paths:
   /scheduler/classes:
     post:
       tags:
-        - scheduler
+        - Scheduler Classes
       summary: Create a class
       requestBody:
         required: true
@@ -190,7 +190,7 @@ paths:
   /scheduler/classes/{id}:
     get:
       tags:
-        - scheduler
+        - Scheduler Classes
       summary: Get a class by id
       parameters:
         - $ref: '#components/parameters/pathId'
@@ -207,7 +207,7 @@ paths:
           $ref: '#/components/responses/InternalError'
     put:
       tags:
-        - scheduler
+        - Scheduler Classes
       summary: Update a class
       parameters:
         - $ref: '#components/parameters/pathId'
@@ -230,7 +230,7 @@ paths:
           $ref: '#/components/responses/InternalError'
     delete:
       tags:
-        - scheduler
+        - Scheduler Classes
       summary: Delete a class
       parameters:
         - $ref: '#components/parameters/pathId'
@@ -245,7 +245,7 @@ paths:
   /scheduler/classes/{id}/appointments/{date}:
     get:
       tags:
-        - scheduler
+        - Scheduler Classes
       summary: List Appointments of a Class
       parameters:
         - in: path
@@ -288,7 +288,7 @@ paths:
   /scheduler/blocks:
     post:
       tags:
-        - scheduler
+        - Scheduler Blocks
       summary: create calendar block
       requestBody:
         required: true
@@ -311,7 +311,7 @@ paths:
   /scheduler/blocks/{id}:
     put:
       tags:
-        - scheduler
+        - Scheduler Blocks
       summary: update calendar block2
       parameters:
         - $ref: '#components/parameters/pathId'
@@ -334,7 +334,7 @@ paths:
           $ref: '#/components/responses/InternalError'
     delete:
       tags:
-        - scheduler
+        - Scheduler Blocks
       summary: Delete calendar block
       parameters:
         - $ref: '#components/parameters/pathId'
@@ -349,7 +349,7 @@ paths:
   /scheduler/calendars:
     get:
       tags:
-        - scheduler
+        - Scheduler Calendars
       summary: list calendars
       responses:
         200:
@@ -368,7 +368,7 @@ paths:
   /scheduler/calendars/{id}/activities:
     get:
       tags:
-        - scheduler
+        - Scheduler Blocks
       summary: list activities associateds in calendar
       parameters:
         - in: path
@@ -396,7 +396,7 @@ paths:
   /calendar-labels:
     get:
       tags:
-        - calendar-labels
+        - Calendar Labels
       summary: list all calendar labels
       responses:
         200:
@@ -417,7 +417,7 @@ paths:
           $ref: '#/components/responses/InternalError'
     post:
       tags:
-        - calendar-labels
+        - Calendar Labels
       summary: create a calendar label
       requestBody:
         required: true
@@ -447,7 +447,7 @@ paths:
   /calendar-labels/{id}:
     get:
       tags:
-        - calendar-labels
+        - Calendar Labels
       summary: get a calendar label by id
       parameters:
         - $ref: '#components/parameters/pathId'
@@ -468,7 +468,7 @@ paths:
           $ref: '#/components/responses/InternalError'
     put:
       tags:
-        - calendar-labels
+        - Calendar Labels
       summary: update a calendar label
       parameters:
         - $ref: '#components/parameters/pathId'
@@ -498,7 +498,7 @@ paths:
           $ref: '#/components/responses/InternalError'
     delete:
       tags:
-        - calendar-labels
+        - Calendar Labels
       summary: delete a calendar label
       parameters:
         - $ref: '#components/parameters/pathId'
