@@ -27,3 +27,8 @@ export const updateSchema = joi.object({
   color: joi.string().length(7).required(),
   notes: joi.string().allow(null)
 })
+
+export const listAppointmentsSchema = joi.object({
+  calendarClassId: joi.string().uuid().required(),
+  date: joi.string().isoDate().required()
+})
