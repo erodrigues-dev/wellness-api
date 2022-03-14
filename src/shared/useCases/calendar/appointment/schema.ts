@@ -32,3 +32,8 @@ export const checkAvailabilitySchema = Joi.object({
   ignoreAppointmentId: Joi.string().uuid().allow(null),
   date: Joi.string().isoDate().required()
 })
+
+export const partialUpdateSchema = Joi.object({
+  id: Joi.string().uuid().required(),
+  notes: Joi.string().max(600).allow(null)
+})
