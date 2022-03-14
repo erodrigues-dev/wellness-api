@@ -7,6 +7,7 @@ import { SchedulerListItemsUseCase } from '../../shared/useCases/calendar/schedu
 import { CalendarCancelAppointmentUseCase } from '../../shared/useCases/calendar/appointment/CancelAppointment'
 import { CalendarUpdateAppointmentUseCase } from '../../shared/useCases/calendar/appointment/UpdateAppointment'
 import { CalendarCheckAvailabilityUseCase } from '../../shared/useCases/calendar/appointment/CheckAvailability'
+import { CalendarAppointmentPartialUpdateUseCase } from '../../shared/useCases/calendar/appointment/PartialUpdate'
 
 export class SchedulerController {
   async calendars(req: Request, res: Response, next: NextFunction) {
@@ -75,6 +76,17 @@ export class SchedulerController {
     try {
       const data = { ...req.params, ...req.body }
       const usecase = new CalendarUpdateAppointmentUseCase()
+      const model = await usecase.handle(data)
+      return res.json(model)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async partialUpdateAppointment(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = { ...req.params, ...req.body }
+      const usecase = new CalendarAppointmentPartialUpdateUseCase()
       const model = await usecase.handle(data)
       return res.json(model)
     } catch (error) {
