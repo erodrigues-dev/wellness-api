@@ -6,6 +6,7 @@ import { partialUpdateSchema } from './schema'
 interface Data {
   id: string
   notes: string
+  calendarLabelId: string
 }
 
 export class CalendarAppointmentPartialUpdateUseCase {
@@ -22,7 +23,7 @@ export class CalendarAppointmentPartialUpdateUseCase {
   private async save({ id, ...data }: Data) {
     await CalendarAppointment.update(data, {
       where: { id },
-      fields: ['notes']
+      fields: ['notes', 'calendarLabelId']
     })
   }
 }
