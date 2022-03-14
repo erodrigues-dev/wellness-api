@@ -20,6 +20,10 @@ router.get('/scheduler/items', bindRoute(controller, 'listItems'))
 router.get('/scheduler/appointments/:id', bindRoute(controller, 'getAppointment'))
 router.post('/scheduler/appointments', bindRoute(controller, 'addAppointment'))
 router.put('/scheduler/appointments/:id', bindRoute(controller, 'updateAppointment'))
+router.patch(
+  '/scheduler/appointments/:id',
+  bindRoute(controller, 'partialUpdateAppointment')
+)
 router.post(
   '/scheduler/appointments/:id/cancel',
   bindRoute(controller, 'cancelAppointment')
