@@ -132,6 +132,8 @@ paths:
               properties:
                 notes:
                   type: string
+                calendarLabelId:
+                  type: string
       responses:
         200:
           description: Ok

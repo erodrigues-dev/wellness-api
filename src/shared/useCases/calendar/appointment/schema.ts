@@ -35,5 +35,6 @@ export const checkAvailabilitySchema = Joi.object({
 
 export const partialUpdateSchema = Joi.object({
   id: Joi.string().uuid().required(),
-  notes: Joi.string().max(600).allow(null)
+  notes: Joi.string().max(600).allow(null),
+  calendarLabelId: Joi.string().uuid().allow(null)
 })
