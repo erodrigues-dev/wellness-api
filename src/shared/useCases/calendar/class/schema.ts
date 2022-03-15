@@ -11,7 +11,6 @@ export const storeSchema = joi.object({
   dateStart: joi.string().isoDate().required(),
   slots: joi.number().min(1).required(),
   recurrenceRule: joi.string().allow(null),
-  recurrenceExceptions: joi.string().allow(null),
   color: joi.string().length(7).required(),
   notes: joi.string().allow(null)
 })
@@ -23,7 +22,6 @@ export const updateSchema = joi.object({
   dateStart: joi.string().isoDate().required(),
   slots: joi.number().min(1).required(),
   recurrenceRule: joi.string().allow(null),
-  recurrenceExceptions: joi.string().allow(null),
   color: joi.string().length(7).required(),
   notes: joi.string().allow(null)
 })
