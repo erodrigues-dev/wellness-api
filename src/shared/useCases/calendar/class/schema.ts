@@ -32,3 +32,8 @@ export const listAppointmentsSchema = joi.object({
   calendarClassId: joi.string().uuid().required(),
   date: joi.string().isoDate().required()
 })
+
+export const destroySchema = joi.object({
+  id: joi.string().uuid().required(),
+  date: joi.string().isoDate().allow(null)
+})
