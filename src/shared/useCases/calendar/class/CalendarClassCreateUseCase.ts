@@ -3,7 +3,7 @@ import CalendarClass from '../../../database/models/CalendarClass'
 
 import { parseISO, addMinutes } from '../../../utils/date-utils'
 
-import { storeSchema } from './calendar-class-schema'
+import { storeSchema } from './schema'
 import { GetModel } from './GetModel'
 
 interface Data {

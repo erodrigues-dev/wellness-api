@@ -1,7 +1,7 @@
 import { literal, Op } from 'sequelize'
 import CalendarAppointment from '../../../database/models/CalendarAppointment'
 import { getDate } from '../../../utils/date-utils'
-import { listAppointmentsSchema } from './calendar-class-schema'
+import { listAppointmentsSchema } from './schema'
 
 interface Data {
   calendarClassId: string

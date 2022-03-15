@@ -261,11 +261,18 @@ paths:
       summary: Delete a class
       parameters:
         - $ref: '#components/parameters/pathId'
+        - in: query
+          name: date
+          description: Date in ISO8601 format
+          schema:
+            type: string
       responses:
         204:
           description: No content
         400:
           $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
         500:
           $ref: '#/components/responses/InternalError'
 

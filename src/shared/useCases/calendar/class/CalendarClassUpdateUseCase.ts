@@ -2,7 +2,7 @@ import Activity from '../../../database/models/Activity'
 import CalendarClass from '../../../database/models/CalendarClass'
 import { addMinutes, parseISO } from '../../../utils/date-utils'
 
-import { updateSchema } from './calendar-class-schema'
+import { updateSchema } from './schema'
 import { GetModel } from './GetModel'
 
 export class CalendarClassUpdateUseCase {

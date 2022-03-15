@@ -4,7 +4,7 @@ import { rrulestr } from 'rrule'
 import CalendarClass from '../../../database/models/CalendarClass'
 import CalendarAppointment from '../../../database/models/CalendarAppointment'
 import { getDate, parseISO, startOfDay, isSameDay } from '../../../utils/date-utils'
-import { listSchema } from './calendar-class-schema'
+import { listSchema } from './schema'
 import { GetModel } from './GetModel'
 import { RecurrenceUtil } from '../../../utils/RecurrenceUtil'
 
