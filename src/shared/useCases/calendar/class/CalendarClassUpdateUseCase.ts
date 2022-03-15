@@ -5,25 +5,37 @@ import { addMinutes, parseISO } from '../../../utils/date-utils'
 import { updateSchema } from './schema'
 import { GetModel } from './GetModel'
 
+interface Data {
+  id: string
+  calendarId: string
+  activityId: number
+  dateStart: string
+  slots: number
+  recurrenceRule: string
+  color: string
+  notes: string
+}
+
 export class CalendarClassUpdateUseCase {
   private getModel = new GetModel()
 
-  async handle(data: any) {
+  async handle(data: Data) {
     await this.validate(data)
     await this.save(data)
-    return this.getModel.handle(data.id)
+    const model = await this.getModel.handle(data.id)
+    return this.getModel.map(model)
   }
 
-  validate(data: any) {
+  validate(data: Data) {
     return updateSchema.validateAsync(data)
   }
 
-  private async save({ id, ...data }) {
+  private async save({ id, ...data }: Data) {
     const endDate = await this.calculateEndDate(data)
     await CalendarClass.update({ ...data, endDate }, { where: { id } })
   }
 
-  private async calculateEndDate({ activityId, dateStart }: any) {
+  private async calculateEndDate({ activityId, dateStart }) {
     const { duration } = await Activity.findByPk(activityId, { attributes: ['duration'] })
     const date = parseISO(dateStart)
     return addMinutes(date, duration)
