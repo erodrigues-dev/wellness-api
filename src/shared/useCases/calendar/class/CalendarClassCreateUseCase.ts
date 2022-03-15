@@ -12,7 +12,6 @@ interface Data {
   dateStart: string
   slots: number
   recurrenceRule: string
-  recurrenceExceptions: string
   color: string
   notes: string
 }
