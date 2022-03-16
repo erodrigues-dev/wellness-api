@@ -10,3 +10,8 @@ export const createBlockSchema = joi.object({
 export const updateBlockSchema = createBlockSchema.append({
   id: joi.string().uuid().required()
 })
+
+export const destroySchema = joi.object({
+  id: joi.string().uuid().required(),
+  date: joi.string().isoDate().allow(null)
+})
