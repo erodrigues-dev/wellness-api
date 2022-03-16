@@ -6,8 +6,8 @@ import { updateBlockSchema } from './schema'
 interface BlockData {
   id: string
   calendarId: string
-  start: string
-  end: string
+  dateStart: string
+  dateEnd: string
   recurrenceRule: string
   recurrenceExceptions: string
 }
@@ -33,9 +33,11 @@ export class CalendarUpdateBlockUseCase {
 
   private async save({ id, ...data }: BlockData) {
     const saveData = {
-      ...data,
       status: 'block',
-      recurrenceExceptions: JSON.stringify(data.recurrenceExceptions || [])
+      calendarId: data.calendarId,
+      start: data.dateStart,
+      end: data.dateEnd,
+      recurrenceRule: data.recurrenceRule
     }
     await CalendarSlot.update(saveData, { where: { id } })
   }
