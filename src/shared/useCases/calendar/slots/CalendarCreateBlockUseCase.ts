@@ -4,10 +4,9 @@ import { createBlockSchema } from './schema'
 
 interface BlockData {
   calendarId: string
-  start: string
-  end: string
+  dateStart: string
+  dateEnd: string
   recurrenceRule: string
-  recurrenceExceptions: string
 }
 
 export class CalendarCreateBlockUseCase {
@@ -25,9 +24,11 @@ export class CalendarCreateBlockUseCase {
 
   private async save(data: BlockData) {
     const saveData = {
-      ...data,
       status: 'block',
-      recurrenceExceptions: JSON.stringify(data.recurrenceExceptions || [])
+      calendarId: data.calendarId,
+      start: data.dateStart,
+      end: data.dateEnd,
+      recurrenceRule: data.recurrenceRule
     }
     const model = await CalendarSlot.create(saveData)
     return model
