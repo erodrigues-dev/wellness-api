@@ -69,9 +69,9 @@ export class CalendarSlotController {
 
   async destroyBlock(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params
+      const data = { ...req.params, ...req.query } as any
       const usecase = new CalendarDestroyBlockUseCase()
-      await usecase.handle(id)
+      await usecase.handle(data)
       return res.sendStatus(204)
     } catch (error) {
       next(error)
