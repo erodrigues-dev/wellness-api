@@ -33,5 +33,9 @@ export const listAppointmentsSchema = joi.object({
 
 export const destroySchema = joi.object({
   id: joi.string().uuid().required(),
-  date: joi.string().isoDate().allow(null)
+  date: joi.string().isoDate().when('following', {
+    is: true,
+    then: joi.string().required()
+  }),
+  following: joi.boolean()
 })
