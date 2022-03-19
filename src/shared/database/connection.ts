@@ -29,9 +29,26 @@ import CalendarAppointment from './models/CalendarAppointment'
 import CalendarLabel from './models/CalendarLabel'
 import CalendarClass from './models/CalendarClass'
 
-const connection = new Sequelize(DB_CONFIG)
+const connection = new Sequelize({ ...DB_CONFIG })
+
+export const isConnected = async () => {
+  try {
+    console.log('>> Check database connection')
+    const { dialect, host, port, database } = DB_CONFIG
+    console.log(`>> Database connected: ${dialect}://${host}:${port}/${database}`)
+    await connection.authenticate()
+    return true
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
 
 export function databaseConfig() {
+  isConnected()
+
+  console.log('>> Loading Models')
+
   Activity.setup(connection)
   Employee.setup(connection)
   Customer.setup(connection)

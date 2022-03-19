@@ -10,7 +10,7 @@ import path from 'path'
 import YAML from 'yamljs'
 
 import useAdminModule from './admin/admin-module'
-import { databaseConfig } from './shared/database/connection'
+import { databaseConfig, isConnected } from './shared/database/connection'
 import useErrorHandlers from './shared/error-handlers'
 import useSiteModule from './site/site-module'
 import useWebhooksModule from './webhooks/webhook-module'
@@ -30,10 +30,11 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('short'))
 
-app.get('/', (_, res) => {
+app.get('/', async (_, res) => {
   return res.json({
     type: 'health-check',
-    message: 'api is running'
+    message: 'api is running',
+    databaseConnected: await isConnected()
   })
 })
 
@@ -42,7 +43,6 @@ app.use('/admin/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 useAdminModule(app)
 useWebhooksModule(app)
 useSiteModule(app)
-
 useErrorHandlers(app)
 
 export default app
