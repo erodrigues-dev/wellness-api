@@ -44,7 +44,7 @@ export class GetModel {
       activity: item.activity,
       notes: item.notes,
       recurrenceRule: item.recurrenceRule,
-      recurrenceExceptions: JSON.parse(item.recurrenceExceptions || '[]')
+      recurrenceId: item.recurrenceId
     }
   }
 }
