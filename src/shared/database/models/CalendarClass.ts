@@ -5,6 +5,7 @@ import CalendarAppointment from './CalendarAppointment'
 
 export default class CalendarClass extends Model {
   id: string
+  recurrenceId: string
   calendarId: string
   activityId: number
 
@@ -12,7 +13,6 @@ export default class CalendarClass extends Model {
   dateEnd: Date
   slots: number
   recurrenceRule: string
-  recurrenceExceptions: string
   color: string
   notes: string
 
@@ -27,11 +27,11 @@ export default class CalendarClass extends Model {
   static setup(connection: Sequelize) {
     CalendarClass.init(
       {
+        recurrenceId: DataTypes.STRING,
         dateStart: DataTypes.DATE,
         dateEnd: DataTypes.DATE,
         slots: DataTypes.INTEGER,
         recurrenceRule: DataTypes.STRING,
-        recurrenceExceptions: DataTypes.STRING,
         color: DataTypes.STRING,
         notes: DataTypes.STRING
       },
