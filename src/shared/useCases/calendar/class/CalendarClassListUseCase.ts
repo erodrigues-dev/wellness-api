@@ -20,53 +20,28 @@ export class CalendarClassListUseCase {
   ) {}
 
   async handle(data: Props) {
-    await listSchema.validateAsync(data)
+    await this.validate(data)
+    const list = await this.query(data)
 
-    const [byDate, byRecurrence] = await Promise.all([
-      this.queryByDate(data),
-      this.queryRecurrences(data)
-    ])
-
-    const all = [...byDate, ...byRecurrence]
-
-    return all.map(item => this.getModel.map(item))
+    return list.map(item => this.getModel.map(item))
   }
 
-  private async queryByDate(data: Props) {
+  private async validate(data: Props) {
+    await listSchema.validateAsync(data)
+  }
+
+  private async query(data: Props) {
     const date = getDate(data.date)
     const list = await CalendarClass.findAll({
       where: {
         [Op.and]: [
           { calendarId: { [Op.in]: data.calendars } },
-          { recurrenceRule: { [Op.is]: null } },
           literal(`date_trunc('day', "CalendarClass"."date_start") = '${date}'`)
         ]
       },
-      include: this.getModel.getIncludesWithAppointments(data.date)
+      include: this.getModel.getIncludesWithAppointments()
     })
 
     return list.map(item => item.toJSON())
-  }
-
-  private async queryRecurrences(data: Props) {
-    const list = await CalendarClass.findAll({
-      where: {
-        [Op.and]: [
-          { recurrenceRule: { [Op.not]: null } },
-          literal(`date_trunc('day', "CalendarClass"."date_start") <= '${data.date}'`)
-        ]
-      },
-      include: this.getModel.getIncludesWithAppointments(data.date)
-    })
-
-    return list
-      .map(item => item.toJSON())
-      .filter(item =>
-        this.recurrenceUtil.hasDateInRecurrence({
-          rrule: item.recurrenceRule,
-          exceptions: item.recurrenceExceptions,
-          date: data.date
-        })
-      )
   }
 }
