@@ -12,6 +12,7 @@ export default class CalendarClass extends Model {
   dateStart: Date
   dateEnd: Date
   slots: number
+  reservedSlots: number
   recurrenceRule: string
   color: string
   notes: string
@@ -31,6 +32,7 @@ export default class CalendarClass extends Model {
         dateStart: DataTypes.DATE,
         dateEnd: DataTypes.DATE,
         slots: DataTypes.INTEGER,
+        reservedSlots: DataTypes.INTEGER,
         recurrenceRule: DataTypes.STRING,
         color: DataTypes.STRING,
         notes: DataTypes.STRING

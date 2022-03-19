@@ -1,12 +1,9 @@
 import { literal, Op } from 'sequelize'
-import { rrulestr } from 'rrule'
 
 import CalendarClass from '../../../database/models/CalendarClass'
-import CalendarAppointment from '../../../database/models/CalendarAppointment'
-import { getDate, parseISO, startOfDay, isSameDay } from '../../../utils/date-utils'
+import { getDate } from '../../../utils/date-utils'
 import { listSchema } from './schema'
 import { GetModel } from './GetModel'
-import { RecurrenceUtil } from '../../../utils/RecurrenceUtil'
 
 interface Props {
   date: string
@@ -14,10 +11,7 @@ interface Props {
 }
 
 export class CalendarClassListUseCase {
-  constructor(
-    private getModel = new GetModel(),
-    private recurrenceUtil = new RecurrenceUtil()
-  ) {}
+  constructor(private getModel = new GetModel()) {}
 
   async handle(data: Props) {
     await this.validate(data)
@@ -39,9 +33,9 @@ export class CalendarClassListUseCase {
           literal(`date_trunc('day', "CalendarClass"."date_start") = '${date}'`)
         ]
       },
-      include: this.getModel.getIncludesWithAppointments()
+      include: this.getModel.getIncludes()
     })
 
-    return list.map(item => item.toJSON())
+    return list
   }
 }
