@@ -3,10 +3,11 @@ import CalendarClass from '../../../database/models/CalendarClass'
 import { getDate } from '../../../utils/date-utils'
 
 export class GetModel {
-  handle(id: string) {
-    return CalendarClass.findByPk(id, {
+  async handle(id: string) {
+    const model = await CalendarClass.findByPk(id, {
       include: this.getIncludes()
     })
+    return this.map(model)
   }
 
   getIncludes() {
@@ -16,15 +17,13 @@ export class GetModel {
     ]
   }
 
-  getIncludesWithAppointments(date: string) {
-    const dateOnly = getDate(date)
+  getIncludesWithAppointments() {
     return [
       { association: 'calendar', attributes: ['id', 'name'] },
       { association: 'activity', attributes: ['id', 'name', 'duration'] },
       {
         association: 'appointments',
         attributes: ['id'],
-        where: literal(`date_trunc('day', "appointments"."date_start") = '${dateOnly}'`),
         required: false
       }
     ]
