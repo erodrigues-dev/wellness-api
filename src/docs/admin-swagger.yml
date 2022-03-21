@@ -210,40 +210,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-    delete:
-      tags:
-        - Scheduler Classes
-      summary: Delete a class
-      description: |
-        - To destroy a item of the series use field "date"
-        - To destroy a item of the series and the followings, set "following" as true
-      parameters:
-        - in: query
-          name: id
-          schema:
-            type: string
-          required: true
-        - in: query
-          name: date
-          description: |
-            set this date to destroy a item of the series
-            (ISO8601)
-          schema:
-            type: string
-        - in: query
-          name: following
-          description: set as true to destroy following items in the series
-          schema:
-            type: boolean
-      responses:
-        204:
-          description: No content
-        400:
-          $ref: '#/components/responses/BadRequest'
-        404:
-          $ref: '#/components/responses/NotFound'
-        500:
-          $ref: '#/components/responses/InternalError'
   /scheduler/classes/{id}:
     get:
       tags:
@@ -289,6 +255,32 @@ paths:
                 $ref: '#/components/schemas/CalendarClass'
         400:
           $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+    delete:
+      tags:
+        - Scheduler Classes
+      summary: Delete a class
+      description: |
+        - To destroy a item of the series and the followings, set "following" as true
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: following
+          description: set as true to destroy following items in the series
+          schema:
+            type: boolean
+      responses:
+        204:
+          description: No content
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
         500:
           $ref: '#/components/responses/InternalError'
   /scheduler/classes/{id}/appointments/{date}:

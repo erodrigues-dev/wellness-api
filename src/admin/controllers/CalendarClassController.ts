@@ -65,12 +65,11 @@ export class CalendarClassController {
 
   async destroy(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = { ...req.query } as any
+      const data = { ...req.params, ...req.query } as any
 
       const usecase = new CalendarClassDestroyUseCase()
       await usecase.handle(data)
-      return res.json(data)
-      // return res.sendStatus(204)
+      return res.sendStatus(204)
     } catch (error) {
       next(error)
     }
