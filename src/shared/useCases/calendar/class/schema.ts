@@ -23,7 +23,8 @@ export const updateSchema = joi.object({
   slots: joi.number().min(1).required(),
   recurrenceRule: joi.string().allow(null),
   color: joi.string().length(7).required(),
-  notes: joi.string().allow(null)
+  notes: joi.string().allow(null),
+  updateOption: joi.string().valid('current', 'current-and-following')
 })
 
 export const listAppointmentsSchema = joi.object({
