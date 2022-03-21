@@ -73,7 +73,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-
   /scheduler/appointments/{id}:
     get:
       tags:
@@ -145,7 +144,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         500:
           $ref: '#/components/responses/InternalError'
-
   /scheduler/appointments/{id}/cancel:
     post:
       tags:
@@ -160,7 +158,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-
   /scheduler/appointments/check-availability:
     post:
       tags:
@@ -213,40 +210,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-    delete:
-      tags:
-        - Scheduler Classes
-      summary: Delete a class
-      description: |
-        - To destroy a item of the series use field "date"
-        - To destroy a item of the series and the followings, set "following" as true
-      parameters:
-        - in: query
-          name: id
-          schema:
-            type: string
-          required: true
-        - in: query
-          name: date
-          description: |
-            set this date to destroy a item of the series
-            (ISO8601)
-          schema:
-            type: string
-        - in: query
-          name: following
-          description: set as true to destroy following items in the series
-          schema:
-            type: boolean
-      responses:
-        204:
-          description: No content
-        400:
-          $ref: '#/components/responses/BadRequest'
-        404:
-          $ref: '#/components/responses/NotFound'
-        500:
-          $ref: '#/components/responses/InternalError'
   /scheduler/classes/{id}:
     get:
       tags:
@@ -269,6 +232,8 @@ paths:
       tags:
         - Scheduler Classes
       summary: Update a class
+      description: >
+        - set "following: true" to update current and following ocurrences in series
       parameters:
         - $ref: '#components/parameters/pathId'
       requestBody:
@@ -276,7 +241,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestCalendarClass'
+              $ref: '#/components/schemas/RequestUpdateCalendarClass'
       responses:
         200:
           description: Ok
@@ -288,8 +253,33 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-
-  /scheduler/classes/{id}/appointments/{date}:
+    delete:
+      tags:
+        - Scheduler Classes
+      summary: Delete a class
+      description: |
+        - To destroy a item of the series and the followings, set "following" as true
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: following
+          description: set as true to destroy following items in the series
+          schema:
+            type: boolean
+      responses:
+        204:
+          description: No content
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalError'
+  /scheduler/classes/{id}/appointments}:
     get:
       tags:
         - Scheduler Classes
@@ -301,13 +291,6 @@ paths:
           description: Calendar Class Id
           schema:
             type: string
-        - in: path
-          name: date
-          required: true
-          description: Date of Class ISO8601
-          schema:
-            type: string
-            example: 2022-01-01
       responses:
         200:
           description: ok
@@ -354,7 +337,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-
   /scheduler/blocks/{id}:
     put:
       tags:
@@ -416,7 +398,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-
   /scheduler/calendars/{id}/activities:
     get:
       tags:
@@ -495,7 +476,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-
   /calendar-labels/{id}:
     get:
       tags:
@@ -655,12 +635,30 @@ components:
           type: integer
         recurrenceRule:
           type: string
-        recurrenceExceptions:
+        color:
+          type: string
+        notes:
+          type: string
+
+    RequestUpdateCalendarClass:
+      type: object
+      properties:
+        calendarId:
+          type: string
+        activityId:
+          type: integer
+        dateStart:
+          type: string
+        slots:
+          type: integer
+        recurrenceRule:
           type: string
         color:
           type: string
         notes:
           type: string
+        following:
+          type: boolean
 
     RequestCheckAvailability:
       type: object
@@ -795,10 +793,6 @@ components:
           type: string
         recurrenceRule:
           type: string
-        recurrenceExceptions:
-          type: array
-          items:
-            type: string
 
     CalendarLabel:
       type: object

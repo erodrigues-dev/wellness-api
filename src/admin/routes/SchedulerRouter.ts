@@ -37,11 +37,11 @@ router.post(
 router.post('/scheduler/classes', bindRoute(calendarClassController, 'store'))
 router.get('/scheduler/classes/:id', bindRoute(calendarClassController, 'get'))
 router.get(
-  '/scheduler/classes/:id/appointments/:date',
+  '/scheduler/classes/:id/appointments',
   bindRoute(calendarClassController, 'getAppointments')
 )
 router.put('/scheduler/classes/:id', bindRoute(calendarClassController, 'update'))
-router.delete('/scheduler/classes', bindRoute(calendarClassController, 'destroy'))
+router.delete('/scheduler/classes/:id', bindRoute(calendarClassController, 'destroy'))
 
 // --> blocks
 router.post('/scheduler/blocks', bindRoute(calendarSlotController, 'createBlock'))

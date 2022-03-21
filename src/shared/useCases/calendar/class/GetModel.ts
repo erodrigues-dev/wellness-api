@@ -1,12 +1,11 @@
-import { literal } from 'sequelize'
 import CalendarClass from '../../../database/models/CalendarClass'
-import { getDate } from '../../../utils/date-utils'
 
 export class GetModel {
-  handle(id: string) {
-    return CalendarClass.findByPk(id, {
+  async handle(id: string) {
+    const model = await CalendarClass.findByPk(id, {
       include: this.getIncludes()
     })
+    return this.map(model)
   }
 
   getIncludes() {
@@ -16,27 +15,13 @@ export class GetModel {
     ]
   }
 
-  getIncludesWithAppointments(date: string) {
-    const dateOnly = getDate(date)
-    return [
-      { association: 'calendar', attributes: ['id', 'name'] },
-      { association: 'activity', attributes: ['id', 'name', 'duration'] },
-      {
-        association: 'appointments',
-        attributes: ['id'],
-        where: literal(`date_trunc('day', "appointments"."date_start") = '${dateOnly}'`),
-        required: false
-      }
-    ]
-  }
-
   map(item: CalendarClass) {
     return {
       id: item.id,
       dateStart: item.dateStart,
       dateEnd: item.dateEnd,
       slots: item.slots,
-      reservedSlots: item.appointments?.length,
+      reservedSlots: item.reservedSlots,
       color: item.color,
       calendarId: item.calendarId,
       activityId: item.activityId,
@@ -44,7 +29,7 @@ export class GetModel {
       activity: item.activity,
       notes: item.notes,
       recurrenceRule: item.recurrenceRule,
-      recurrenceExceptions: JSON.parse(item.recurrenceExceptions || '[]')
+      recurrenceId: item.recurrenceId
     }
   }
 }

@@ -2,7 +2,7 @@ import CalendarAppointment from '../../../database/models/CalendarAppointment'
 
 import { createAppointmentSchema } from './schema'
 import CalendarClass from '../../../database/models/CalendarClass'
-import { CalculateDateEnd } from './CalculateDateEnd'
+import { CalculateDateEnd } from '../shared/CalculateDateEnd'
 import { GetModel } from './GetModel'
 
 interface AddAppointmentData {

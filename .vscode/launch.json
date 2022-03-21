@@ -10,6 +10,15 @@
       "name": "Attach Node",
       "restart": true,
       "address": "localhost"
-    }
+    },
+    {
+      "name": "Debug Current File",
+      "program": "${file}",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    },
   ]
 }

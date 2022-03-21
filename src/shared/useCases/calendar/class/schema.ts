@@ -23,19 +23,15 @@ export const updateSchema = joi.object({
   slots: joi.number().min(1).required(),
   recurrenceRule: joi.string().allow(null),
   color: joi.string().length(7).required(),
-  notes: joi.string().allow(null)
+  notes: joi.string().allow(null),
+  following: joi.boolean()
 })
 
 export const listAppointmentsSchema = joi.object({
-  calendarClassId: joi.string().uuid().required(),
-  date: joi.string().isoDate().required()
+  id: joi.string().uuid().required()
 })
 
 export const destroySchema = joi.object({
   id: joi.string().uuid().required(),
-  date: joi.string().isoDate().when('following', {
-    is: true,
-    then: joi.string().required()
-  }),
   following: joi.boolean()
 })
