@@ -16,17 +16,15 @@ export const storeSchema = joi.object({
 })
 
 export const updateSchema = joi.object({
-  data: joi.object({
-    id: joi.string().uuid().required(),
-    calendarId: joi.string().uuid().required(),
-    activityId: joi.number().required(),
-    dateStart: joi.string().isoDate().required(),
-    slots: joi.number().min(1).required(),
-    recurrenceRule: joi.string().allow(null),
-    color: joi.string().length(7).required(),
-    notes: joi.string().allow(null)
-  }),
-  updateOption: joi.string().valid('current', 'current-and-following')
+  id: joi.string().uuid().required(),
+  calendarId: joi.string().uuid().required(),
+  activityId: joi.number().required(),
+  dateStart: joi.string().isoDate().required(),
+  slots: joi.number().min(1).required(),
+  recurrenceRule: joi.string().allow(null),
+  color: joi.string().length(7).required(),
+  notes: joi.string().allow(null),
+  following: joi.boolean()
 })
 
 export const listAppointmentsSchema = joi.object({

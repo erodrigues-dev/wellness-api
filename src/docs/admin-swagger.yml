@@ -232,12 +232,8 @@ paths:
       tags:
         - Scheduler Classes
       summary: Update a class
-      description: >-
-        ### Update Options
-
-        - set "current" to update only current item
-
-        - set "current-and-following" to update current and following ocurrences in series
+      description: >
+        - set "following: true" to update current and following ocurrences in series
       parameters:
         - $ref: '#components/parameters/pathId'
       requestBody:
@@ -639,8 +635,6 @@ components:
           type: integer
         recurrenceRule:
           type: string
-        recurrenceExceptions:
-          type: string
         color:
           type: string
         notes:
@@ -649,11 +643,22 @@ components:
     RequestUpdateCalendarClass:
       type: object
       properties:
-        data:
-          $ref: '#components/schemas/RequestCalendarClass'
-        updateOption:
+        calendarId:
           type: string
-          example: 'current | current-and-follwing'
+        activityId:
+          type: integer
+        dateStart:
+          type: string
+        slots:
+          type: integer
+        recurrenceRule:
+          type: string
+        color:
+          type: string
+        notes:
+          type: string
+        following:
+          type: boolean
 
     RequestCheckAvailability:
       type: object
@@ -788,10 +793,6 @@ components:
           type: string
         recurrenceRule:
           type: string
-        recurrenceExceptions:
-          type: array
-          items:
-            type: string
 
     CalendarLabel:
       type: object

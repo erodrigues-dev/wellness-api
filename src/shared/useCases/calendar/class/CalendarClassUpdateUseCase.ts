@@ -20,9 +20,8 @@ interface UpdateData {
   notes: string
 }
 
-interface Data {
-  data: UpdateData
-  updateOption: 'current' | 'current-and-following'
+interface Data extends UpdateData {
+  following: boolean
 }
 
 type CreateRecurrenceItemsData = {
@@ -41,9 +40,9 @@ export class CalendarClassUpdateUseCase {
 
   async handle(data: Data) {
     await this.validate(data)
-    await this.loadModel(data.data.id)
+    await this.loadModel(data.id)
     await this.save(data)
-    return this.getModel.handle(data.data.id)
+    return this.getModel.handle(data.id)
   }
 
   validate(data: Data) {
@@ -55,13 +54,10 @@ export class CalendarClassUpdateUseCase {
     if (!this.model) throw new NotFoundError()
   }
 
-  private save({ updateOption, data }: Data) {
-    if (updateOption === 'current') return this.saveCurrent(data)
+  private save({ following, ...data }: Data) {
+    if (following) return this.saveCurrentAndFollowing(data)
 
-    if (updateOption === 'current-and-following')
-      return this.saveCurrentAndFollowing(data)
-
-    return Promise.reject(new Error(`updateOption is invalid [${updateOption}]`))
+    return this.saveCurrent(data)
   }
 
   private async saveCurrent(data: UpdateData) {
