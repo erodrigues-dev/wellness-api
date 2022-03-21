@@ -73,7 +73,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-
   /scheduler/appointments/{id}:
     get:
       tags:
@@ -145,7 +144,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         500:
           $ref: '#/components/responses/InternalError'
-
   /scheduler/appointments/{id}/cancel:
     post:
       tags:
@@ -160,7 +158,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-
   /scheduler/appointments/check-availability:
     post:
       tags:
@@ -269,6 +266,12 @@ paths:
       tags:
         - Scheduler Classes
       summary: Update a class
+      description: >-
+        ### Update Options
+
+        - set "current" to update only current item
+
+        - set "current-and-following" to update current and following ocurrences in series
       parameters:
         - $ref: '#components/parameters/pathId'
       requestBody:
@@ -276,7 +279,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestCalendarClass'
+              $ref: '#/components/schemas/RequestUpdateCalendarClass'
       responses:
         200:
           description: Ok
@@ -288,7 +291,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-
   /scheduler/classes/{id}/appointments/{date}:
     get:
       tags:
@@ -354,7 +356,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-
   /scheduler/blocks/{id}:
     put:
       tags:
@@ -416,7 +417,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-
   /scheduler/calendars/{id}/activities:
     get:
       tags:
@@ -495,7 +495,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         500:
           $ref: '#/components/responses/InternalError'
-
   /calendar-labels/{id}:
     get:
       tags:
@@ -661,6 +660,15 @@ components:
           type: string
         notes:
           type: string
+
+    RequestUpdateCalendarClass:
+      type: object
+      properties:
+        data:
+          $ref: '#components/schemas/RequestCalendarClass'
+        updateOption:
+          type: string
+          example: 'current | current-and-follwing'
 
     RequestCheckAvailability:
       type: object
