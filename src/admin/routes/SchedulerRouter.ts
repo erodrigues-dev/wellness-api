@@ -37,7 +37,7 @@ router.post(
 router.post('/scheduler/classes', bindRoute(calendarClassController, 'store'))
 router.get('/scheduler/classes/:id', bindRoute(calendarClassController, 'get'))
 router.get(
-  '/scheduler/classes/:id/appointments/:date',
+  '/scheduler/classes/:id/appointments',
   bindRoute(calendarClassController, 'getAppointments')
 )
 router.put('/scheduler/classes/:id', bindRoute(calendarClassController, 'update'))

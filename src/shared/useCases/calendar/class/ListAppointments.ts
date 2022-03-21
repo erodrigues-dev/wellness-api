@@ -1,11 +1,8 @@
-import { literal, Op } from 'sequelize'
 import CalendarAppointment from '../../../database/models/CalendarAppointment'
-import { getDate } from '../../../utils/date-utils'
 import { listAppointmentsSchema } from './schema'
 
 interface Data {
-  calendarClassId: string
-  date: string
+  id: string
 }
 
 export class CalendarClassListAppointmentsUseCase {
@@ -13,21 +10,17 @@ export class CalendarClassListAppointmentsUseCase {
 
   async handle(data: Data) {
     await this.validate(data)
-    return this.query(data)
+    return this.query(data.id)
   }
 
   private async validate(data: Data) {
     await this.schema.validateAsync(data)
   }
 
-  private async query(data: Data) {
-    const date = getDate(data.date)
+  private async query(id: string) {
     const list = await CalendarAppointment.findAll({
       where: {
-        [Op.and]: [
-          { calendarClassId: data.calendarClassId },
-          literal(`date_trunc('day', "CalendarAppointment"."date_start") = '${date}'`)
-        ]
+        calendarClassId: id
       },
       include: [
         { association: 'customer', attributes: ['id', 'name'] },
@@ -36,7 +29,7 @@ export class CalendarClassListAppointmentsUseCase {
       attributes: ['id', 'notes']
     })
 
-    return list.map(item => item.toJSON()).map(item => this.map(item))
+    return list.map(item => this.map(item))
   }
 
   private map(item: CalendarAppointment) {

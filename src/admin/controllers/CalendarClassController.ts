@@ -31,9 +31,9 @@ export class CalendarClassController {
 
   async getAppointments(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id: calendarClassId, date } = req.params
+      const { id } = req.params
       const usecase = new CalendarClassListAppointmentsUseCase()
-      const model = await usecase.handle({ calendarClassId, date })
+      const model = await usecase.handle({ id })
       return res.json(model)
     } catch (error) {
       next(error)

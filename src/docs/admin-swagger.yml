@@ -283,7 +283,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         500:
           $ref: '#/components/responses/InternalError'
-  /scheduler/classes/{id}/appointments/{date}:
+  /scheduler/classes/{id}/appointments}:
     get:
       tags:
         - Scheduler Classes
@@ -295,13 +295,6 @@ paths:
           description: Calendar Class Id
           schema:
             type: string
-        - in: path
-          name: date
-          required: true
-          description: Date of Class ISO8601
-          schema:
-            type: string
-            example: 2022-01-01
       responses:
         200:
           description: ok
