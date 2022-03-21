@@ -9,7 +9,7 @@ import { GetModel } from './GetModel'
 import { CalculateDateEnd } from '../shared/CalculateDateEnd'
 import { NotFoundError } from '../../../custom-error'
 
-interface Data {
+interface UpdateData {
   id: string
   calendarId: string
   activityId: number
@@ -18,11 +18,13 @@ interface Data {
   recurrenceRule: string
   color: string
   notes: string
+}
 
+interface Data {
+  data: UpdateData
   updateOption: 'current' | 'current-and-following'
 }
 
-type UpdateData = Omit<Data, 'updateOption'>
 type CreateRecurrenceItemsData = {
   data: UpdateData
   allDates: Date[]
@@ -39,9 +41,9 @@ export class CalendarClassUpdateUseCase {
 
   async handle(data: Data) {
     await this.validate(data)
-    await this.loadModel(data.id)
+    await this.loadModel(data.data.id)
     await this.save(data)
-    return this.getModel.handle(data.id)
+    return this.getModel.handle(data.data.id)
   }
 
   validate(data: Data) {
@@ -53,7 +55,7 @@ export class CalendarClassUpdateUseCase {
     if (!this.model) throw new NotFoundError()
   }
 
-  private save({ updateOption, ...data }: Data) {
+  private save({ updateOption, data }: Data) {
     if (updateOption === 'current') return this.saveCurrent(data)
 
     if (updateOption === 'current-and-following')

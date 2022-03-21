@@ -53,9 +53,10 @@ export class CalendarClassController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = { ...req.params, ...req.body }
+      const { id } = req.params
+      const { updateOption, data } = req.body
       const usecase = new CalendarClassUpdateUseCase()
-      const model = await usecase.handle(data)
+      const model = await usecase.handle({ data: { id, ...data }, updateOption })
       return res.json(model)
     } catch (error) {
       next(error)
