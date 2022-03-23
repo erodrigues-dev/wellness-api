@@ -28,10 +28,8 @@ export class RecurrenceUtil {
   private dateInRecurrenceRule(recurrenceRule: string, date: Date) {
     const rule = rrulestr(recurrenceRule)
 
-    const isFinalized = rule.origOptions.until && date >= rule.origOptions.until
-    if (isFinalized) return false
+    const nextDate = rule.after(date, true)
 
-    const dateInclude = rule.after(date, true)
-    return Boolean(dateInclude)
+    return isSameDay(nextDate, date)
   }
 }
