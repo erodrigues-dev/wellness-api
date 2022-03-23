@@ -11,7 +11,8 @@ export const updateBlockSchema = createBlockSchema.append({
   id: joi.string().uuid().required()
 })
 
-export const destroySchema = joi.object({
+export const destroyBlockSchema = joi.object({
   id: joi.string().uuid().required(),
-  date: joi.string().isoDate().allow(null)
+  date: joi.string().isoDate().required(),
+  following: joi.boolean().default(false)
 })
