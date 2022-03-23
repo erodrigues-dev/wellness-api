@@ -1,19 +1,19 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
-import Calendar from './Calendar';
+import { DataTypes, Model, Sequelize } from 'sequelize'
+import Calendar from './Calendar'
 
 export default class CalendarSlot extends Model {
-  id: string;
-  calendarId: string;
-  start: Date;
-  end: Date;
-  recurrenceRule: string;
-  recurrenceExceptions: string;
-  status: string;
+  id: string
+  calendarId: string
+  start: Date
+  end: Date
+  recurrenceRule: string
+  recurrenceExceptions: string
+  status: string
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date
+  updatedAt: Date
 
-  calendar?: Calendar;
+  calendar?: Calendar
 
   static setup(connection: Sequelize) {
     CalendarSlot.init(
@@ -25,13 +25,13 @@ export default class CalendarSlot extends Model {
         status: DataTypes.STRING
       },
       { sequelize: connection, tableName: 'calendars_slots' }
-    );
+    )
   }
 
   static setupAssociations() {
     CalendarSlot.belongsTo(Calendar, {
       as: 'calendar',
       foreignKey: 'calendarId'
-    });
+    })
   }
 }
