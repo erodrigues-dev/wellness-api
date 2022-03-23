@@ -27,8 +27,11 @@ export class RecurrenceUtil {
 
   private dateInRecurrenceRule(recurrenceRule: string, date: Date) {
     const rule = rrulestr(recurrenceRule)
-    const dateInclude = rule.after(date, true)
 
+    const isFinalized = rule.origOptions.until && date >= rule.origOptions.until
+    if (isFinalized) return false
+
+    const dateInclude = rule.after(date, true)
     return Boolean(dateInclude)
   }
 }
