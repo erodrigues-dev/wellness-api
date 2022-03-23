@@ -7,8 +7,14 @@ export const createBlockSchema = joi.object({
   recurrenceRule: joi.string().allow(null)
 })
 
-export const updateBlockSchema = createBlockSchema.append({
-  id: joi.string().uuid().required()
+export const updateBlockSchema = joi.object({
+  data: createBlockSchema.append({
+    id: joi.string().uuid().required()
+  }),
+  updateOptions: joi.object({
+    updateOnDate: joi.string().isoDate(),
+    updateFollowing: joi.boolean()
+  })
 })
 
 export const destroyBlockSchema = joi.object({

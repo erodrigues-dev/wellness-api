@@ -341,7 +341,11 @@ paths:
     put:
       tags:
         - Scheduler Blocks
-      summary: update calendar block2
+      summary: update calendar block
+      description: |
+        - `updateOptions` is required if is a recurrent item
+        - `updateOptions.updateOnDate` ISO8601 set date of the item to be updated
+        - `updateOptions.updateFollowing` set to update current item and following items
       parameters:
         - $ref: '#components/parameters/pathId'
       requestBody:
@@ -349,16 +353,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestCalendarBlock'
+              $ref: '#/components/schemas/RequestUpdateCalendarBlock'
       responses:
         200:
-          description: Ok
+          description: returns a array of impacted items
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CalendarBlock'
+                type: array
+                items:
+                  $ref: '#/components/schemas/CalendarBlock'
         400:
           $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
         500:
           $ref: '#/components/responses/InternalError'
     delete:
@@ -607,7 +615,7 @@ components:
 
   # ---- schemas
   schemas:
-    # >> requrests
+    # >> requests
     RequestCalendarLabel:
       type: object
       properties:
@@ -627,6 +635,19 @@ components:
           type: string
         recurrenceRule:
           type: string
+
+    RequestUpdateCalendarBlock:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/RequestCalendarBlock'
+        updateOptions:
+          type: object
+          properties:
+            updateOnDate:
+              type: string
+            updateFollowing:
+              type: boolean
 
     RequestCalendarClass:
       type: object

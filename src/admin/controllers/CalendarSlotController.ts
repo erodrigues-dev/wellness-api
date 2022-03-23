@@ -58,7 +58,11 @@ export class CalendarSlotController {
 
   async updateBlock(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = { ...req.params, ...req.body }
+      const { id } = req.params
+      const data = {
+        ...req.body,
+        data: { id, ...req.body.data }
+      }
       const usecase = new CalendarUpdateBlockUseCase()
       const model = await usecase.handle(data)
       return res.json(model)
