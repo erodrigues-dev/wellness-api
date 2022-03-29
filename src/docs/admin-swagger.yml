@@ -171,6 +171,7 @@ paths:
               $ref: '#/components/schemas/RequestCheckAvailability'
             example:
               calendarId: '3500f32f-3e4a-4a42-88a4-31ad2c83bb09'
+              activityId: 300
               ignoreAppointmentId: '4c747aae-250f-4500-bd9b-3aa8c6efb53a'
               date: '2022-01-01T07:00:00-0300'
       responses:
@@ -692,6 +693,8 @@ components:
       properties:
         calendarId:
           type: string
+        activityId:
+          type: integer
         ignoreAppointmentId:
           type: string
         date:
