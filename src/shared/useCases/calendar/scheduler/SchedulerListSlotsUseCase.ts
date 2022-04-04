@@ -43,11 +43,16 @@ export class SchedulerListSlotUseCase {
   }
 
   private async queryRecurrentItems(data: Data) {
+    const dateOnly = getDate(data.date)
     const dbList = await CalendarSlot.findAll({
       where: {
-        calendarId: { [Op.in]: data.calendars },
-        start: { [Op.lte]: data.date },
-        recurrenceRule: { [Op.not]: null }
+        [Op.and]: [
+          {
+            calendarId: { [Op.in]: data.calendars },
+            recurrenceRule: { [Op.not]: null }
+          },
+          literal(`date_trunc('day', "CalendarSlot"."start") <= '${dateOnly}'`)
+        ]
       },
       include: this.getModel.getIncludes()
     })
