@@ -57,12 +57,25 @@ export class SchedulerListSlotUseCase {
       include: this.getModel.getIncludes()
     })
 
-    return dbList.filter(item =>
-      this.recurrenceUtil.hasDateInRecurrence({
-        rrule: item.recurrenceRule,
-        exceptions: item.recurrenceExceptions,
-        date: data.date
-      })
-    )
+    return dbList
+      .map(item => item.toJSON())
+      .filter(item =>
+        this.recurrenceUtil.hasDateInRecurrence({
+          rrule: item.recurrenceRule,
+          exceptions: item.recurrenceExceptions,
+          date: data.date
+        })
+      )
+      .map(item => this.fillCurrentDate(item, dateOnly))
+  }
+
+  private fillCurrentDate(item: CalendarSlot, dateOnly: string) {
+    const [, startTime] = item.start.toISOString().split('T')
+    const [, endTime] = item.end.toISOString().split('T')
+    return {
+      ...item,
+      start: new Date(`${dateOnly}T${startTime}`),
+      end: new Date(`${dateOnly}T${endTime}`)
+    } as CalendarSlot
   }
 }
