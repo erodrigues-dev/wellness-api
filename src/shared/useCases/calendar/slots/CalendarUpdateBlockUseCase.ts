@@ -71,6 +71,9 @@ export class CalendarUpdateBlockUseCase {
     this.model.end = parseISO(data.dateEnd)
 
     await this.model.save()
+    await this.model.reload({
+      include: this.getModel.getIncludes()
+    })
     return [this.model]
   }
 
