@@ -114,6 +114,7 @@ export class CalendarUpdateBlockUseCase {
     try {
       const rule = rrulestr(this.model.recurrenceRule)
       rule.origOptions.until = startOfDay(parseISO(updateOnDate))
+      rule.origOptions.count = undefined
       this.model.recurrenceRule = rule.toString()
       await this.model.save({ transaction })
 

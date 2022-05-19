@@ -58,6 +58,7 @@ export class CalendarDestroyBlockUseCase {
   private async destroyCurrentAndFollowing({ date }: Data) {
     const rule = rrulestr(this.model.recurrenceRule)
     rule.origOptions.until = startOfDay(parseISO(date))
+    rule.origOptions.count = undefined
 
     this.model.recurrenceRule = rule.toString()
 
