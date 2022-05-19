@@ -56,6 +56,10 @@ export class CalendarAddAppointmentUseCase {
     }
 
     const { id } = await CalendarAppointment.create(appointmentData)
+
+    calendarClass.reservedSlots += 1
+    await calendarClass.save()
+
     return id
   }
 
