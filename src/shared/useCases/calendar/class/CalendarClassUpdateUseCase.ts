@@ -54,10 +54,10 @@ export class CalendarClassUpdateUseCase {
     if (!this.model) throw new NotFoundError()
   }
 
-  private save({ following, ...data }: Data) {
-    if (following) return this.saveCurrentAndFollowing(data)
-
-    return this.saveCurrent(data)
+  private async save({ following, ...data }: Data) {
+    if (!this.hasChanges(data)) return
+    if (following) await this.saveCurrentAndFollowing(data)
+    await this.saveCurrent(data)
   }
 
   private async saveCurrent(data: UpdateData) {
@@ -176,5 +176,20 @@ export class CalendarClassUpdateUseCase {
     const allDates = rule.all(maxLength180)
 
     return allDates
+  }
+
+  private hasChanges(data: UpdateData) {
+    const newDateStart = parseISO(data.dateStart)
+    const oldDateStart = new Date(this.model.dateStart)
+    const dateStartIsChanged = compareAsc(oldDateStart, newDateStart) !== 0
+
+    return (
+      dateStartIsChanged ||
+      this.model.calendarId !== data.calendarId ||
+      this.model.activityId !== data.activityId ||
+      this.model.slots !== data.slots ||
+      this.model.color !== data.color ||
+      this.model.notes !== data.notes
+    )
   }
 }
