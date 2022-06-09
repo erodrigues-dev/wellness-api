@@ -1,6 +1,13 @@
 import { format, parse } from 'date-fns'
 
-export { addMinutes, parseISO, startOfDay, isSameDay, formatISO } from 'date-fns'
+export {
+  addMinutes,
+  parseISO,
+  startOfDay,
+  isSameDay,
+  formatISO,
+  compareAsc
+} from 'date-fns'
 
 export function formatTime24To12(time: string): string {
   const dateTime = parse(time, 'HH:mm:ss', new Date())
