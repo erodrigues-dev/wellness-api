@@ -3,7 +3,7 @@ import RRule from 'rrule'
 import { v4 as uuid } from 'uuid'
 
 import CalendarClass from '../../../database/models/CalendarClass'
-import { addMinutes, parseISO, startOfDay } from '../../../utils/date-utils'
+import { addMinutes, parseISO, startOfDay, compareAsc } from '../../../utils/date-utils'
 import { updateSchema } from './schema'
 import { GetModel } from './GetModel'
 import { CalculateDateEnd } from '../shared/CalculateDateEnd'
@@ -62,7 +62,8 @@ export class CalendarClassUpdateUseCase {
 
   private async saveCurrent(data: UpdateData) {
     const newDateStart = parseISO(data.dateStart)
-    if (this.model.dateStart !== newDateStart) {
+    const oldDateStart = new Date(this.model.dateStart)
+    if (compareAsc(oldDateStart, newDateStart) !== 0) {
       this.model.dateStart = newDateStart
       this.model.dateEnd = await this.calculateDateEnd.calculate(data)
     }
