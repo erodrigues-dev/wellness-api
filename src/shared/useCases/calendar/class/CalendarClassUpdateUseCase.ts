@@ -68,7 +68,6 @@ export class CalendarClassUpdateUseCase {
     }
 
     this.model.calendarId = data.calendarId
-    this.model.calendarId = data.calendarId
     this.model.activityId = data.activityId
     this.model.slots = data.slots
     this.model.color = data.color
