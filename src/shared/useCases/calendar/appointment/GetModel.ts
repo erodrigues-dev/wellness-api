@@ -10,7 +10,7 @@ export class GetModel {
   getIncludes() {
     return [
       { association: 'activity', attributes: ['id', 'name', 'duration'] },
-      { association: 'customer', attributes: ['id', 'name'] },
+      { association: 'customer', attributes: ['id', 'name', 'email', 'phone'] },
       { association: 'calendar', attributes: ['id', 'name'] },
       { association: 'calendarLabel', attributes: ['id', 'name', 'color'] }
     ]
