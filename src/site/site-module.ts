@@ -1,9 +1,10 @@
-import { Express } from 'express';
-import jwt from 'express-jwt';
+import { Express } from 'express'
+import jwt from 'express-jwt'
 
-import routes from './routes';
+import routes from './routes'
 
 export default function useSiteModule(app: Express) {
+  console.log('>> Loading Site module')
   app.use(
     '/site',
     jwt({
@@ -21,7 +22,7 @@ export default function useSiteModule(app: Express) {
         }
       ]
     })
-  );
+  )
 
-  app.use('/site', routes);
+  app.use('/site', routes)
 }

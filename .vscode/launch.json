@@ -9,8 +9,16 @@
       "request": "attach",
       "name": "Attach Node",
       "restart": true,
-      "port": 7001,
       "address": "localhost"
-    }
+    },
+    {
+      "name": "Debug Current File",
+      "program": "${file}",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    },
   ]
 }

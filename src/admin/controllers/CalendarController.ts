@@ -10,7 +10,8 @@ const storeSchema = Joi.object({
   minHoursToSchedule: Joi.number().required(),
   minHoursToCancel: Joi.number().required(),
   maxDaysInFuture: Joi.number().required(),
-  maxEntryPerSlot: Joi.number().required()
+  maxEntryPerSlot: Joi.number().required(),
+  activities: Joi.array().items(Joi.number()).min(1).required()
 });
 
 export class CalendarController {
@@ -67,6 +68,16 @@ export class CalendarController {
       const { id } = req.params;
       await this.service.destroy(id);
       return res.sendStatus(StatusCodes.NO_CONTENT);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async listActivities(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const result = await this.service.listActivities(id);
+      return res.json(result);
     } catch (error) {
       next(error);
     }

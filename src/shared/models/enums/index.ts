@@ -6,4 +6,3 @@ export * from './PackageTypeEnum';
 export * from './PaymentStatusEnum';
 export * from './PaymentTypeEnum';
 export * from './RecurrencyPayEnum';
-export * from './ScheduleStatusEnum';

@@ -4,6 +4,19 @@ import { getPaginateOptions } from '../utils/getPaginateOptions';
 import { Op } from 'sequelize';
 
 export class CalendarService {
+  listAll() {
+    return Calendar.findAll({
+      attributes: {
+        exclude: ['categoryId', 'deletedAt']
+      },
+      include: {
+        association: 'category',
+        attributes: ['id', 'name']
+      },
+      order: ['name']
+    });
+  }
+
   async list({ name, categoryName, page, limit }) {
     const where = {};
     if (name) where['name'] = { [Op.iLike]: `%${name}%` };
@@ -27,21 +40,81 @@ export class CalendarService {
   }
 
   async get(id) {
-    return await Calendar.findByPk(id);
+    const model = await Calendar.findByPk(id, {
+      attributes: {
+        exclude: ['categoryId', 'deletedAt']
+      },
+      include: [
+        {
+          association: 'category',
+          attributes: ['id', 'name']
+        },
+        {
+          association: 'activities',
+          attributes: ['id', 'name']
+        }
+      ]
+    });
+
+    return this._parseModel(model.toJSON());
   }
 
-  async create(data) {
-    const model = await Calendar.create(data);
-    return model.id;
+  async listActivities(calendarId) {
+    const calendar = await Calendar.findByPk(calendarId, {
+      attributes: ['id'],
+      include: {
+        association: 'activities',
+        attributes: ['id', 'name', 'duration']
+      }
+    });
+
+    return calendar.activities.map(activity => ({
+      id: activity.id,
+      name: activity.name,
+      duration: activity.duration
+    }));
   }
 
-  async update({ id, ...data }) {
-    const [rows] = await Calendar.update(data, { where: { id } });
+  async create({ activities, ...data }) {
+    const transaction = await Calendar.sequelize.transaction();
+    try {
+      const model = await Calendar.create(data as any, { transaction });
+      await model.setActivities(activities, { transaction });
+      await transaction.commit();
+      return model.id;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  }
 
-    if (rows === 0) throw new CustomError('Calendar not found', 404);
+  async update({ id, activities, ...data }) {
+    const transaction = await Calendar.sequelize.transaction();
+    try {
+      const [rows] = await Calendar.update(data, { where: { id }, transaction });
+      if (rows === 0) throw new CustomError('Calendar not found', 404);
+
+      const model = await Calendar.findByPk(id, { transaction });
+      await model.setActivities(activities, { transaction });
+
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   }
 
   async destroy(id) {
     await Calendar.destroy({ where: { id } });
+  }
+
+  _parseModel(model) {
+    return {
+      ...model,
+      activities: model.activities?.map(activity => ({
+        id: activity.id,
+        name: activity.name
+      }))
+    };
   }
 }

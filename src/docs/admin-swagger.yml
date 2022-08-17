@@ -1,0 +1,943 @@
+openapi: 3.0.1
+info:
+  title: Elite Wellness
+  version: 0.0.2
+  description: Admin API documentation
+
+servers:
+  - url: https://stg.api.elitewellnessperformance.com/admin
+    description: Staging API
+  - url: http://localhost:3333/admin
+    description: Local API
+
+security:
+  - token: []
+
+paths:
+  # > scheduler
+  /scheduler/items:
+    get:
+      tags:
+        - Scheduler Items
+      summary: List scheduler items
+      parameters:
+        - in: query
+          name: calendars
+          required: true
+          description: list of calendar ids
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: date
+          required: true
+          description: date format ISO8601
+          schema:
+            type: string
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchedulerItems'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
+  /scheduler/appointments:
+    post:
+      tags:
+        - Scheduler Appointments
+      summary: Create appointment
+      requestBody:
+        description: >
+          Ao informar o campo `calendarClassId` os campos
+          `calendarId` e `activityId` serão automaticamente carregados da classe
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAppointment'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+  /scheduler/appointments/{id}:
+    get:
+      tags:
+        - Scheduler Appointments
+      summary: Get appointment by id
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalError'
+    put:
+      tags:
+        - Scheduler Appointments
+      summary: Update appointment
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      requestBody:
+        description: >
+          Ao informar o campo `calendarClassId` os campos
+          `calendarId` e `activityId` serão automaticamente carregados da classe
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAppointment'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+    patch:
+      tags:
+        - Scheduler Appointments
+      summary: Update appointment partially
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                calendarLabelId:
+                  type: string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalError'
+  /scheduler/appointments/{id}/cancel:
+    post:
+      tags:
+        - Scheduler Appointments
+      summary: Cancel appointment
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      responses:
+        204:
+          description: Not Content
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+  /scheduler/appointments/check-availability:
+    post:
+      tags:
+        - Scheduler Appointments
+      summary: Check slot availability
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCheckAvailability'
+            example:
+              calendarId: '3500f32f-3e4a-4a42-88a4-31ad2c83bb09'
+              activityId: 300
+              ignoreAppointmentId: '4c747aae-250f-4500-bd9b-3aa8c6efb53a'
+              date: '2022-01-01T07:00:00-0300'
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isFree:
+                    type: boolean
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
+  /scheduler/classes:
+    post:
+      tags:
+        - Scheduler Classes
+      summary: Create a class
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCalendarClass'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarClass'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+  /scheduler/classes/{id}:
+    get:
+      tags:
+        - Scheduler Classes
+      summary: Get a class by id
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarClass'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalError'
+    put:
+      tags:
+        - Scheduler Classes
+      summary: Update a class
+      description: >
+        - set "following: true" to update current and following ocurrences in series
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestUpdateCalendarClass'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarClass'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+    delete:
+      tags:
+        - Scheduler Classes
+      summary: Delete a class
+      description: |
+        - To destroy a item of the series and the followings, set "following" as true
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: following
+          description: set as true to destroy following items in the series
+          schema:
+            type: boolean
+      responses:
+        204:
+          description: No content
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalError'
+  /scheduler/classes/{id}/appointments}:
+    get:
+      tags:
+        - Scheduler Classes
+      summary: List Appointments of a Class
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Calendar Class Id
+          schema:
+            type: string
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/CalendarClassAppointment'
+                example:
+                  - id: '05412710-139d-4ade-b470-480aea585481'
+                    customer:
+                      id: 100
+                      name: Jhon Doe
+                    calendarLabel:
+                      id: b49b8ff5-9d77-4132-9b1c-2ac16c575f42
+                      name: Checked In
+                      color: '#89D831'
+                    notes: any notes
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+
+  /scheduler/blocks:
+    post:
+      tags:
+        - Scheduler Blocks
+      summary: create calendar block
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCalendarBlock'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarBlock'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+  /scheduler/blocks/{id}:
+    put:
+      tags:
+        - Scheduler Blocks
+      summary: update calendar block
+      description: |
+        - `updateOptions` is required if is a recurrent item
+        - `updateOptions.updateOnDate` ISO8601 set date of the item to be updated
+        - `updateOptions.updateFollowing` set to update current item and following items
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestUpdateCalendarBlock'
+      responses:
+        200:
+          description: returns a array of impacted items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CalendarBlock'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalError'
+    delete:
+      tags:
+        - Scheduler Blocks
+      summary: Delete calendar block
+      parameters:
+        - $ref: '#components/parameters/pathId'
+        - in: query
+          name: date
+          description: date in ISO8601 format
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: following
+          description: set true to destroy following items
+          schema:
+            type: boolean
+      responses:
+        204:
+          description: Ok
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalError'
+
+  /scheduler/calendars:
+    get:
+      tags:
+        - Scheduler Calendars
+      summary: list calendars
+      responses:
+        200:
+          description: list of calendars
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Calendar'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+  /scheduler/calendars/{id}/activities:
+    get:
+      tags:
+        - Scheduler Calendars
+      summary: list calendar activities
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: calendar id
+          schema:
+            type: string
+      responses:
+        200:
+          description: list of calendars
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+  # < scheduler
+
+  # > calendar-labels
+  /calendar-labels:
+    get:
+      tags:
+        - Calendar Labels
+      summary: list all calendar labels
+      responses:
+        200:
+          description: list of calendar labels
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CalendarLabel'
+                example:
+                  - id: '1fb20875-cc02-4015-906b-778e18dbaef8'
+                    name: CheckIn
+                    color: '#31D8D4'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+    post:
+      tags:
+        - Calendar Labels
+      summary: create a calendar label
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCalendarLabel'
+            example:
+              name: CheckIn
+              color: '#31D8D4'
+      responses:
+        200:
+          description: created calendar label
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarLabel'
+              example:
+                id: '878ccc9e-9328-4e2c-838e-9bf898541e74'
+                name: CheckIn
+                color: '#31D8D4'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalError'
+  /calendar-labels/{id}:
+    get:
+      tags:
+        - Calendar Labels
+      summary: get a calendar label by id
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarLabel'
+              example:
+                id: '878ccc9e-9328-4e2c-838e-9bf898541e74'
+                name: CheckIn
+                color: '#31D8D4'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalError'
+    put:
+      tags:
+        - Calendar Labels
+      summary: update a calendar label
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCalendarLabel'
+            example:
+              name: 'CheckIn'
+              color: '#8AD831'
+      responses:
+        200:
+          description: updated calendar label
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarLabel'
+              example:
+                id: '878ccc9e-9328-4e2c-838e-9bf898541e74'
+                name: 'CheckIn'
+                color: '#8AD831'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalError'
+    delete:
+      tags:
+        - Calendar Labels
+      summary: delete a calendar label
+      parameters:
+        - $ref: '#components/parameters/pathId'
+      responses:
+        204:
+          description: No Content
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalError'
+  # < calendar-labels
+
+components:
+  # ---- security schemas
+  securitySchemes:
+    'token':
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  # ---- parameters
+  parameters:
+    pathId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+
+  # ---- responses
+  responses:
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            properties:
+              message:
+                type: string
+                example: unexpected error
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              type:
+                type: string
+              status:
+                type: number
+            example:
+              message: '"any_field" is required'
+              type: ValidationError
+              status: 400
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Not Found Error
+
+  # ---- schemas
+  schemas:
+    # >> requests
+    RequestCalendarLabel:
+      type: object
+      properties:
+        name:
+          type: string
+        color:
+          type: string
+
+    RequestCalendarBlock:
+      type: object
+      properties:
+        calendarId:
+          type: string
+        dateStart:
+          type: string
+        dateEnd:
+          type: string
+        recurrenceRule:
+          type: string
+
+    RequestUpdateCalendarBlock:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/RequestCalendarBlock'
+        updateOptions:
+          type: object
+          properties:
+            updateOnDate:
+              type: string
+            updateFollowing:
+              type: boolean
+
+    RequestCalendarClass:
+      type: object
+      properties:
+        calendarId:
+          type: string
+        activityId:
+          type: integer
+        dateStart:
+          type: string
+        slots:
+          type: integer
+        recurrenceRule:
+          type: string
+        color:
+          type: string
+        notes:
+          type: string
+
+    RequestUpdateCalendarClass:
+      type: object
+      properties:
+        calendarId:
+          type: string
+        activityId:
+          type: integer
+        dateStart:
+          type: string
+        slots:
+          type: integer
+        recurrenceRule:
+          type: string
+        color:
+          type: string
+        notes:
+          type: string
+        following:
+          type: boolean
+
+    RequestCheckAvailability:
+      type: object
+      properties:
+        calendarId:
+          type: string
+        activityId:
+          type: integer
+        ignoreAppointmentId:
+          type: string
+        date:
+          type: string
+    # << requests
+
+    IdAndName:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    IdIntegerAndName:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    Activity:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 4
+        name:
+          type: string
+          example: Adult Training
+        duration:
+          type: integer
+          example: 30
+
+    Calendar:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 3500f32f-3e4a-4a42-88a4-31ad2c83bb09
+        name:
+          type: string
+          example: Anthony
+        minHoursToSchedule:
+          type: number
+          example: 12
+        minHoursToCancel:
+          type: number
+          example: 12
+        maxDaysInFuture:
+          type: number
+          example: 365
+        maxEntryPerSlot:
+          type: number
+          example: 1
+        createdAt:
+          type: string
+          example: 2022-02-10T23:40:36.370Z
+        updatedAt:
+          type: string
+          example: 2022-02-10T23:40:36.370Z
+        category:
+          type: object
+          properties:
+            id:
+              type: number
+              example: 6
+            name:
+              type: string
+              example: Categoria 1
+
+    CalendarSimpleObj:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      example:
+        id: 3500f32f-3e4a-4a42-88a4-31ad2c83bb09
+        name: Anthony
+
+    CreateAppointment:
+      type: object
+      properties:
+        calendarClassId:
+          type: string
+        calendarId:
+          type: string
+        activityId:
+          type: integer
+        dateStart:
+          type: string
+        customerId:
+          type: integer
+        calendarLabelId:
+          type: string
+        notes:
+          type: string
+
+    CalendarClass:
+      type: object
+      properties:
+        id:
+          type: string
+        dateStart:
+          type: string
+        dateEnd:
+          type: string
+        slots:
+          type: integer
+        reservedSlots:
+          type: integer
+        color:
+          type: string
+        calendarId:
+          type: string
+        activityId:
+          type: integer
+        calendar:
+          $ref: '#/components/schemas/CalendarSimpleObj'
+        activity:
+          $ref: '#components/schemas/Activity'
+        notes:
+          type: string
+        recurrenceRule:
+          type: string
+
+    CalendarLabel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        color:
+          type: string
+
+    Appointment:
+      type: object
+      properties:
+        id:
+          type: string
+        dateStart:
+          type: string
+        dateEnd:
+          type: string
+        customerId:
+          type: integer
+        activityId:
+          type: integer
+        calendarId:
+          type: string
+        calendarLabelId:
+          type: string
+        calendarClassId:
+          type: string
+        customer:
+          $ref: '#/components/schemas/IdIntegerAndName'
+        activity:
+          $ref: '#components/schemas/Activity'
+        calendar:
+          $ref: '#/components/schemas/CalendarSimpleObj'
+        calendarLabel:
+          $ref: '#/components/schemas/CalendarLabel'
+        notes:
+          type: string
+
+    CalendarBlock:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          example: block
+        dateStart:
+          type: string
+        dateEnd:
+          type: string
+        calendarId:
+          type: string
+        calendar:
+          $ref: '#/components/schemas/CalendarSimpleObj'
+        recurrenceRule:
+          type: string
+        recurrenceExceptions:
+          type: array
+          items:
+            type: string
+
+    CalendarSlot:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          example: available
+        dateStart:
+          type: string
+        dateEnd:
+          type: string
+        calendarId:
+          type: string
+        calendar:
+          $ref: '#/components/schemas/CalendarSimpleObj'
+        recurrenceRule:
+          type: string
+        recurrenceExceptions:
+          type: array
+          items:
+            type: string
+
+    SchedulerItems:
+      type: object
+      properties:
+        appointments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Appointment'
+        classes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarClass'
+        blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarBlock'
+        slots:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarSlot'
+
+    CalendarClassAppointment:
+      type: object
+      properties:
+        id:
+          type: string
+        customer:
+          $ref: '#/components/schemas/IdIntegerAndName'
+        calendarLabel:
+          $ref: '#/components/schemas/CalendarLabel'
+        notes:
+          type: string

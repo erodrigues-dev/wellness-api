@@ -1,10 +1,12 @@
-import { Express } from 'express';
-import jwt from 'express-jwt';
+import { Express } from 'express'
+import jwt from 'express-jwt'
 
-import midlewares from './midlewares';
-import routes from './routes';
+import midlewares from './midlewares'
+import routes from './routes'
 
 export default function useAdminModule(app: Express) {
+  console.log('>> Loading Admin Module')
+
   app.use(
     '/admin',
     jwt({
@@ -22,8 +24,8 @@ export default function useAdminModule(app: Express) {
         }
       ]
     })
-  );
+  )
 
-  app.use('/admin', midlewares);
-  app.use('/admin', routes);
+  app.use('/admin', midlewares)
+  app.use('/admin', routes)
 }

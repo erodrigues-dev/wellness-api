@@ -1,5 +1,3 @@
-import Schedule from '../../../shared/database/models/Schedule';
-
 interface ListData {
   user_id: number;
   page: number;
@@ -8,30 +6,31 @@ interface ListData {
 
 export class AppointmentsListUseCase {
   async list({ user_id, page = 1, limit = 10 }: ListData) {
-    const data = await Schedule.findAll({
-      where: {
-        customerId: user_id
-      },
-      include: [
-        {
-          association: 'orderActivity',
-          attributes: ['id', 'name', 'duration'],
-          include: [
-            {
-              association: 'activity',
-              attributes: ['imageUrl']
-            },
-            {
-              association: 'category',
-              attributes: ['name']
-            }
-          ]
-        }
-      ],
-      order: [['date', 'desc']],
-      limit: limit + 1,
-      offset: (page - 1) * limit
-    });
+    // const data = await Schedule.findAll({
+    //   where: {
+    //     customerId: user_id
+    //   },
+    //   include: [
+    //     {
+    //       association: 'orderActivity',
+    //       attributes: ['id', 'name', 'duration'],
+    //       include: [
+    //         {
+    //           association: 'activity',
+    //           attributes: ['imageUrl']
+    //         },
+    //         {
+    //           association: 'category',
+    //           attributes: ['name']
+    //         }
+    //       ]
+    //     }
+    //   ],
+    //   order: [['date', 'desc']],
+    //   limit: limit + 1,
+    //   offset: (page - 1) * limit
+    // });
+    const data = [];
 
     const rows = data.map(item => ({
       id: item.id,

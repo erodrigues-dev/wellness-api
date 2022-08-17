@@ -30,7 +30,7 @@ export class CreateWorkoutProfileUseCase {
     if (type === 'customer') data.teamGroupId = null;
     if (type === 'team-group') data.customerId = null;
 
-    const { id } = await WorkoutProfile.create(data);
+    const { id } = await WorkoutProfile.create(data as any);
     const created = await WorkoutProfile.findByPk(id, {
       include: [
         {

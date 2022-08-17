@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 
 import waiverService, { WaiverService } from '../../shared/services/WaiverService';
 

@@ -85,11 +85,11 @@ export class ActivityService {
     return this.parseActivity(model);
   }
 
-  async create({ employees, ...data }: CreateData) {
+  async create({ employees, ...data }) {
     const transaction = await Activity.sequelize.transaction();
 
     try {
-      const model = await Activity.create(data, { transaction });
+      const model = await Activity.create(data as any, { transaction });
 
       if (employees.length > 0) {
         await ActivityEmployee.bulkCreate(

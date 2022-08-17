@@ -1,18 +1,45 @@
-import { Router } from 'express';
-import { bindRoute } from '../../shared/utils/bindRoute';
+import { Router } from 'express'
+import { bindRoute } from '../../shared/utils/bindRoute'
 
-import { Permission } from '../../shared/models/entities/Permission';
-import { checkPermission } from '../../shared/utils/permission';
+import { Permission } from '../../shared/models/entities/Permission'
+import { checkPermission } from '../../shared/utils/permission'
 
-import { makeCalendarController } from '../controllers/CalendarController';
+import { makeCalendarController } from '../controllers/CalendarController'
+import { makeCalendarSlotController } from '../controllers/CalendarSlotController'
 
-const controller = makeCalendarController();
-const router = Router();
+const calendarController = makeCalendarController()
+const slotController = makeCalendarSlotController()
 
-router.get('/calendars', checkPermission(Permission.CalendarList), bindRoute(controller, 'index'));
-router.get('/calendars/:id', checkPermission(Permission.CalendarList), bindRoute(controller, 'get'));
-router.post('/calendars', checkPermission(Permission.CalendarCreateUpdate), bindRoute(controller, 'store'));
-router.put('/calendars/:id', checkPermission(Permission.CalendarCreateUpdate), bindRoute(controller, 'update'));
-router.delete('/calendars/:id', checkPermission(Permission.CalendarDelete), bindRoute(controller, 'destroy'));
+const router = Router()
 
-export default router;
+router.get(
+  '/calendars',
+  checkPermission(Permission.CalendarList),
+  bindRoute(calendarController, 'index')
+)
+router.get(
+  '/calendars/:id',
+  checkPermission(Permission.CalendarList),
+  bindRoute(calendarController, 'get')
+)
+router.post(
+  '/calendars',
+  checkPermission(Permission.CalendarCreateUpdate),
+  bindRoute(calendarController, 'store')
+)
+router.put(
+  '/calendars/:id',
+  checkPermission(Permission.CalendarCreateUpdate),
+  bindRoute(calendarController, 'update')
+)
+router.delete(
+  '/calendars/:id',
+  checkPermission(Permission.CalendarDelete),
+  bindRoute(calendarController, 'destroy')
+)
+router.get('/calendars/:id/activities', bindRoute(calendarController, 'listActivities'))
+
+router.get('/calendars/:id/slots', bindRoute(slotController, 'index'))
+router.post('/calendars/:id/slots', bindRoute(slotController, 'store'))
+
+export default router
